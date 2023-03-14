@@ -1,0 +1,23 @@
+.bgColor {
+    color: #ececf1;
+    background-color: #343541;
+}
+
+.fontColor {
+    color: #ececf1;
+}
+
+.elBtnStyle {
+    font-weight: bold;
+}
+
+.el-button--info {
+    background-color: #ffffff !important;
+}
+
+.elBtnStyle span {
+    letter-spacing: 3px;
+    font-weight: 700;
+    font-size: 16px;
+    color: #343541;
+}
