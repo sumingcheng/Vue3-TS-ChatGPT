@@ -14,11 +14,11 @@ let content = ref("");
 const roleAlias = { user: "ME", assistant: "ChatGPT", system: "System" };
 const decoder = new TextDecoder("utf-8");
 
-const messageList = ref([ {
+const messageList = ref([{
   message: {
     content: "您好，有什么我可以帮您的吗？"
   }
-} ]);
+}]);
 
 const { getKey, setKey } = operationKey()
 
@@ -101,23 +101,19 @@ const scrollToBottom = () => {
     <!--内容-->
     <div class="flex-1 mt-16">
       <div class="m-6 mb-2" ref="chatListDom">
-        <Loading v-show="!messageList.length>0"/>
-        <div
-            class="mb-6"
-            v-for="item in messageList"
-            key=""
-        >
+        <Loading v-show="!(messageList.length > 0)" />
+        <div class="mb-6" v-for="item in messageList" key="">
           <div class="font-bold mb-3">ChatGPT</div>
           <pre class="text-sm text-slate-600 whitespace-pre-wrap leading-relaxed font-bold">
-           <code>{{ item.message.content.replace(/^\n\n/, '') }}</code>
-          </pre>
+               <code>{{ item.message.content.replace(/^\n\n/, '') }}</code>
+              </pre>
         </div>
       </div>
     </div>
     <!--底部-->
     <div class="flex flex-nowrap fixed w-full items-baseline bottom-0 px-6 py-4 bgColor">
       <div class="mx-2 text-sm bgColor w-full">
-        <el-input placeholder="请输入内容" v-model="content" size="large" @keydown.enter="sendMessage"/>
+        <el-input placeholder="请输入内容" v-model="content" size="large" @keydown.enter="sendMessage" />
       </div>
     </div>
     <!--设置 弹出层-->
@@ -125,15 +121,15 @@ const scrollToBottom = () => {
       <div class="bottom-0 w-full p-6 pb-8">
         <div class="flex items-center">
           <span class="w-1/6 font-bold">API Key</span>
-          <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large"/>
+          <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large" />
           <el-button type="primary" @click="empty" class="ml-2">清空</el-button>
         </div>
       </div>
       <template #footer>
-      <span>
-        <el-button @click="centerDialogVisible = false">关闭</el-button>
-        <el-button type="primary" @click="saveApiKey">保存</el-button>
-      </span>
+        <span>
+          <el-button @click="centerDialogVisible = false">关闭</el-button>
+          <el-button type="primary" @click="saveApiKey">保存</el-button>
+        </span>
       </template>
     </el-dialog>
   </div>
