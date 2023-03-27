@@ -1,16 +1,16 @@
 <script setup lang="ts">
-import type { ChatMessage } from "@/types";
-import { nextTick, onMounted, ref, watch } from "vue";
-import { chat } from "@/libs/gpt";
-import Loding from "@/components/Loding.vue";
+import type { ChatMessage } from "@/types"
+import { nextTick, onMounted, ref, watch } from "vue"
+import { chat } from "@/libs/gpt"
+import Loding from "@/components/Loding.vue"
 
-let isConfig = ref(true);
-let isTalking = ref(false);
-let messageContent = ref("");
-let Key = ref("");
-const chatListDom = ref<HTMLDivElement>();
-const decoder = new TextDecoder("utf-8");
-const roleAlias = { user: "ME", assistant: "ChatGPT", system: "System" };
+let isConfig = ref(true)
+let isTalking = ref(false)
+let messageContent = ref("")
+let Key = ref("")
+const chatListDom = ref<HTMLDivElement>()
+const decoder = new TextDecoder("utf-8")
+const roleAlias = { user: "ME", assistant: "ChatGPT", system: "System" }
 const messageList = ref<ChatMessage[]>([
   {
     role: "system",
@@ -28,105 +28,103 @@ const messageList = ref<ChatMessage[]>([
 
 请告诉我你需要哪方面的帮助，我会根据你的需求给你提供相应的信息和建议。`,
   },
-]);
+])
 
 onMounted(() => {
   if (loadConfig()) {
-    switchConfigStatus();
+    switchConfigStatus()
   }
-});
+})
 
 const sendChatMessage = async (content: string = messageContent.value) => {
-  isTalking.value = true;
+  isTalking.value = true
 
   if (messageList.value.length === 2) {
-    messageList.value.pop();
+    messageList.value.pop()
   }
 
-  messageList.value.push({ role: "user", content });
-  clearMessageContent();
+  messageList.value.push({ role: "user", content })
+  clearMessageContent()
 
-  messageList.value.push({ role: "assistant", content: "" });
-  const { status, data, message } = await chat(messageList.value, loadConfig());
+  messageList.value.push({ role: "assistant", content: "" })
+  const { status, data, message } = await chat(messageList.value, loadConfig())
 
   if (status === "success" && data) {
-    const reader = data.getReader();
-    await readStream(reader);
+    const reader = data.getReader()
+    await readStream(reader)
   } else {
-    appendLastMessageContent(message);
+    appendLastMessageContent(message)
   }
 
-  isTalking.value = false;
-};
-
+  isTalking.value = false
+}
+// 读取Stream
 const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
-  const { done, value } = await reader.read();
+  const { done, value } = await reader.read()
   if (done) {
-    reader.closed;
-    return;
+    reader.closed
+    return
   }
-  const dataList = decoder.decode(value).match(/(?<=data: )\s*({.*?}]})/g);
+  const dataList = decoder.decode(value).match(/(?<=data: )\s*({.*?}]})/g)
   dataList?.forEach((v: any) => {
-    const json = JSON.parse(v);
-    appendLastMessageContent(json.choices[0].delta.content ?? "");
-  });
-  await readStream(reader);
-};
+    const json = JSON.parse(v)
+    appendLastMessageContent(json.choices[0].delta.content ?? "")
+  })
+  await readStream(reader)
+}
 
 const appendLastMessageContent = (content: string) =>
-    (messageList.value[messageList.value.length - 1].content += content);
+  (messageList.value[messageList.value.length - 1].content += content)
 
 const sendOrSave = () => {
-  if (!messageContent.value.length) return;
+  if (!messageContent.value.length) return
   if (isConfig.value) {
     if (saveConfig(messageContent.value.trim())) {
-      switchConfigStatus();
+      switchConfigStatus()
     }
-    clearMessageContent();
+    clearMessageContent()
   } else {
-    sendChatMessage();
+    sendChatMessage()
   }
-};
+}
 
 const clickConfig = () => {
   if (!isConfig.value) {
-    messageContent.value = loadConfig();
+    messageContent.value = loadConfig()
     centerDialogVisible.value = true
   } else {
-    clearMessageContent();
+    clearMessageContent()
   }
-  switchConfigStatus();
-};
+  switchConfigStatus()
+}
 
 const saveConfig = (apiKey: string) => {
   if (apiKey.slice(0, 3) !== "sk-" || apiKey.length !== 51) {
-    alert("API Key 错误，请检查后重新输入！");
-    return false;
+    alert("API Key 错误，请检查后重新输入！")
+    return false
   }
-  localStorage.setItem("apiKey", apiKey);
-  return true;
-};
+  localStorage.setItem("apiKey", apiKey)
+  return true
+}
 
-const loadConfig = () => localStorage.getItem("apiKey") ?? "";
+const loadConfig = () => localStorage.getItem("apiKey") ?? ""
 
-const switchConfigStatus = () => (isConfig.value = !isConfig.value);
+const switchConfigStatus = () => (isConfig.value = !isConfig.value)
 
-const clearMessageContent = () => (messageContent.value = "");
+const clearMessageContent = () => (messageContent.value = "")
 
 const scrollToBottom = () => {
-  if (!chatListDom.value) return;
-  scrollTo(0, chatListDom.value.scrollHeight);
-};
+  if (!chatListDom.value) return
+  scrollTo(0, chatListDom.value.scrollHeight)
+}
 
-watch(messageList.value, () => nextTick(() => scrollToBottom()));
+watch(messageList.value, () => nextTick(() => scrollToBottom()))
 const centerDialogVisible = ref(false)
 </script>
 
 <template>
   <div class="flex flex-col h-screen">
-    <div
-        class="flex flex-nowrap fixed w-full items-baseline top-0 px-6 py-4 bg-gray-100"
-    >
+    <div class="flex flex-nowrap fixed w-full items-baseline top-0 px-6 py-4 bg-gray-100">
       <div class="text-2xl font-bold">ChatGPT</div>
       <div class="ml-4 text-sm text-gray-500">
         基于 OpenAI 的 ChatGPT 自然语言模型人工智能对话
@@ -138,15 +136,11 @@ const centerDialogVisible = ref(false)
 
     <div class="flex-1 mt-16">
       <div class="m-6" ref="chatListDom">
-        <div
-            class="mb-6"
-            v-for="item of messageList.filter((v) => v.role !== 'system')"
-        >
+        <div class="mb-6" v-for="item of messageList.filter((v) => v.role !== 'system')">
           <div class="font-bold mb-3">{{ roleAlias[item.role] }}：</div>
           <pre class="text-sm text-slate-600 whitespace-pre-wrap leading-relaxed"
-              v-if="item.content"
-          >{{ item.content.replace(/^\n\n/, '') }}</pre>
-          <Loding v-else/>
+            v-if="item.content">{{ item.content.replace(/^\n\n/, '') }}</pre>
+          <Loding v-else />
         </div>
       </div>
     </div>
@@ -156,12 +150,7 @@ const centerDialogVisible = ref(false)
         修改 API Key：
       </div>
       <div class="flex">
-        <el-input
-            class="input"
-            placeholder="请输入"
-            v-model="messageContent"
-            @keydown.enter="isTalking || sendOrSave()"
-        />
+        <el-input class="input" placeholder="请输入" v-model="messageContent" @keydown.enter="isTalking || sendOrSave()" />
         <button class="btn" :disabled="isTalking" @click="sendOrSave()">
           {{ isConfig ? '保存' : '发送' }}
         </button>
@@ -173,9 +162,9 @@ const centerDialogVisible = ref(false)
 <style scoped>
 pre {
   font-family: -apple-system, "Noto Sans", "Helvetica Neue", Helvetica,
-  "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB",
-  "Noto Sans CJK SC", "Source Han Sans SC", "Source Han Sans CN",
-  "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti",
-  SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
+    "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB",
+    "Noto Sans CJK SC", "Source Han Sans SC", "Source Han Sans CN",
+    "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti",
+    SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
 }
 </style>

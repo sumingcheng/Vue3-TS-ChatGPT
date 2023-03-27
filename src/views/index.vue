@@ -1,27 +1,27 @@
 <script setup lang="ts">
-import { nextTick, onMounted, ref, watch } from "vue";
-import { operationKey } from "@/hooks";
-import { ElMessage } from "element-plus";
-import { postGPT } from "@/libs/api";
-import Loading from "@/components/Loding.vue";
+import { nextTick, onMounted, ref, watch } from "vue"
+import { operationKey } from "@/hooks"
+import { ElMessage } from "element-plus"
+import { postGPT } from "@/libs/api"
+import Loading from "@/components/Loding.vue"
 
 
 const centerDialogVisible = ref(false)
-const chatListDom = ref<HTMLDivElement>();
-let isConfig = ref(true);
-let Key = ref("");
-let content = ref("");
-const roleAlias = { user: "ME", assistant: "ChatGPT", system: "System" };
-const decoder = new TextDecoder("utf-8");
+const chatListDom = ref<HTMLDivElement>()
+let isConfig = ref(true)
+let Key = ref("")
+let content = ref("")
+const roleAlias = { user: "ME", assistant: "ChatGPT", system: "System" }
+const decoder = new TextDecoder("utf-8")
 
 const messageList = ref([{
   message: {
     content: "您好，有什么我可以帮您的吗？"
   }
-}]);
+}])
 
 const { getKey, setKey } = operationKey()
-
+// 保存 key
 const saveApiKey = () => {
   if (Key.value.slice(0, 3) !== "sk-" || Key.value.length !== 51) {
     ElMessage({
@@ -34,13 +34,13 @@ const saveApiKey = () => {
     })
   }
 }
-
+// 判断是否有 key
 onMounted(() => {
   if (!getKey()) {
     centerDialogVisible.value = true
   }
 })
-
+// 点击配置
 const clickConfig = () => {
   Key.value = getKey()
   centerDialogVisible.value = true
@@ -49,19 +49,19 @@ const clickConfig = () => {
 const empty = () => {
   Key.value = ""
 }
-
+// 发送消息
 const sendMessage = async () => {
   let data = content.value
-  messageList.value = [];
-  content.value = "";
+  messageList.value = []
+  content.value = ""
   if (data) {
     try {
       const res: any = await postGPT({
         role: "user",
         content: data,
       })
+
       messageList.value = res.choices
-      console.log(res.choices)
     } catch (error) {
       ElMessage({
         message: '请求错误，尝试更换节点', type: 'warning',
@@ -74,11 +74,11 @@ const sendMessage = async () => {
   }
 }
 
-// 监听高度滚动
-watch(messageList.value, () => nextTick(() => scrollToBottom()));
+// 监听messageList.value,页面滚动到底部
+watch(messageList.value, () => nextTick(() => scrollToBottom()))
 const scrollToBottom = () => {
-  if (!chatListDom.value) return;
-  scrollTo(0, chatListDom.value.scrollHeight);
+  if (!chatListDom.value) return
+  scrollTo(0, chatListDom.value.scrollHeight)
 };
 
 </script>
@@ -105,8 +105,8 @@ const scrollToBottom = () => {
         <div class="mb-6" v-for="item in messageList" key="">
           <div class="font-bold mb-3">ChatGPT</div>
           <pre class="text-sm text-slate-600 whitespace-pre-wrap leading-relaxed font-bold">
-               <code>{{ item.message.content.replace(/^\n\n/, '') }}</code>
-              </pre>
+            <code>{{ item.message.content.replace(/^\n\n/, '') }}</code>
+          </pre>
         </div>
       </div>
     </div>
