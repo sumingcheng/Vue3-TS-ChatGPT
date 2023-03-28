@@ -17,7 +17,7 @@ export const GPT_VERSION = [
         label: 'GPT-3.5',
     },
     {
-        value: 'gpt4',
+        value: 'gpt-4',
         label: 'GPT-4',
     },
 ]
