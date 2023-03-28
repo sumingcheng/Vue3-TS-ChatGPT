@@ -125,7 +125,7 @@ const centerDialogVisible = ref(false)
 <template>
   <div class="flex flex-col h-screen">
     <div class="flex flex-nowrap fixed w-full items-baseline top-0 px-6 py-4 bg-gray-100">
-      <div class="text-2xl font-bold">ChatGPT</div>
+      <div class="text-2xl font-bold">神奇海螺</div>
       <div class="ml-4 text-sm text-gray-500">
         基于 OpenAI 的 ChatGPT 自然语言模型人工智能对话
       </div>
@@ -138,7 +138,7 @@ const centerDialogVisible = ref(false)
       <div class="m-6" ref="chatListDom">
         <div class="mb-6" v-for="item of messageList.filter((v) => v.role !== 'system')">
           <div class="font-bold mb-3">{{ roleAlias[item.role] }}：</div>
-          <pre class="text-sm text-slate-600 whitespace-pre-wrap leading-relaxed"
+          <pre class="text-sm text-black whitespace-pre-wrap leading-relaxed"
             v-if="item.content">{{ item.content.replace(/^\n\n/, '') }}</pre>
           <Loding v-else />
         </div>
