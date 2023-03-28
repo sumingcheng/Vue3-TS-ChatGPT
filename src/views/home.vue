@@ -3,14 +3,22 @@ import type { ChatMessage } from "@/types"
 import { nextTick, onMounted, ref, watch } from "vue"
 import { chat } from "@/libs/gpt"
 import Loding from "@/components/Loding.vue"
+import { ElMessage } from "element-plus";
+import { operationKey } from "@/hooks";
+import { GPT_VERSION } from "@/libs/utils";
 
+const myInput = ref<HTMLInputElement | null>(null)
 let isConfig = ref(true)
 let isTalking = ref(false)
 let messageContent = ref("")
 let Key = ref("")
+
+// GPT版本
+let GPT_V = ref("gpt-3.5-turbo")
 const chatListDom = ref<HTMLDivElement>()
 const decoder = new TextDecoder("utf-8")
 const roleAlias = { user: "ME", assistant: "ChatGPT", system: "System" }
+const { getKey, setKey } = operationKey()
 const messageList = ref<ChatMessage[]>([
   {
     role: "system",
@@ -18,7 +26,7 @@ const messageList = ref<ChatMessage[]>([
   },
   {
     role: "assistant",
-    content: `你好，我是AI语言模型，我可以提供一些常用服务和信息，例如：
+    content: `你好，我是ChatGPT，您的中文人工智能引擎，您可以问我任何问题例如：
 
 1. 翻译：我可以把中文翻译成英文，英文翻译成中文，还有其他一些语言翻译，比如法语、日语、西班牙语等。
 
@@ -35,7 +43,25 @@ onMounted(() => {
     switchConfigStatus()
   }
 })
-
+// 保存 key
+const saveApiKey = () => {
+  if (Key.value.slice(0, 3) !== "sk-" || Key.value.length !== 51) {
+    ElMessage({
+      message: '请填写 Key', type: 'warning',
+    })
+  } else {
+    setKey(Key.value)
+    ElMessage({
+      message: 'Key 设置成功', type: 'success',
+    })
+    centerDialogVisible.value = false
+  }
+}
+// 清空 key
+const empty = () => {
+  Key.value = ""
+}
+// 发送消息
 const sendChatMessage = async (content: string = messageContent.value) => {
   isTalking.value = true
 
@@ -47,7 +73,8 @@ const sendChatMessage = async (content: string = messageContent.value) => {
   clearMessageContent()
 
   messageList.value.push({ role: "assistant", content: "" })
-  const { status, data, message } = await chat(messageList.value, loadConfig())
+  // 调用接口 获取数据
+  const { status, data, message } = await chat(messageList.value, loadConfig(), GPT_V.value)
 
   if (status === "success" && data) {
     const reader = data.getReader()
@@ -57,6 +84,15 @@ const sendChatMessage = async (content: string = messageContent.value) => {
   }
 
   isTalking.value = false
+  getFocus()
+}
+// 聚焦myInput
+const getFocus = () => {
+  nextTick(() => {
+    if (myInput.value) {
+      myInput.value.focus();
+    }
+  })
 }
 // 读取Stream
 const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
@@ -74,7 +110,7 @@ const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
 }
 
 const appendLastMessageContent = (content: string) =>
-  (messageList.value[messageList.value.length - 1].content += content)
+    (messageList.value[messageList.value.length - 1].content += content)
 
 const sendOrSave = () => {
   if (!messageContent.value.length) return
@@ -90,12 +126,13 @@ const sendOrSave = () => {
 
 const clickConfig = () => {
   if (!isConfig.value) {
-    messageContent.value = loadConfig()
+    Key.value = getKey()
     centerDialogVisible.value = true
   } else {
     clearMessageContent()
   }
-  switchConfigStatus()
+
+  centerDialogVisible.value = true
 }
 
 const saveConfig = (apiKey: string) => {
@@ -124,47 +161,69 @@ const centerDialogVisible = ref(false)
 
 <template>
   <div class="flex flex-col h-screen">
-    <div class="flex flex-nowrap fixed w-full items-baseline top-0 px-6 py-4 bg-gray-100">
-      <div class="text-2xl font-bold">神奇海螺</div>
-      <div class="ml-4 text-sm text-gray-500">
-        基于 OpenAI 的 ChatGPT 自然语言模型人工智能对话
+    <div class="flex flex-nowrap fixed w-full items-baseline top-0 px-6 py-4 bgColor">
+      <div class="text-2xl font-bold text-white">神奇海螺</div>
+      <div class="ml-4 text-sm text-white">
+        可以呼唤神奇海螺，神奇海螺会帮你解决问题
       </div>
       <div class="ml-auto text-sm cursor-pointer" @click="clickConfig">
-        <el-button size="default" type="primary">设置</el-button>
+        <el-button size="large" type="info" class="elBtnStyle text-5xl">设置</el-button>
       </div>
     </div>
 
     <div class="flex-1 mt-16">
       <div class="m-6" ref="chatListDom">
         <div class="mb-6" v-for="item of messageList.filter((v) => v.role !== 'system')">
-          <div class="font-bold mb-3">{{ roleAlias[item.role] }}：</div>
-          <pre class="text-base text-black whitespace-pre-wrap leading-relaxed"
-            v-if="item.content">{{ item.content.replace(/^\n\n/, '') }}</pre>
-          <Loding v-else />
+          <div class="font-bold mb-3 text-lg">{{ roleAlias[item.role] }}：</div>
+          <pre class="text-base text-black whitespace-pre-wrap line-height-1.2"
+              v-if="item.content">{{ item.content.replace(/^\n\n/, '') }}</pre>
+          <Loding v-else/>
         </div>
       </div>
     </div>
 
-    <div class="sticky bottom-0 w-full p-6 pb-8 bg-gray-100">
-      <div class="-mt-2 mb-2 text-sm text-gray-500" v-if="isConfig">
-        修改 API Key：
-      </div>
+    <div class="sticky bottom-0 w-full p-6 pb-8 bgColor">
       <div class="flex">
-        <el-input class="input" placeholder="请输入" v-model="messageContent" @keydown.enter="isTalking || sendOrSave()" />
-        <button class="btn" :disabled="isTalking" @click="sendOrSave()">
-          {{ isConfig ? '保存' : '发送' }}
-        </button>
+        <el-input class="input" ref="myInput" placeholder="请输入" v-model="messageContent" size="large"
+            @keydown.enter="sendOrSave()" :disabled="isTalking"/>
       </div>
     </div>
   </div>
+
+  <el-dialog v-model="centerDialogVisible" title="请输入 API Key" width="40%" center>
+    <div class="bottom-0 w-full p-6 pb-8">
+      <div class="flex items-center">
+        <span class="w-1/6 font-bold">API Key</span>
+        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large"/>
+      </div>
+      <div class="flex items-center mt-5">
+        <span class="w-1/6 font-bold">GPT 版本</span>
+        <el-select size="large" class="w-full" v-model="GPT_V">
+          <el-option
+              v-for="item in GPT_VERSION"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+          />
+        </el-select>
+      </div>
+    </div>
+
+    <template #footer>
+        <span>
+          <el-button @click="centerDialogVisible = false">关闭</el-button>
+          <el-button type="primary" @click="saveApiKey">保存</el-button>
+        </span>
+    </template>
+  </el-dialog>
 </template>
 
 <style scoped>
 pre {
   font-family: -apple-system, "Noto Sans", "Helvetica Neue", Helvetica,
-    "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB",
-    "Noto Sans CJK SC", "Source Han Sans SC", "Source Han Sans CN",
-    "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti",
-    SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
+  "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB",
+  "Noto Sans CJK SC", "Source Han Sans SC", "Source Han Sans CN",
+  "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti",
+  SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
 }
 </style>

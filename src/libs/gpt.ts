@@ -1,11 +1,10 @@
 import type { ChatMessage } from "@/types";
 import axios from "axios";
 
-const model = "gpt-3.5-turbo";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-export async function chat(messageList: ChatMessage[], apiKey: string) {
+export async function chat(messageList: ChatMessage[], apiKey: string, GPT_VERSION: string) {
     try {
         const result = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "post",
@@ -15,7 +14,7 @@ export async function chat(messageList: ChatMessage[], apiKey: string) {
             },
 
             body: JSON.stringify({
-                model,
+                model: GPT_VERSION,
                 stream: true,
                 messages: messageList,
             }),

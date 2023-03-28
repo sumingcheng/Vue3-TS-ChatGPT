@@ -10,3 +10,14 @@ export const Storage = {
         localStorage.removeItem(key)
     }
 }
+
+export const GPT_VERSION = [
+    {
+        value: 'gpt-3.5-turbo',
+        label: 'GPT-3.5',
+    },
+    {
+        value: 'gpt4',
+        label: 'GPT-4',
+    },
+]
