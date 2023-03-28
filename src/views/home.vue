@@ -138,7 +138,7 @@ const centerDialogVisible = ref(false)
       <div class="m-6" ref="chatListDom">
         <div class="mb-6" v-for="item of messageList.filter((v) => v.role !== 'system')">
           <div class="font-bold mb-3">{{ roleAlias[item.role] }}：</div>
-          <pre class="text-sm text-black whitespace-pre-wrap leading-relaxed"
+          <pre class="text-base text-black whitespace-pre-wrap leading-relaxed"
             v-if="item.content">{{ item.content.replace(/^\n\n/, '') }}</pre>
           <Loding v-else />
         </div>
