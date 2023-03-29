@@ -28,7 +28,7 @@ const { getKey, setKey } = operationKey()
 const messageList = ref<ChatMessage[]>([
   {
     role: "system",
-    content: "你是 ChatGPT，OpenAI 训练的大型语言模型，尽可能简洁地回答。",
+    content: "你是 ChatGPT，OpenAI 训练的大型语言模型，尽可能简洁准确的回答。",
   },
   {
     role: "assistant",
@@ -132,7 +132,7 @@ const sendOrSave = () => {
 
 // 设置
 const clickConfig = () => {
-  console.log(isConfig.value);
+  console.log(isConfig.value)
 
   if (!isConfig.value) {
     Key.value = getKey()
@@ -163,7 +163,7 @@ const scrollToBottom = () => {
   if (!chatListDom.value) return
   scrollTo(0, chatListDom.value.scrollHeight)
 }
-
+// 值改变，滚动到底部
 watch(messageList.value, () => nextTick(() => scrollToBottom()))
 const centerDialogVisible = ref(false)
 </script>
@@ -200,7 +200,7 @@ const centerDialogVisible = ref(false)
     </div>
   </div>
   <!-- 设置 -->
-  <el-dialog v-model="centerDialogVisible" title="请输入 API Key" width="40%" center>
+  <el-dialog v-model="centerDialogVisible" title="ChatGPT 设置" width="40%" center>
     <div class="bottom-0 w-full p-6 pb-8">
       <div class="flex items-center">
         <span class="w-1/6 font-bold">API Key</span>
@@ -225,10 +225,7 @@ const centerDialogVisible = ref(false)
 
 <style scoped>
 pre {
-  font-family: -apple-system, "Noto Sans", "Helvetica Neue", Helvetica,
-    "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB",
-    "Noto Sans CJK SC", "Source Han Sans SC", "Source Han Sans CN",
-    "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti",
-    SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
+  font-family: -apple-system, "Noto Sans", "Microsoft YaHei";
 }
+
 </style>

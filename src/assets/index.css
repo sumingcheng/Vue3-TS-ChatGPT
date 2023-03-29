@@ -1,23 +1,33 @@
+* {
+  font-family: -apple-system, "Noto Sans", "Microsoft YaHei";
+}
+
 .bgColor {
-    color: #ececf1;
-    background-color: #343541;
+  color: #ececf1;
+  background-color: #343541;
 }
 
 .fontColor {
-    color: #ececf1;
+  color: #ececf1;
 }
 
 .elBtnStyle {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .el-button--info {
-    background-color: #ffffff !important;
+  background-color: #ffffff !important;
 }
 
 .elBtnStyle span {
-    letter-spacing: 3px;
-    font-weight: 700;
-    font-size: 16px;
-    color: #343541;
+  letter-spacing: 3px;
+  font-weight: 700;
+  font-size: 16px;
+  color: #343541;
+}
+
+.el-input__inner {
+  color: black;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
