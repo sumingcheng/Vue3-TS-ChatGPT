@@ -3,12 +3,15 @@ import type { ChatMessage } from "@/types"
 import { nextTick, onMounted, ref, watch } from "vue"
 import { chat } from "@/libs/gpt"
 import Loding from "@/components/Loding.vue"
-import { ElMessage } from "element-plus";
-import { operationKey } from "@/hooks";
-import { GPT_VERSION } from "@/libs/utils";
+import { ElMessage } from "element-plus"
+import { operationKey } from "@/hooks"
+import { GPT_VERSION } from "@/libs/utils"
 
+// 获取 input
 const myInput = ref<HTMLInputElement | null>(null)
+// 是否显示配置
 let isConfig = ref(true)
+// 是否在聊天
 let isTalking = ref(false)
 let messageContent = ref("")
 let Key = ref("")
@@ -17,8 +20,11 @@ let Key = ref("")
 let GPT_V = ref("gpt-3.5-turbo")
 const chatListDom = ref<HTMLDivElement>()
 const decoder = new TextDecoder("utf-8")
+// 角色
 const roleAlias = { user: "ME", assistant: "ChatGPT", system: "System" }
+// localstorage key
 const { getKey, setKey } = operationKey()
+// 消息列表
 const messageList = ref<ChatMessage[]>([
   {
     role: "system",
@@ -90,7 +96,7 @@ const sendChatMessage = async (content: string = messageContent.value) => {
 const getFocus = () => {
   nextTick(() => {
     if (myInput.value) {
-      myInput.value.focus();
+      myInput.value.focus()
     }
   })
 }
@@ -110,7 +116,7 @@ const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
 }
 
 const appendLastMessageContent = (content: string) =>
-    (messageList.value[messageList.value.length - 1].content += content)
+  (messageList.value[messageList.value.length - 1].content += content)
 
 const sendOrSave = () => {
   if (!messageContent.value.length) return
@@ -124,7 +130,10 @@ const sendOrSave = () => {
   }
 }
 
+// 设置
 const clickConfig = () => {
+  console.log(isConfig.value);
+
   if (!isConfig.value) {
     Key.value = getKey()
     centerDialogVisible.value = true
@@ -161,6 +170,7 @@ const centerDialogVisible = ref(false)
 
 <template>
   <div class="flex flex-col h-screen">
+    <!-- 顶部 -->
     <div class="flex flex-nowrap fixed w-full items-baseline top-0 px-6 py-4 bgColor">
       <div class="text-2xl font-bold text-white">神奇海螺</div>
       <div class="ml-4 text-sm text-white">
@@ -170,50 +180,45 @@ const centerDialogVisible = ref(false)
         <el-button size="large" type="info" class="elBtnStyle text-5xl">设置</el-button>
       </div>
     </div>
-
+    <!-- 内容 -->
     <div class="flex-1 mt-16">
       <div class="m-6" ref="chatListDom">
         <div class="mb-6" v-for="item of messageList.filter((v) => v.role !== 'system')">
           <div class="font-bold mb-3 text-lg">{{ roleAlias[item.role] }}：</div>
           <pre class="text-base text-black whitespace-pre-wrap line-height-1.2"
-              v-if="item.content">{{ item.content.replace(/^\n\n/, '') }}</pre>
-          <Loding v-else/>
+            v-if="item.content">{{ item.content.replace(/^\n\n/, '') }}</pre>
+          <Loding v-else />
         </div>
       </div>
     </div>
-
+    <!-- 底部 -->
     <div class="sticky bottom-0 w-full p-6 pb-8 bgColor">
       <div class="flex">
         <el-input class="input" ref="myInput" placeholder="请输入" v-model="messageContent" size="large"
-            @keydown.enter="sendOrSave()" :disabled="isTalking"/>
+          @keydown.enter="sendOrSave()" :disabled="isTalking" />
       </div>
     </div>
   </div>
-
+  <!-- 设置 -->
   <el-dialog v-model="centerDialogVisible" title="请输入 API Key" width="40%" center>
     <div class="bottom-0 w-full p-6 pb-8">
       <div class="flex items-center">
         <span class="w-1/6 font-bold">API Key</span>
-        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large"/>
+        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large" />
       </div>
       <div class="flex items-center mt-5">
         <span class="w-1/6 font-bold">GPT 版本</span>
         <el-select size="large" class="w-full" v-model="GPT_V">
-          <el-option
-              v-for="item in GPT_VERSION"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
-          />
+          <el-option v-for="item in GPT_VERSION" :key="item.value" :label="item.label" :value="item.value" />
         </el-select>
       </div>
     </div>
 
     <template #footer>
-        <span>
-          <el-button @click="centerDialogVisible = false">关闭</el-button>
-          <el-button type="primary" @click="saveApiKey">保存</el-button>
-        </span>
+      <span>
+        <el-button @click="centerDialogVisible = false">关闭</el-button>
+        <el-button type="primary" @click="saveApiKey">保存</el-button>
+      </span>
     </template>
   </el-dialog>
 </template>
@@ -221,9 +226,9 @@ const centerDialogVisible = ref(false)
 <style scoped>
 pre {
   font-family: -apple-system, "Noto Sans", "Helvetica Neue", Helvetica,
-  "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB",
-  "Noto Sans CJK SC", "Source Han Sans SC", "Source Han Sans CN",
-  "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti",
-  SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
+    "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB",
+    "Noto Sans CJK SC", "Source Han Sans SC", "Source Han Sans CN",
+    "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti",
+    SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
 }
 </style>

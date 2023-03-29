@@ -12,6 +12,7 @@ const app = createApp(App)
 
 app.use(ElementPlus)
 app.use(router)
+
 app.mount('#app')
 
 

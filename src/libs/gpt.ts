@@ -1,8 +1,4 @@
 import type { ChatMessage } from "@/types";
-import axios from "axios";
-
-
-axios.defaults.headers.post["Content-Type"] = "application/json";
 
 export async function chat(messageList: ChatMessage[], apiKey: string, GPT_VERSION: string) {
     try {
