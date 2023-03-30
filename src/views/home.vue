@@ -30,7 +30,7 @@ const { getKey, setKey } = operationKey()
 const messageList = ref<ChatMessage[]>([
   {
     role: "system",
-    content: "你是 ChatGPT，OpenAI 训练的大型语言模型，尽可能简洁准确的回答。",
+    content: "你是 ChatGPT，OpenAI 训练的大型语言模型，尽可能Authentic, concise,accurate的回答问题。",
   },
   {
     role: "assistant",
