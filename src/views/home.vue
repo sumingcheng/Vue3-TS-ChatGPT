@@ -15,6 +15,8 @@ let isConfig = ref(true)
 let isTalking = ref(false)
 let messageContent = ref("")
 let Key = ref("")
+// 是否显示loading
+const centerDialogVisible = ref(false)
 
 // GPT版本
 let GPT_V = ref("gpt-3.5-turbo")
@@ -43,7 +45,7 @@ const messageList = ref<ChatMessage[]>([
 请告诉我你需要哪方面的帮助，我会根据你的需求给你提供相应的信息和建议。`,
   },
 ])
-
+// 钩子
 onMounted(() => {
   if (loadConfig()) {
     switchConfigStatus()
@@ -67,6 +69,7 @@ const saveApiKey = () => {
 const empty = () => {
   Key.value = ""
 }
+
 // 发送消息
 const sendChatMessage = async (content: string = messageContent.value) => {
   isTalking.value = true
@@ -92,6 +95,7 @@ const sendChatMessage = async (content: string = messageContent.value) => {
   isTalking.value = false
   getFocus()
 }
+
 // 聚焦myInput
 const getFocus = () => {
   nextTick(() => {
@@ -100,6 +104,7 @@ const getFocus = () => {
     }
   })
 }
+
 // 读取Stream
 const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
   const { done, value } = await reader.read()
@@ -116,7 +121,7 @@ const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
 }
 
 const appendLastMessageContent = (content: string) =>
-  (messageList.value[messageList.value.length - 1].content += content)
+    (messageList.value[messageList.value.length - 1].content += content)
 
 const sendOrSave = () => {
   if (!messageContent.value.length) return
@@ -144,6 +149,7 @@ const clickConfig = () => {
   centerDialogVisible.value = true
 }
 
+// 保存时检查 key
 const saveConfig = (apiKey: string) => {
   if (apiKey.slice(0, 3) !== "sk-" || apiKey.length !== 51) {
     alert("API Key 错误，请检查后重新输入！")
@@ -159,13 +165,16 @@ const switchConfigStatus = () => (isConfig.value = !isConfig.value)
 
 const clearMessageContent = () => (messageContent.value = "")
 
+
+// 值改变，滚动到底部
+watch(messageList.value, () => nextTick(() => scrollToBottom()))
+
 const scrollToBottom = () => {
   if (!chatListDom.value) return
   scrollTo(0, chatListDom.value.scrollHeight)
 }
-// 值改变，滚动到底部
-watch(messageList.value, () => nextTick(() => scrollToBottom()))
-const centerDialogVisible = ref(false)
+
+
 </script>
 
 <template>
@@ -186,8 +195,8 @@ const centerDialogVisible = ref(false)
         <div class="mb-6" v-for="item of messageList.filter((v) => v.role !== 'system')">
           <div class="font-bold mb-3 text-lg">{{ roleAlias[item.role] }}：</div>
           <pre class="text-base text-black whitespace-pre-wrap line-height-1.2"
-            v-if="item.content">{{ item.content.replace(/^\n\n/, '') }}</pre>
-          <Loding v-else />
+              v-if="item.content">{{ item.content.replace(/^\n\n/, '') }}</pre>
+          <Loding v-else/>
         </div>
       </div>
     </div>
@@ -195,7 +204,7 @@ const centerDialogVisible = ref(false)
     <div class="sticky bottom-0 w-full p-6 pb-8 bgColor">
       <div class="flex">
         <el-input class="input" ref="myInput" placeholder="请输入" v-model="messageContent" size="large"
-          @keydown.enter="sendOrSave()" :disabled="isTalking" />
+            @keydown.enter="sendOrSave()" :disabled="isTalking"/>
       </div>
     </div>
   </div>
@@ -204,12 +213,12 @@ const centerDialogVisible = ref(false)
     <div class="bottom-0 w-full p-6 pb-8">
       <div class="flex items-center">
         <span class="w-1/6 font-bold">API Key</span>
-        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large" />
+        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large"/>
       </div>
       <div class="flex items-center mt-5">
         <span class="w-1/6 font-bold">GPT 版本</span>
         <el-select size="large" class="w-full" v-model="GPT_V">
-          <el-option v-for="item in GPT_VERSION" :key="item.value" :label="item.label" :value="item.value" />
+          <el-option v-for="item in GPT_VERSION" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>
       </div>
     </div>
