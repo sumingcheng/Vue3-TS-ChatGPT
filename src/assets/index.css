@@ -1,37 +1,45 @@
 * {
-  font-family: -apple-system, "Noto Sans", "Microsoft YaHei";
+    font-family: "Microsoft YaHei", -apple-system, "Noto Sans";
 }
 
 body {
-  background-color: #f7f7f7;
+    background-color: #f7f7f7;
 }
 
 .bgColor {
-  color: #f7f7f7;
-  background-color: #343541;
+    color: #f7f7f7;
+    background-color: #343541;
 }
 
 .fontColor {
-  color: #f7f7f7;
+    color: #f7f7f7;
 }
 
 .elBtnStyle {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .el-button--info {
-  background-color: #f7f7f7 !important;
+    background-color: #f7f7f7 !important;
 }
 
 .elBtnStyle span {
-  letter-spacing: 3px;
-  font-weight: 700;
-  font-size: 16px;
-  color: #333333;
+    letter-spacing: 3px;
+    font-weight: 700;
+    font-size: 16px;
+    color: #333333;
 }
 
 .el-input__inner {
-  color: #333333;
-  font-size: 1.5rem;
-  font-weight: bold;
+    color: #333333;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+pre {
+    width: auto;
+    background-color: #fafafa;
+    padding: 1.5rem;
+    border: 1px solid rgb(208, 215, 222);
+    border-radius: 6px;
 }

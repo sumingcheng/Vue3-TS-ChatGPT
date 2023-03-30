@@ -6,6 +6,26 @@ import Loading from "@/components/Loding.vue"
 import { ElMessage } from "element-plus"
 import { operationKey } from "@/hooks"
 import { GPT_VERSION } from "@/libs/utils"
+// 代码块高亮
+import hljs from '@/libs/highlight';
+import { marked } from 'marked';
+
+// 配置 marked
+marked.setOptions({
+  highlight: function (code, lang) {
+    if (lang && hljs.getLanguage(lang)) {
+      return hljs.highlight(lang, code).value;
+    } else {
+      return hljs.highlightAuto(code).value;
+    }
+  },
+  // 其他配置
+});
+
+// 触发渲染
+const markedRender = (val: any) => {
+  return marked(val);
+};
 
 // 获取 input
 const myInput = ref<HTMLInputElement | null>(null)
@@ -34,23 +54,20 @@ const messageList = ref<ChatMessage[]>([
   },
   {
     role: "assistant",
-    content: `你好，我是ChatGPT，您的中文人工智能引擎，您可以问我任何问题例如：
-
-1. 翻译：我可以把中文翻译成英文，英文翻译成中文，还有其他一些语言翻译，比如法语、日语、西班牙语等。
-
-2. 咨询服务：如果你有任何问题需要咨询，例如健康、法律、投资等方面，我可以尽可能为你提供帮助。
-
-3. 闲聊：如果你感到寂寞或无聊，我们可以聊一些有趣的话题，以减轻你的压力。
-
-请告诉我你需要哪方面的帮助，我会根据你的需求给你提供相应的信息和建议。`,
+    content: `
+    你好，我是ChatGPT，您的中文人工智能引擎，您可以问我任何问题例如：
+    1. 翻译：我可以把中文翻译任何语言等。
+    2. 咨询服务：如果你有任何问题需要咨询，例如健康、法律、投资等方面，我可以尽可能为你提供帮助。
+    3. 闲聊：如果你感到寂寞或无聊，我们可以聊一些有趣的话题，以减轻你的压力。`,
   },
 ])
 // 钩子
 onMounted(() => {
-  if (loadConfig()) {
+  if (getKey()) {
     switchConfigStatus()
   }
 })
+
 // 保存 key
 const saveApiKey = () => {
   if (Key.value.slice(0, 3) !== "sk-" || Key.value.length !== 51) {
@@ -64,10 +81,6 @@ const saveApiKey = () => {
     })
     centerDialogVisible.value = false
   }
-}
-// 清空 key
-const empty = () => {
-  Key.value = ""
 }
 
 // 发送消息
@@ -83,7 +96,7 @@ const sendChatMessage = async (content: string = messageContent.value) => {
 
   messageList.value.push({ role: "assistant", content: "" })
   // 调用接口 获取数据
-  const { status, data, message } = await chat(messageList.value, loadConfig(), GPT_V.value)
+  const { status, data, message } = await chat(messageList.value, getKey(), GPT_V.value)
 
   if (status === "success" && data) {
     const reader = data.getReader()
@@ -123,22 +136,21 @@ const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
 const appendLastMessageContent = (content: string) =>
     (messageList.value[messageList.value.length - 1].content += content)
 
+
 const sendOrSave = () => {
-  if (!messageContent.value.length) return
-  if (isConfig.value) {
-    if (saveConfig(messageContent.value.trim())) {
-      switchConfigStatus()
-    }
-    clearMessageContent()
-  } else {
+  // if (!messageContent.value.length) return
+  if (getKey()) {
     sendChatMessage()
+  } else {
+    ElMessage({
+      message: '您好像没有填写Key', type: 'warning',
+    })
   }
 }
 
 // 设置
 const clickConfig = () => {
-  console.log(isConfig.value)
-
+  console.log(!isConfig.value)
   if (!isConfig.value) {
     Key.value = getKey()
     centerDialogVisible.value = true
@@ -148,18 +160,6 @@ const clickConfig = () => {
 
   centerDialogVisible.value = true
 }
-
-// 保存时检查 key
-const saveConfig = (apiKey: string) => {
-  if (apiKey.slice(0, 3) !== "sk-" || apiKey.length !== 51) {
-    alert("API Key 错误，请检查后重新输入！")
-    return false
-  }
-  localStorage.setItem("apiKey", apiKey)
-  return true
-}
-
-const loadConfig = () => localStorage.getItem("apiKey") ?? ""
 
 const switchConfigStatus = () => (isConfig.value = !isConfig.value)
 
@@ -179,6 +179,7 @@ const scrollToBottom = () => {
 
 <template>
   <div class="flex flex-col h-screen">
+
     <!-- 顶部 -->
     <div class="flex flex-nowrap fixed w-full items-baseline top-0 px-6 py-4 bgColor">
       <div class="text-2xl font-bold text-white">神奇海螺</div>
@@ -192,10 +193,11 @@ const scrollToBottom = () => {
     <!-- 内容 -->
     <div class="flex-1 mt-16">
       <div class="m-6" ref="chatListDom">
-        <div class="mb-6" v-for="item of messageList.filter((v) => v.role !== 'system')">
+        <div v-for="item of messageList.filter((v) => v.role !== 'system')">
           <div class="font-bold mb-3 text-lg">{{ roleAlias[item.role] }}：</div>
-          <pre class="text-base text-black whitespace-pre-wrap line-height-1.2"
-              v-if="item.content">{{ item.content.replace(/^\n\n/, '') }}</pre>
+          <div class="text-base text-black whitespace-pre-wrap"
+              v-if="item.content" v-html="markedRender(item.content.replace(/^\n\n/, ''))">
+          </div>
           <Loading v-else/>
         </div>
       </div>
@@ -213,7 +215,7 @@ const scrollToBottom = () => {
     <div class="bottom-0 w-full p-6 pb-8">
       <div class="flex items-center">
         <span class="w-1/6 font-bold">API Key</span>
-        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large"/>
+        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large" clearable/>
       </div>
       <div class="flex items-center mt-5">
         <span class="w-1/6 font-bold">GPT 版本</span>
@@ -232,9 +234,3 @@ const scrollToBottom = () => {
   </el-dialog>
 </template>
 
-<style scoped>
-pre {
-  font-family: -apple-system, "Noto Sans", "Microsoft YaHei";
-}
-
-</style>

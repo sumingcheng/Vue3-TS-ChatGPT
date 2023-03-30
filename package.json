@@ -10,7 +10,10 @@
     "type-check": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@types/marked": "^4.0.8",
     "element-plus": "^2.2.36",
+    "highlight.js": "^11.7.0",
+    "marked": "^4.3.0",
     "vue": "^3.2.38",
     "vue-router": "^4.1.5"
   },
