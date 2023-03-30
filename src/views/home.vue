@@ -2,7 +2,7 @@
 import type { ChatMessage } from "@/types"
 import { nextTick, onMounted, ref, watch } from "vue"
 import { chat } from "@/libs/gpt"
-import Loding from "@/components/Loding.vue"
+import Loading from "@/components/Loding.vue"
 import { ElMessage } from "element-plus"
 import { operationKey } from "@/hooks"
 import { GPT_VERSION } from "@/libs/utils"
@@ -196,7 +196,7 @@ const scrollToBottom = () => {
           <div class="font-bold mb-3 text-lg">{{ roleAlias[item.role] }}：</div>
           <pre class="text-base text-black whitespace-pre-wrap line-height-1.2"
               v-if="item.content">{{ item.content.replace(/^\n\n/, '') }}</pre>
-          <Loding v-else/>
+          <Loading v-else/>
         </div>
       </div>
     </div>
