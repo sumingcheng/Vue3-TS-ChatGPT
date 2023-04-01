@@ -59,6 +59,27 @@ const messageList = ref<ChatMessage[]>([
     1. 翻译：我可以把中文翻译任何语言等。
     2. 咨询服务：如果你有任何问题需要咨询，例如健康、法律、投资等方面，我可以尽可能为你提供帮助。
     3. 闲聊：如果你感到寂寞或无聊，我们可以聊一些有趣的话题，以减轻你的压力。`,
+  }, {
+    role: "assistant",
+    content: `
+    你好，我是ChatGPT，您的中文人工智能引擎，您可以问我任何问题例如：
+    1. 翻译：我可以把中文翻译任何语言等。
+    2. 咨询服务：如果你有任何问题需要咨询，例如健康、法律、投资等方面，我可以尽可能为你提供帮助。
+    3. 闲聊：如果你感到寂寞或无聊，我们可以聊一些有趣的话题，以减轻你的压力。`,
+  }, {
+    role: "assistant",
+    content: `
+    你好，我是ChatGPT，您的中文人工智能引擎，您可以问我任何问题例如：
+    1. 翻译：我可以把中文翻译任何语言等。
+    2. 咨询服务：如果你有任何问题需要咨询，例如健康、法律、投资等方面，我可以尽可能为你提供帮助。
+    3. 闲聊：如果你感到寂寞或无聊，我们可以聊一些有趣的话题，以减轻你的压力。`,
+  }, {
+    role: "assistant",
+    content: `
+    你好，我是ChatGPT，您的中文人工智能引擎，您可以问我任何问题例如：
+    1. 翻译：我可以把中文翻译任何语言等。
+    2. 咨询服务：如果你有任何问题需要咨询，例如健康、法律、投资等方面，我可以尽可能为你提供帮助。
+    3. 闲聊：如果你感到寂寞或无聊，我们可以聊一些有趣的话题，以减轻你的压力。`,
   },
 ])
 // 钩子
@@ -85,8 +106,9 @@ const saveApiKey = () => {
 
 // 发送消息
 const sendChatMessage = async (content: string = messageContent.value) => {
+  // 禁止发送
   isTalking.value = true
-
+  // 滚动到底部开关
   if (messageList.value.length === 2) {
     messageList.value.pop()
   }
@@ -104,8 +126,9 @@ const sendChatMessage = async (content: string = messageContent.value) => {
   } else {
     appendLastMessageContent(message)
   }
-
+  // 继续发送
   isTalking.value = false
+  // 自动聚焦
   getFocus()
 }
 
@@ -136,11 +159,12 @@ const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
 const appendLastMessageContent = (content: string) =>
     (messageList.value[messageList.value.length - 1].content += content)
 
-
-const sendOrSave = () => {
-  // if (!messageContent.value.length) return
+//  发送消息
+const sendMessage = () => {
   if (getKey()) {
+    // 发送数据
     sendChatMessage()
+
   } else {
     ElMessage({
       message: '您好像没有填写Key', type: 'warning',
@@ -166,12 +190,16 @@ const switchConfigStatus = () => (isConfig.value = !isConfig.value)
 const clearMessageContent = () => (messageContent.value = "")
 
 
-// 值改变，滚动到底部
+// 监听值改变
 watch(messageList.value, () => nextTick(() => scrollToBottom()))
 
+// 滚动到底部
 const scrollToBottom = () => {
-  if (!chatListDom.value) return
-  scrollTo(0, chatListDom.value.scrollHeight)
+  if (!chatListDom.value) {
+    return
+  } else {
+    scrollTo(0, chatListDom.value.scrollHeight)
+  }
 }
 
 
@@ -179,7 +207,6 @@ const scrollToBottom = () => {
 
 <template>
   <div class="flex flex-col h-screen">
-
     <!-- 顶部 -->
     <div class="flex flex-nowrap fixed w-full items-baseline top-0 px-6 py-4 bgColor">
       <div class="text-2xl font-bold text-white">神奇海螺</div>
@@ -191,7 +218,7 @@ const scrollToBottom = () => {
       </div>
     </div>
     <!-- 内容 -->
-    <div class="flex-1 mt-16">
+    <div class="flex-1 mt-16 content">
       <div class="m-6" ref="chatListDom">
         <div v-for="item of messageList.filter((v) => v.role !== 'system')">
           <div class="font-bold mb-3 text-lg">{{ roleAlias[item.role] }}：</div>
@@ -204,9 +231,13 @@ const scrollToBottom = () => {
     </div>
     <!-- 底部 -->
     <div class="sticky bottom-0 w-full p-6 pb-8 bgColor">
-      <div class="flex">
-        <el-input class="input" ref="myInput" placeholder="请输入" v-model="messageContent" size="large"
-            @keydown.enter="sendOrSave()" :disabled="isTalking"/>
+      <div class="flex items-center">
+        <el-input class="input" :rows="1" type="textarea" ref="myInput" v-model="messageContent"
+            size="large" @keydown.enter="sendMessage()" :disabled="isTalking"/>
+        <!--发送-->
+        <el-button @click="sendMessage()" size="large" type="info"
+            class="elBtnStyle text-5xl ml-5">发送
+        </el-button>
       </div>
     </div>
   </div>

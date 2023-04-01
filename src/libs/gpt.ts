@@ -8,14 +8,13 @@ export async function chat(messageList: ChatMessage[], apiKey: string, GPT_VERSI
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${ apiKey }`,
             },
-
             body: JSON.stringify({
                 model: GPT_VERSION,
                 stream: true,
                 messages: messageList,
             }),
         });
-        console.log(result.body)
+
         return {
             status: "success",
             data: result.body,
