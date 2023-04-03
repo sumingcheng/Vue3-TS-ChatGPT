@@ -5,7 +5,6 @@
 3. 使用 marked 解决 markdown 语法的问题
 4. 使用 highlight.js 解决语法高亮问题
 5. 使用 tailwindcss 和 el-ui 处理样式
-6. 
 
 ## 运行
 
