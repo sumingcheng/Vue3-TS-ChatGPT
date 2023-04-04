@@ -43,7 +43,7 @@ let GPT_V = ref("gpt-3.5-turbo")
 const chatListDom = ref<HTMLDivElement>()
 const decoder = new TextDecoder("utf-8")
 // 角色
-const roleAlias = { user: "ME", assistant: "ChatGPT", system: "System" }
+const roleAlias = { user: "ME", assistant: "Magic Conch", system: "System" }
 // localstorage key
 const { getKey, setKey } = operationKey()
 // 消息列表
