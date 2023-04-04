@@ -55,10 +55,8 @@ const messageList = ref<ChatMessage[]>([
   {
     role: "assistant",
     content: `
-    你好，我是ChatGPT，您的中文人工智能引擎，您可以问我任何问题例如：
-    1. 翻译：我可以把中文翻译任何语言等。
-    2. 咨询服务：如果你有任何问题需要咨询，例如健康、法律、投资等方面，我可以尽可能为你提供帮助。
-    3. 闲聊：如果你感到寂寞或无聊，我们可以聊一些有趣的话题，以减轻你的压力。`,
+    你好，我是神奇海螺，欢迎提问
+    `,
   }
 ])
 // 钩子
@@ -207,7 +205,7 @@ const scrollToBottom = () => {
       </div>
     </div>
     <!-- 底部 -->
-    <div class="sticky bottom-0 w-full p-6 pb-8 bgColor">
+    <div class="sticky bottom-0 w-full p-6 bgColor pb-0">
       <div class="flex items-center">
         <el-input class="input" :rows="1" type="textarea" ref="myInput" v-model="messageContent"
             size="large" @keydown.enter="sendMessage()" :disabled="isTalking"/>
@@ -217,16 +215,19 @@ const scrollToBottom = () => {
         </el-button>
       </div>
     </div>
+    <div class="w-full bgColor flex items-center justify-center" style="line-height: 40px">
+      <a class="jb" href="https://beian.miit.gov.cn/" target="_blank">京ICP备2022029426号-1</a>
+    </div>
   </div>
   <!-- 设置 -->
-  <el-dialog v-model="centerDialogVisible" title="ChatGPT 设置" width="40%" center>
+  <el-dialog v-model="centerDialogVisible" title="神奇海螺 设置" width="40%" center>
     <div class="bottom-0 w-full p-6 pb-8">
       <div class="flex items-center">
         <span class="w-1/6 font-bold">API Key</span>
         <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large" clearable/>
       </div>
       <div class="flex items-center mt-5">
-        <span class="w-1/6 font-bold">GPT 版本</span>
+        <span class="w-1/6 font-bold">版本</span>
         <el-select size="large" class="w-full" v-model="GPT_V">
           <el-option v-for="item in GPT_VERSION" :key="item.value" :label="item.label" :value="item.value"/>
         </el-select>

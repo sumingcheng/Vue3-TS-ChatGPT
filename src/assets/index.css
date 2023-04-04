@@ -6,6 +6,15 @@ body {
     background-color: #f7f7f7;
 }
 
+.jb:before {
+    /*图标*/
+    display: inline-block;
+    content: " ";
+    margin-right: 10px;
+    width: 20px;
+    height: 22px;
+}
+
 .bgColor {
     color: #f7f7f7;
     background-color: #343541;
@@ -56,3 +65,4 @@ textarea::-webkit-scrollbar-track {
 textarea::-webkit-scrollbar-thumb {
     background-color: #cccccc;
 }
+
