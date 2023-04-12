@@ -1,51 +1,24 @@
 <script setup lang="ts">
 import type { ChatMessage } from "@/types"
+import Loading from "@/components/Loding.vue"
 import { nextTick, onMounted, ref, watch } from "vue"
 import { chat } from "@/libs/gpt"
-import Loading from "@/components/Loding.vue"
-import { ElMessage } from "element-plus"
 import { operationKey } from "@/hooks"
-import { GPT_VERSION } from "@/libs/utils"
+import { ElMessage } from "element-plus"
+import { DECODER, GPT_VERSION } from "@/libs/utils"
 // 代码块高亮
-import hljs from '@/libs/highlight';
-import { marked } from 'marked';
-
-// 配置 marked
-marked.setOptions({
-  highlight: function (code, lang) {
-    if (lang && hljs.getLanguage(lang)) {
-      return hljs.highlight(lang, code).value;
-    } else {
-      return hljs.highlightAuto(code).value;
-    }
-  },
-  // 其他配置
-});
-
-// 触发渲染
-const markedRender = (val: any) => {
-  return marked(val);
-};
+import { markedRender } from "@/libs/highlight"
 
 // 获取 input
 const myInput = ref<HTMLInputElement | null>(null)
-// 是否显示配置
-let isConfig = ref(true)
-// 是否在聊天
-let isTalking = ref(false)
-let messageContent = ref("")
-let Key = ref("")
 // 是否显示loading
 const centerDialogVisible = ref(false)
-
-// GPT版本
-let GPT_V = ref("gpt-3.5-turbo")
 const chatListDom = ref<HTMLDivElement>()
-const decoder = new TextDecoder("utf-8")
+
+
 // 角色
 const roleAlias = { user: "ME", assistant: "Magic Conch", system: "System" }
-// localstorage key
-const { getKey, setKey } = operationKey()
+
 // 消息列表
 const messageList = ref<ChatMessage[]>([
   {
@@ -59,11 +32,26 @@ const messageList = ref<ChatMessage[]>([
     `,
   }
 ])
+// GPT版本
+const GPT_V = ref("gpt-3.5-turbo")
+
+// 是否显示配置
+let isConfig = ref(true)
+// 是否在聊天
+let isTalking = ref(false)
+let messageContent = ref("")
+let Key = ref("")
+
+// localstorage key
+const { getKey, setKey } = operationKey()
+
+
 // 钩子
 onMounted(() => {
   if (getKey()) {
     switchConfigStatus()
   }
+  getFocus()
 })
 
 // 保存 key
@@ -109,7 +97,7 @@ const sendChatMessage = async (content: string = messageContent.value) => {
   getFocus()
 }
 
-// 聚焦myInput
+// 聚焦 myInput
 const getFocus = () => {
   nextTick(() => {
     if (myInput.value) {
@@ -125,7 +113,7 @@ const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
     reader.closed
     return
   }
-  const dataList = decoder.decode(value).match(/(?<=data: )\s*({.*?}]})/g)
+  const dataList = DECODER.decode(value).match(/(?<=data: )\s*({.*?}]})/g)
   dataList?.forEach((v: any) => {
     const json = JSON.parse(v)
     appendLastMessageContent(json.choices[0].delta.content ?? "")
@@ -178,6 +166,7 @@ const scrollToBottom = () => {
     scrollTo(0, chatListDom.value.scrollHeight)
   }
 }
+
 </script>
 
 <template>

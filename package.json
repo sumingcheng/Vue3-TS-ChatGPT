@@ -13,6 +13,7 @@
     "@types/marked": "^4.0.8",
     "element-plus": "^2.2.36",
     "highlight.js": "^11.7.0",
+    "jsencrypt": "^3.3.2",
     "lodash": "^4.17.21",
     "marked": "^4.3.0",
     "vue": "^3.2.38",
