@@ -1,8 +1,4 @@
-import JSEncrypt from 'jsencrypt'
-import type { JSEncryptRSAKey } from "jsencrypt/lib/JSEncryptRSAKey";
-
-let rsa = new JSEncrypt();
-
+import { decryptString, encryptString } from "@/libs/encryp";
 
 
 export const DECODER = new TextDecoder("utf-8")
@@ -10,10 +6,10 @@ export const DECODER = new TextDecoder("utf-8")
 // 封装 localStorage
 export const Storage = {
     get(key: string): string | null {
-        return localStorage.getItem(key)
+        return decryptString(localStorage.getItem(key))
     },
     set(key: string, value: string): void {
-        localStorage.setItem(key, value)
+        localStorage.setItem(key, encryptString(value))
     },
     remove(key: string): void {
         localStorage.removeItem(key)
