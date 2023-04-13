@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@types/marked": "^4.0.8",
+    "crypto-js": "^4.1.1",
     "element-plus": "^2.2.36",
     "highlight.js": "^11.7.0",
     "lodash": "^4.17.21",
