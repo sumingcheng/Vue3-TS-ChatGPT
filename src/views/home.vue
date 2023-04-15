@@ -126,10 +126,9 @@ const appendLastMessageContent = (content: string) =>
 
 //  发送消息
 const sendMessage = () => {
-  if (getKey()) {
+  if (getKey().length === 51) {
     // 发送数据
     sendChatMessage()
-
   } else {
     ElMessage({
       message: '您好像没有填写Key', type: 'warning',
