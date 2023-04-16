@@ -26,3 +26,4 @@ export async function chat(messageList: ChatMessage[], apiKey: string, GPT_VERSI
         };
     }
 }
+

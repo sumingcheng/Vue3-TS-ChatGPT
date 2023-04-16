@@ -63,7 +63,7 @@ const saveApiKey = () => {
   } else {
     setKey(Key.value)
     ElMessage({
-      message: 'Key 设置成功', type: 'success',
+      message: '设置成功', type: 'success',
     })
     centerDialogVisible.value = false
   }
@@ -138,7 +138,6 @@ const sendMessage = () => {
 
 // 设置
 const clickConfig = () => {
-  console.log(!isConfig.value)
   if (!isConfig.value) {
     Key.value = getKey()
     centerDialogVisible.value = true
@@ -217,7 +216,7 @@ const scrollToBottom = () => {
       <div class="flex items-center mt-5">
         <span class="w-1/6 font-bold">版本</span>
         <el-select size="large" class="w-full" v-model="GPT_V">
-          <el-option v-for="item in GPT_VERSION" :key="item.value" :label="item.label" :value="item.value"/>
+          <el-option v-for="item in GPT_VERSION()" :key="item.id" :label="item.id" :value="item.id"/>
         </el-select>
       </div>
     </div>
