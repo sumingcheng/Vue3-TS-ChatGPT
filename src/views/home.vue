@@ -6,9 +6,9 @@ import { chat } from "@/libs/gpt"
 import { operationKey } from "@/hooks"
 import { ElMessage } from "element-plus"
 import { DECODER } from "@/libs/utils"
+import GPT_VERSION from '@/data/data.json'
 // 代码块高亮
 import { markedRender } from "@/libs/highlight"
-import GPT_VERSION from '@/data/data.json'
 // 获取 input
 const myInput = ref<HTMLInputElement | null>(null)
 // 是否显示loading

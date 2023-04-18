@@ -44,6 +44,7 @@ body {
     font-size: 1.1rem !important;
 }
 
+/*code*/
 pre {
     width: auto;
     background-color: #fafafa;
@@ -66,6 +67,7 @@ textarea::-webkit-scrollbar-thumb {
     background-color: #cccccc;
 }
 
+/*markdown 表格*/
 table {
     border-collapse: collapse;
     width: 100%;
