@@ -5,7 +5,8 @@ import { nextTick, onMounted, ref, watch } from "vue"
 import { chat } from "@/libs/gpt"
 import { operationKey } from "@/hooks"
 import { ElMessage } from "element-plus"
-import { DECODER, GPT_VERSION } from "@/libs/utils"
+import { DECODER } from "@/libs/utils"
+import GPT_VERSION from '@/data/data.json'
 // 代码块高亮
 import { markedRender } from "@/libs/highlight"
 
@@ -216,7 +217,7 @@ const scrollToBottom = () => {
       <div class="flex items-center mt-5">
         <span class="w-1/6 font-bold">版本</span>
         <el-select size="large" class="w-full" v-model="GPT_V">
-          <el-option v-for="item in GPT_VERSION()" :key="item.id" :label="item.id" :value="item.id"/>
+          <el-option v-for="item in JSON.parse(GPT_VERSION)" :key="item.id" :label="item.id" :value="item.id"/>
         </el-select>
       </div>
     </div>

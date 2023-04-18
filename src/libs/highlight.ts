@@ -1,7 +1,9 @@
 import hljs from 'highlight.js/lib/core';
+import ClipboardJS from 'clipboard';
 import javascript from 'highlight.js/lib/languages/javascript';
 import 'highlight.js/styles/github.css';
 import { marked } from 'marked';
+
 
 hljs.registerLanguage('javascript', javascript);
 

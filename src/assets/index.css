@@ -66,3 +66,21 @@ textarea::-webkit-scrollbar-thumb {
     background-color: #cccccc;
 }
 
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: transparent;
+    border: 1px solid #dee2e6;
+}
+
+th, td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border: 1px solid #dee2e6;
+}
+
+th {
+    text-align: left;
+    background-color: #f2f2f2;
+}
