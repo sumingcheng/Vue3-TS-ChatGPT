@@ -8,9 +8,11 @@
 6. CryptoJS 对称加密 sk
 
 ## 运行
-
+```
 npm run dev
+```
 
 ## 打包
-
+```
 npm run build
+```
