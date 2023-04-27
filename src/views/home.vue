@@ -193,7 +193,7 @@ const scrollToBottom = () => {
       </div>
     </div>
     <!-- 底部 -->
-    <div class="sticky bottom-0 w-full p-6 bgColor pb-0">
+    <div class="sticky w-full p-6 bgColor pb-6">
       <div class="flex items-center">
         <el-input class="input" :rows="1" type="textarea" ref="myInput" v-model="messageContent"
             size="large" @keydown.enter="sendMessage()" :disabled="isTalking"/>
@@ -202,9 +202,6 @@ const scrollToBottom = () => {
             class="elBtnStyle text-5xl ml-5">发送
         </el-button>
       </div>
-    </div>
-    <div class="w-full bgColor flex items-center justify-center" style="line-height: 40px">
-      <a class="jb" href="https://beian.miit.gov.cn/" target="_blank">京ICP备2022029426号-1</a>
     </div>
   </div>
   <!-- 设置 -->
