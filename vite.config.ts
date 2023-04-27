@@ -7,6 +7,9 @@ import vue from "@vitejs/plugin-vue";
 export default defineConfig({
   plugins: [vue()],
   base: "./",
+  build: {
+    outDir: 'docs'
+  },
   server: {
     port: 3456 // 指定端口号
   },
