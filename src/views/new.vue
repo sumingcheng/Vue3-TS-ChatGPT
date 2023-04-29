@@ -25,7 +25,7 @@ const roleAlias = { user: "ME", assistant: "Magic Conch", system: "System" }
 const messageList = ref<ChatMessage[]>([
   {
     role: "system",
-    content: "你是 ChatGPT，OpenAI 训练的大型语言模型，尽可能Authentic, concise,accurate的回答问题。",
+    content: "你是ChatGPT,尽可能精准的、真实的、更加易懂的回答我的问题。优先选择中文回答,其次选择英文。",
   },
   {
     role: "assistant",
@@ -170,7 +170,7 @@ const scrollToBottom = () => {
 </script>
 
 <template>
-  <div class="flex flex-col h-screen">
+  <div class="flex flex-col w-full h-screen">
     <!-- 顶部 -->
     <div class="flex flex-nowrap fixed w-full items-baseline top-0 px-6 py-4 bgColor">
       <div class="text-2xl font-bold text-white">神奇海螺</div>
