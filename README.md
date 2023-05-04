@@ -16,3 +16,8 @@ npm run dev
 ```
 npm run build
 ```
+
+## 部署 Git Page
+```
+如果要部署自己的 Page 请使用 Page 分支
+```
