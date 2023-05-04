@@ -23,7 +23,7 @@ const roleAlias = { user: "ME", assistant: "Magic Conch", system: "System" }
 const messageList = ref<ChatMessage[]>([
   {
     role: "system",
-    content: "你是 ChatGPT，OpenAI 训练的大型语言模型，尽可能Authentic, concise,accurate的回答问题。",
+    content: "Please translate the following sentence into English: You are ChatGPT, answer my questions in a simple, easy-to-understand and detailed way. Please prioritize Chinese answers, followed by English. Please provide examples when answering questions if possible.",
   },
   {
     role: "assistant",
@@ -122,7 +122,7 @@ const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
 }
 
 const appendLastMessageContent = (content: string) =>
-    (messageList.value[messageList.value.length - 1].content += content)
+  (messageList.value[messageList.value.length - 1].content += content)
 
 //  发送消息
 const sendMessage = () => {
@@ -185,21 +185,20 @@ const scrollToBottom = () => {
       <div class="m-6" ref="chatListDom">
         <div v-for="item of messageList.filter((v) => v.role !== 'system')">
           <div class="font-bold mb-3 text-lg">{{ roleAlias[item.role] }}：</div>
-          <div class="text-base text-black whitespace-pre-wrap"
-              v-if="item.content" v-html="markedRender(item.content.replace(/^\n\n/, ''))">
+          <div class="text-base text-black whitespace-pre-wrap" v-if="item.content"
+            v-html="markedRender(item.content.replace(/^\n\n/, ''))">
           </div>
-          <Loading v-else/>
+          <Loading v-else />
         </div>
       </div>
     </div>
     <!-- 底部 -->
     <div class="sticky w-full p-6 bgColor pb-6">
       <div class="flex items-center">
-        <el-input class="input" :rows="1" type="textarea" ref="myInput" v-model="messageContent"
-            size="large" @keydown.enter="sendMessage()" :disabled="isTalking"/>
+        <el-input class="input" :rows="1" type="textarea" ref="myInput" v-model="messageContent" size="large"
+          @keydown.enter="sendMessage()" :disabled="isTalking" />
         <!--发送-->
-        <el-button @click="sendMessage()" size="large" type="info"
-            class="elBtnStyle text-5xl ml-5">发送
+        <el-button @click="sendMessage()" size="large" type="info" class="elBtnStyle text-5xl ml-5">发送
         </el-button>
       </div>
     </div>
@@ -209,12 +208,12 @@ const scrollToBottom = () => {
     <div class="bottom-0 w-full p-6 pb-8">
       <div class="flex items-center">
         <span class="w-1/6 font-bold">API Key</span>
-        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large" clearable/>
+        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large" clearable />
       </div>
       <div class="flex items-center mt-5">
         <span class="w-1/6 font-bold">版本</span>
         <el-select size="large" class="w-full" v-model="GPT_V">
-          <el-option v-for="item in GPT_VERSION" :key="item.id" :label="item.id" :value="item.id"/>
+          <el-option v-for="item in GPT_VERSION" :key="item.id" :label="item.id" :value="item.id" />
         </el-select>
       </div>
     </div>
