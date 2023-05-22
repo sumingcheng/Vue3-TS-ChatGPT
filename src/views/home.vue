@@ -23,7 +23,7 @@ const roleAlias = { user: "ME", assistant: "Magic Conch", system: "System" }
 const messageList = ref<ChatMessage[]>([
   {
     role: "system",
-    content: "You are ChatGPT, answer my questions in a simple, easy-to-understand and detailed way. Please prioritize Chinese answers, followed by English. Please provide examples when answering questions if possible.",
+    content: "You are ChatGPT, please answer my questions in a simple, easy-to-understand and detailed way. Please prioritize Chinese answers, followed by English. Please provide examples when answering questions if possible.",
   },
   {
     role: "assistant",
