@@ -29,9 +29,7 @@ const messageList = ref<ChatMessage[]>([
   },
   {
     role: "assistant",
-    content: `
-    你好，我是神奇海螺，欢迎提问
-    `,
+    content: `你好，我是神奇海螺，欢迎提问`,
   }
 ])
 // GPT版本
