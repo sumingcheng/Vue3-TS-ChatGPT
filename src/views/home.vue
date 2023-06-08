@@ -23,7 +23,7 @@ const roleAlias = { user: "ME", assistant: "Magic Conch", system: "System" }
 const messageList = ref<ChatMessage[]>([
   {
     role: "system",
-    content: "你是 ChatGPT，OpenAI 训练的大型语言模型，尽可能Authentic, concise,accurate的回答问题。",
+    content: "You are ChatGPT, a large-scale language model trained by OpenAI, and you will answer questions as authentically, concisely, and accurately as possible.",
   },
   {
     role: "assistant",
