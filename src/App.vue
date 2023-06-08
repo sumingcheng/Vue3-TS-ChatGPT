@@ -3,9 +3,7 @@
 </script>
 
 <template>
-  <Suspense>
-    <RouterView />
-  </Suspense>
+  <RouterView/>
 </template>
 
 <style></style>
