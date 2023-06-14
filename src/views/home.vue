@@ -204,7 +204,7 @@ const scrollToBottom = () => {
     </div>
   </div>
   <!-- 设置 -->
-  <el-dialog v-model="centerDialogVisible" title="神奇海螺 设置" width="40%" center>
+  <el-dialog v-model="centerDialogVisible" title="神奇海螺 设置" width="80%" center>
     <div class="bottom-0 w-full p-6 pb-8">
       <div class="flex items-center">
         <span class="w-1/6 font-bold">API Key</span>
