@@ -113,9 +113,11 @@ const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
     reader.closed
     return
   }
-  const dataList = DECODER.decode(value).match(/(?<=data: )\s*({.*?}]})/g)
+  const dataList = DECODER.decode(value).match(/data: \s*({.*?}]})/g)
   dataList?.forEach((v: any) => {
-    const json = JSON.parse(v)
+    // 移除 "data: "，然后再解析 JSON
+    const jsonStr = v.replace('data: ', '')
+    const json = JSON.parse(jsonStr)
     appendLastMessageContent(json.choices[0].delta.content ?? "")
   })
   await readStream(reader)
