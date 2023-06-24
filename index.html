@@ -1,14 +1,46 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vue3-ChatGPT</title>
-    <base href="/">
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vue3-ChatGPT</title>
+  <base href="/">
+</head>
+
+<body>
+  <div id="app"></div>
+  <script type="module" src="/src/main.ts"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      },
+      svg: {
+        fontCache: 'global',
+        scale: 110,  // 放大公式
+        minScale: 80  // 公式的最小放大比例
+      },
+      options: {
+        renderActions: {
+          findScript: [10, function (doc) {
+            for (const node of document.querySelectorAll('span.math, div.math')) {
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], false, node)
+              const text = document.createTextNode('')
+              node.parentNode.replaceChild(text, node)
+              math.start = { node: text, delim: '', n: 0 }
+              math.end = { node: text, delim: '', n: 0 }
+              doc.math.push(math)
+            }
+          }, '']
+        }
+      }
+    };
+
+  </script>
+</body>
+
 </html>

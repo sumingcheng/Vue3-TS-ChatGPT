@@ -1,14 +1,15 @@
 <script setup lang="ts">
-import type {ChatMessage} from "@/types"
+import type { ChatMessage } from "@/types"
 import Loading from "@/components/Loding.vue"
-import {nextTick, onMounted, ref, watch} from "vue"
-import {chat} from "@/libs/gpt"
-import {operationKey} from "@/hooks"
-import {ElMessage} from "element-plus"
-import {DECODER} from "@/libs/utils"
+import { nextTick, onMounted, ref, watch, watchEffect } from "vue"
+import { chat } from "@/libs/gpt"
+import { operationKey } from "@/hooks"
+import { ElMessage } from "element-plus"
+import { DECODER } from "@/libs/utils"
 import GPT_VERSION from '@/data/data.json'
 // 代码块高亮
-import {markedRender} from "@/libs/highlight"
+import { markedRender } from "@/libs/highlight"
+
 // 获取 input
 const myInput = ref<HTMLInputElement | null>(null)
 // 是否显示loading
@@ -17,7 +18,7 @@ const chatListDom = ref<HTMLDivElement>()
 
 
 // 角色
-const roleAlias = {user: "ME", assistant: "Magic Conch", system: "System"}
+const roleAlias = { user: "ME", assistant: "Magic Conch", system: "System" }
 
 // 消息列表
 const messageList = ref<ChatMessage[]>([
@@ -43,7 +44,7 @@ let messageContent = ref("")
 let Key = ref("")
 
 // localstorage key
-const {getKey, setKey} = operationKey()
+const { getKey, setKey } = operationKey()
 
 
 // 钩子
@@ -52,8 +53,30 @@ onMounted(() => {
     switchConfigStatus()
   }
   getFocus()
+
+  checkMathJax()
 })
 
+const checkMathJax = () => {
+  if (window.MathJax) {
+    // MathJax 已加载，可以执行 typesetting
+    watchEffect(() => {
+      messageList.value.forEach((message) => {
+        // 确保这个消息是由 markedRender 处理过的
+        if (message.content && message.content.includes('$')) {
+          // 等待DOM更新
+          nextTick(() => {
+            // 然后调用 MathJax 来处理公式
+            window.MathJax.typesetPromise()
+          })
+        }
+      })
+    })
+  } else {
+    // MathJax 还没加载，稍后再试
+    setTimeout(checkMathJax, 100)
+  }
+}
 // 保存 key
 const saveApiKey = () => {
   if (Key.value.slice(0, 3) !== "sk-" || Key.value.length !== 51) {
@@ -78,12 +101,12 @@ const sendChatMessage = async (content: string = messageContent.value) => {
     messageList.value.pop()
   }
 
-  messageList.value.push({role: "user", content})
+  messageList.value.push({ role: "user", content })
   clearMessageContent()
 
-  messageList.value.push({role: "assistant", content: ""})
+  messageList.value.push({ role: "assistant", content: "" })
   // 调用接口 获取数据
-  const {status, data, message} = await chat(messageList.value, getKey(), GPT_V.value)
+  const { status, data, message } = await chat(messageList.value, getKey(), GPT_V.value)
 
   if (status === "success" && data) {
     const reader = data.getReader()
@@ -108,7 +131,7 @@ const getFocus = () => {
 
 // 读取Stream
 const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
-  const {done, value} = await reader.read()
+  const { done, value } = await reader.read()
   if (done) {
     reader.closed
     return
@@ -124,7 +147,7 @@ const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
 }
 
 const appendLastMessageContent = (content: string) =>
-    (messageList.value[messageList.value.length - 1].content += content)
+  (messageList.value[messageList.value.length - 1].content += content)
 
 //  发送消息
 const sendMessage = () => {
@@ -168,6 +191,7 @@ const scrollToBottom = () => {
   }
 }
 
+
 </script>
 
 <template>
@@ -188,9 +212,9 @@ const scrollToBottom = () => {
         <div v-for="item of messageList.filter((v) => v.role !== 'system')">
           <div class="font-bold mb-3 text-lg">{{ roleAlias[item.role] }}：</div>
           <div class="text-base text-black whitespace-pre-wrap" v-if="item.content"
-               v-html="markedRender(item.content.replace(/^\n\n/, ''))">
+            v-html="markedRender(item.content.replace(/^\n\n/, ''))">
           </div>
-          <Loading v-else/>
+          <Loading v-else />
         </div>
       </div>
     </div>
@@ -198,7 +222,7 @@ const scrollToBottom = () => {
     <div class="sticky w-full p-6 bgColor pb-6">
       <div class="flex items-center">
         <el-input class="input" :rows="1" type="textarea" ref="myInput" v-model="messageContent" size="large"
-                  @keydown.enter="sendMessage()" :disabled="isTalking"/>
+          @keydown.enter="sendMessage()" :disabled="isTalking" />
         <!--发送-->
         <el-button @click="sendMessage()" size="large" type="info" class="elBtnStyle text-5xl ml-5">发送
         </el-button>
@@ -206,16 +230,16 @@ const scrollToBottom = () => {
     </div>
   </div>
   <!-- 设置 -->
-  <el-dialog v-model="centerDialogVisible" title="神奇海螺 设置" width="80%" center>
+  <el-dialog v-model="centerDialogVisible" title="设置" width="80%" center>
     <div class="bottom-0 w-full p-6 pb-8">
       <div class="flex items-center">
         <span class="w-1/6 font-bold">API Key</span>
-        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large" clearable/>
+        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large" clearable />
       </div>
       <div class="flex items-center mt-5">
         <span class="w-1/6 font-bold">版本</span>
         <el-select size="large" class="w-full" v-model="GPT_V">
-          <el-option v-for="item in GPT_VERSION" :key="item.id" :label="item.id" :value="item.id"/>
+          <el-option v-for="item in GPT_VERSION" :key="item.id" :label="item.id" :value="item.id" />
         </el-select>
       </div>
     </div>
