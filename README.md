@@ -6,6 +6,7 @@
 4. highlight.js 解决语法高亮问题
 5. tailwindcss 处理样式
 6. CryptoJS 对称加密 sk
+7. 使用 mathjax 实现公式显示
 
 # Vue3-TS-ChatGPT
 
