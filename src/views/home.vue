@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { ChatMessage } from "@/types"
 import Loading from "@/components/Loding.vue"
-import { nextTick, onMounted, ref, watch, watchEffect } from "vue"
+import { nextTick, onMounted, ref, watch, watchEffect,onUpdated } from "vue"
 import { chat } from "@/libs/gpt"
 import { operationKey } from "@/hooks"
 import { ElMessage } from "element-plus"
@@ -55,6 +55,10 @@ onMounted(() => {
   getFocus()
 
   checkMathJax()
+})
+
+onUpdated(() => {
+  // 在这里写页面监听的逻辑
 })
 
 const checkMathJax = () => {
