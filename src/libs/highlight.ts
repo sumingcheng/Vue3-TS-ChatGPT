@@ -1,7 +1,8 @@
 import hljs from 'highlight.js/lib/core'
 import javascript from 'highlight.js/lib/languages/javascript'
 import 'highlight.js/styles/github.css'
-import { marked, Renderer } from 'marked'
+import {marked, Renderer} from 'marked'
+
 const renderer = new Renderer()
 
 
@@ -21,6 +22,13 @@ renderer.paragraph = function (text) {
   }
   return '<p>' + text + '</p>\n'
 }
+
+renderer.code = function (code, language) {
+  const validLang = !!(language && hljs.getLanguage(language));
+  const highlighted = validLang ? hljs.highlight(code, {language}).value : hljs.highlightAuto(code).value;
+  return `<pre class="clearfix"><button class="copyNode">Copy</button><code  class="${language} hljs">${highlighted}</code></pre>\n`;
+}
+
 
 // 配置 marked
 marked.setOptions({

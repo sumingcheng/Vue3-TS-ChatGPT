@@ -37,11 +37,45 @@ body {
 
 /*code*/
 pre {
-  width: auto;
+  position: relative;
+  width: 100%;
   background-color: #fafafa;
   padding: 1.5rem;
   border: 1px solid rgb(208, 215, 222);
   border-radius: 6px;
+}
+
+code {
+  width: 100%;
+  background-color: #fafafa !important;
+}
+
+.copyNode {
+  cursor: pointer;
+  position: absolute;
+  padding: 0.1rem 0.4rem;
+  top: 1rem;
+  right: 1rem;
+  border: 1px solid rgb(208, 215, 222);
+  border-radius: 6px;
+}
+
+.copyNode:hover {
+  cursor: pointer;
+  background-color: #f2f2f2;
+}
+
+.copyNode:active {
+  cursor: pointer;
+  background-color: #e6e6e6;
+}
+
+/*code*/
+
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
 }
 
 textarea::-webkit-scrollbar {

@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import type { ChatMessage } from "@/types"
+import type {ChatMessage} from "@/types"
 import Loading from "@/components/Loding.vue"
-import { nextTick, onMounted, ref, watch, watchEffect,onUpdated } from "vue"
-import { chat } from "@/libs/gpt"
-import { operationKey } from "@/hooks"
-import { ElMessage } from "element-plus"
-import { DECODER } from "@/libs/utils"
+import {nextTick, onMounted, onUpdated, ref, watch, watchEffect} from "vue"
+import {chat} from "@/libs/gpt"
+import {operationKey} from "@/hooks"
+import {ElMessage} from "element-plus"
+import {DECODER} from "@/libs/utils"
 import GPT_VERSION from '@/data/data.json'
 // 代码块高亮
-import { markedRender } from "@/libs/highlight"
+import {markedRender} from "@/libs/highlight"
 
 // 获取 input
 const myInput = ref<HTMLInputElement | null>(null)
@@ -18,7 +18,7 @@ const chatListDom = ref<HTMLDivElement>()
 
 
 // 角色
-const roleAlias = { user: "ME", assistant: "Magic Conch", system: "System" }
+const roleAlias = {user: "ME", assistant: "Magic Conch", system: "System"}
 
 // 消息列表
 const messageList = ref<ChatMessage[]>([
@@ -44,22 +44,8 @@ let messageContent = ref("")
 let Key = ref("")
 
 // localstorage key
-const { getKey, setKey } = operationKey()
+const {getKey, setKey} = operationKey()
 
-
-// 钩子
-onMounted(() => {
-  if (getKey()) {
-    switchConfigStatus()
-  }
-  getFocus()
-
-  checkMathJax()
-})
-
-onUpdated(() => {
-  // 在这里写页面监听的逻辑
-})
 
 const checkMathJax = () => {
   if (window.MathJax) {
@@ -105,12 +91,12 @@ const sendChatMessage = async (content: string = messageContent.value) => {
     messageList.value.pop()
   }
 
-  messageList.value.push({ role: "user", content })
+  messageList.value.push({role: "user", content})
   clearMessageContent()
 
-  messageList.value.push({ role: "assistant", content: "" })
+  messageList.value.push({role: "assistant", content: ""})
   // 调用接口 获取数据
-  const { status, data, message } = await chat(messageList.value, getKey(), GPT_V.value)
+  const {status, data, message} = await chat(messageList.value, getKey(), GPT_V.value)
 
   if (status === "success" && data) {
     const reader = data.getReader()
@@ -135,7 +121,7 @@ const getFocus = () => {
 
 // 读取Stream
 const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
-  const { done, value } = await reader.read()
+  const {done, value} = await reader.read()
   if (done) {
     reader.closed
     return
@@ -151,7 +137,7 @@ const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
 }
 
 const appendLastMessageContent = (content: string) =>
-  (messageList.value[messageList.value.length - 1].content += content)
+    (messageList.value[messageList.value.length - 1].content += content)
 
 //  发送消息
 const sendMessage = () => {
@@ -195,6 +181,54 @@ const scrollToBottom = () => {
   }
 }
 
+// 初始化拷贝
+const initCopy = () => {
+  const copyText: any = document.getElementsByClassName("copyNode")
+  let arr = Array.from(copyText);
+  arr.forEach((v: any) => {
+    // 如果元素已经有一个 copyAction，那么首先移除它
+    if (v.copyAction) {
+      v.removeEventListener("click", v.copyAction);
+    }
+
+    // 创建一个新的 copyAction，并存储在元素的属性中
+    v.copyAction = () => {
+      copy(v.nextSibling.textContent);
+    }
+
+    // 添加新的监听器
+    v.addEventListener("click", v.copyAction);
+  })
+}
+
+
+const copy = (copyText: string) => {
+  navigator.clipboard.writeText(copyText).then(function () {
+    ElMessage({
+      message: '已复制', type: 'success',
+    })
+  }, function (err) {
+    console.error('Could not copy text: ', err);
+  })
+}
+
+onUpdated(() => {
+  nextTick(() => {
+    initCopy()
+  })
+});
+
+// 钩子
+onMounted(() => {
+  if (getKey()) {
+    switchConfigStatus()
+  }
+  getFocus()
+
+  checkMathJax()
+  initCopy()
+})
+
 
 </script>
 
@@ -216,9 +250,9 @@ const scrollToBottom = () => {
         <div v-for="item of messageList.filter((v) => v.role !== 'system')">
           <div class="font-bold mb-3 text-lg">{{ roleAlias[item.role] }}：</div>
           <div class="text-base text-black whitespace-pre-wrap" v-if="item.content"
-            v-html="markedRender(item.content.replace(/^\n\n/, ''))">
+               v-html="markedRender(item.content.replace(/^\n\n/, ''))">
           </div>
-          <Loading v-else />
+          <Loading v-else/>
         </div>
       </div>
     </div>
@@ -226,7 +260,7 @@ const scrollToBottom = () => {
     <div class="sticky w-full p-6 bgColor pb-6">
       <div class="flex items-center">
         <el-input class="input" :rows="1" type="textarea" ref="myInput" v-model="messageContent" size="large"
-          @keydown.enter="sendMessage()" :disabled="isTalking" />
+                  @keydown.enter="sendMessage()" :disabled="isTalking"/>
         <!--发送-->
         <el-button @click="sendMessage()" size="large" type="info" class="elBtnStyle text-5xl ml-5">发送
         </el-button>
@@ -238,12 +272,12 @@ const scrollToBottom = () => {
     <div class="bottom-0 w-full p-6 pb-8">
       <div class="flex items-center">
         <span class="w-1/6 font-bold">API Key</span>
-        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large" clearable />
+        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large" clearable/>
       </div>
       <div class="flex items-center mt-5">
         <span class="w-1/6 font-bold">版本</span>
         <el-select size="large" class="w-full" v-model="GPT_V">
-          <el-option v-for="item in GPT_VERSION" :key="item.id" :label="item.id" :value="item.id" />
+          <el-option v-for="item in GPT_VERSION" :key="item.id" :label="item.id" :value="item.id"/>
         </el-select>
       </div>
     </div>
