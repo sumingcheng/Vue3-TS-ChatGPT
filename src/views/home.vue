@@ -208,7 +208,7 @@ const copy = (copyText: string) => {
       message: '已复制', type: 'success',
     })
   }, function (err) {
-    console.error('Could not copy text: ', err);
+    console.error('无法复制文本: ', err);
   })
 }
 
