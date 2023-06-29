@@ -235,7 +235,7 @@ onMounted(() => {
 <template>
   <div class="flex flex-col h-screen">
     <!-- 顶部 -->
-    <div class="flex flex-nowrap fixed w-full items-baseline top-0 px-6 py-4 bgColor">
+    <div class="flex flex-nowrap fixed w-full items-baseline top-0 px-6 py-4 bgColor z-50">
       <div class="text-2xl font-bold text-white">神奇海螺</div>
       <div class="ml-4 text-sm text-white">
         可以呼唤神奇海螺，神奇海螺会帮你解决问题
