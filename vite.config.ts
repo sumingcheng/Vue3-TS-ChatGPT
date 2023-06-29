@@ -11,6 +11,15 @@ export default defineConfig({
   base: "/Vue3-TS-ChatGPT/",
   build: {
     outDir: 'docs',
+    // rollupOptions: {
+    //   output: {
+    //     manualChunks(id) {
+    //       if (id.includes('node_modules')) {
+    //         return id.split('node_modules/')[1].split('/')[0].toString();
+    //       }
+    //     }
+    //   }
+    // }
   },
   server: {
     port: 3456 // 指定端口号
