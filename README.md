@@ -16,3 +16,5 @@ npm run dev
 ```
 npm run build
 ```
+
+![image](https://github.com/sumingcheng/Vue3-TS-ChatGPT/assets/21992204/e12b914f-1c39-4a76-a006-0642917f73f8)
