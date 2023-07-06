@@ -112,3 +112,18 @@ th {
   text-align: left;
   background-color: #f2f2f2;
 }
+
+/* 兼容WebKit浏览器 (Chrome, Safari, Opera等) */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* 兼容Firefox */
+html {
+  scrollbar-width: none;
+}
+
+/* 兼容IE和Edge */
+body {
+  -ms-overflow-style: none;
+}
