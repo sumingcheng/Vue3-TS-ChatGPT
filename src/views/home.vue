@@ -1,25 +1,24 @@
 <script setup lang="ts">
-import type { ChatMessage } from "@/types"
+import type {ChatMessage} from "@/types"
 import Loading from "@/components/Loding.vue"
-import { nextTick, onMounted, onUpdated, ref, watch, watchEffect } from "vue"
-import { chat } from "@/libs/gpt"
-import { operationKey } from "@/hooks"
-import { ElMessage } from "element-plus"
-import { DECODER } from "@/libs/utils"
+import {nextTick, onMounted, onUnmounted, onUpdated, ref, watch, watchEffect} from "vue"
+import {chat} from "@/libs/gpt"
+import {initCopy, operationKey, scrollToBottom} from "@/hooks"
+import {ElMessage} from "element-plus"
+import {DECODER} from "@/libs/utils"
 import GPT_VERSION from '@/data/data.json'
 // 代码块高亮
-import { markedRender } from "@/libs/highlight"
+import {markedRender} from "@/libs/highlight"
+// localstorage key
+const {getKey, setKey} = operationKey()
 
 // 获取 input
 const myInput = ref<HTMLInputElement | null>(null)
 // 是否显示loading
 const centerDialogVisible = ref(false)
 const chatListDom = ref<HTMLDivElement>()
-
-
 // 角色
-const roleAlias = { user: "ME", assistant: "Magic Conch", system: "System" }
-
+const roleAlias = {user: "ME", assistant: "Magic Conch", system: "System"}
 // 消息列表
 const messageList = ref<ChatMessage[]>([
   {
@@ -33,19 +32,35 @@ const messageList = ref<ChatMessage[]>([
     `,
   }
 ])
-// GPT版本
-const GPT_V = ref("gpt-3.5-turbo")
 
+const GPT_V = ref("gpt-3.5-turbo")
 // 是否显示配置
 let isConfig = ref(true)
-// 是否在聊天
 let isTalking = ref(false)
 let messageContent = ref("")
 let Key = ref("")
+const isScrolling = ref(false);
 
-// localstorage key
-const { getKey, setKey } = operationKey()
-
+// const observedDiv = ref(null);
+// let resizeObserver: any = null;
+//
+// onMounted(() => {
+//   resizeObserver = new ResizeObserver(entries => {
+//     for (let entry of entries) {
+//       console.log('Height:', entry.contentRect.height);
+//     }
+//   });
+//
+//   if (observedDiv.value) {
+//     resizeObserver.observe(observedDiv.value);
+//   }
+// });
+//
+// onUnmounted(() => {
+//   if (resizeObserver && observedDiv.value) {
+//     resizeObserver.unobserve(observedDiv.value);
+//   }
+// });
 
 const checkMathJax = () => {
   if (window.MathJax) {
@@ -91,12 +106,12 @@ const sendChatMessage = async (content: string = messageContent.value) => {
     messageList.value.pop()
   }
 
-  messageList.value.push({ role: "user", content })
+  messageList.value.push({role: "user", content})
   clearMessageContent()
 
-  messageList.value.push({ role: "assistant", content: "" })
+  messageList.value.push({role: "assistant", content: ""})
   // 调用接口 获取数据
-  const { status, data, message } = await chat(messageList.value, getKey(), GPT_V.value)
+  const {status, data, message} = await chat(messageList.value, getKey(), GPT_V.value)
 
   if (status === "success" && data) {
     const reader = data.getReader()
@@ -121,7 +136,7 @@ const getFocus = () => {
 
 // 读取Stream
 const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
-  const { done, value } = await reader.read()
+  const {done, value} = await reader.read()
   if (done) {
     reader.closed
     return
@@ -137,7 +152,7 @@ const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
 }
 
 const appendLastMessageContent = (content: string) =>
-  (messageList.value[messageList.value.length - 1].content += content)
+    (messageList.value[messageList.value.length - 1].content += content)
 
 //  发送消息
 const sendMessage = () => {
@@ -168,49 +183,14 @@ const switchConfigStatus = () => (isConfig.value = !isConfig.value)
 
 const clearMessageContent = () => (messageContent.value = "")
 
-
 // 监听值改变
-watch(messageList.value, () => nextTick(() => scrollToBottom()))
-
-// 滚动到底部
-const scrollToBottom = () => {
-  if (!chatListDom.value) {
-    return
-  } else {
-    scrollTo(0, chatListDom.value.scrollHeight)
-  }
-}
-
-// 初始化拷贝
-const initCopy = () => {
-  const copyText: any = document.getElementsByClassName("copyNode")
-  let arr = Array.from(copyText)
-  arr.forEach((v: any) => {
-    // 如果元素已经有一个 copyAction，那么首先移除它
-    if (v.copyAction) {
-      v.removeEventListener("click", v.copyAction)
+watch(messageList.value, () => nextTick(
+    () => {
+      if (!isScrolling.value) {
+        scrollToBottom(chatListDom.value)
+      }
     }
-
-    // 创建一个新的 copyAction，并存储在元素的属性中
-    v.copyAction = () => {
-      copy(v.nextSibling.textContent)
-    }
-
-    // 添加新的监听器
-    v.addEventListener("click", v.copyAction)
-  })
-}
-
-
-const copy = (copyText: string) => {
-  navigator.clipboard.writeText(copyText).then(function () {
-    ElMessage({
-      message: '已复制', type: 'success',
-    })
-  }, function (err) {
-    console.error('无法复制文本: ', err)
-  })
-}
+))
 
 onUpdated(() => {
   nextTick(() => {
@@ -251,39 +231,39 @@ const goGitHub = () => {
       </div>
     </div>
     <!-- 内容 -->
-    <div class="flex-1 mt-16 content">
+    <div class="flex-1 mt-16 content" ref="observedDiv">
       <div class="m-6" ref="chatListDom">
         <div v-for="item of messageList.filter((v) => v.role !== 'system')">
           <div class="font-bold mb-3 text-lg">{{ roleAlias[item.role] }}：</div>
           <div class="text-base text-black whitespace-pre-wrap" v-if="item.content"
-            v-html="markedRender(item.content.replace(/^\n\n/, ''))">
+               v-html="markedRender(item.content.replace(/^\n\n/, ''))">
           </div>
-          <Loading v-else />
+          <Loading v-else/>
         </div>
       </div>
     </div>
     <!-- 底部 -->
-    <div class="sticky w-full p-6 bgColor pb-6">
+    <div class="sticky w-full p-6 bgColor pb-6 bottom-0">
       <div class="flex items-center">
         <el-input class="input" :rows="1" type="textarea" ref="myInput" v-model="messageContent" size="large"
-          @keydown.enter="sendMessage()" :disabled="isTalking" />
+                  @keydown.enter="sendMessage()" :disabled="isTalking"/>
         <!--发送-->
         <el-button @click="sendMessage()" size="large" type="info" class="elBtnStyle text-5xl ml-5">发送
         </el-button>
       </div>
     </div>
   </div>
-  <!-- 设置 -->
+  <!-- 弹框设置 -->
   <el-dialog v-model="centerDialogVisible" title="设置" width="80%" center>
     <div class="bottom-0 w-full p-6 pb-8">
       <div class="flex items-center">
         <span class="w-1/6 font-bold">API Key</span>
-        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large" clearable />
+        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large" clearable/>
       </div>
       <div class="flex items-center mt-5">
         <span class="w-1/6 font-bold">版本</span>
         <el-select size="large" class="w-full" v-model="GPT_V">
-          <el-option v-for="item in GPT_VERSION" :key="item.id" :label="item.id" :value="item.id" />
+          <el-option v-for="item in GPT_VERSION" :key="item.id" :label="item.id" :value="item.id"/>
         </el-select>
       </div>
     </div>
