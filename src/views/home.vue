@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type {ChatMessage} from "@/types"
 import Loading from "@/components/Loding.vue"
-import {nextTick, onMounted, onUnmounted, onUpdated, ref, watch, watchEffect} from "vue"
+import {nextTick, onMounted, onUpdated, ref, watch, watchEffect} from "vue"
 import {chat} from "@/libs/gpt"
 import {initCopy, operationKey, scrollToBottom} from "@/hooks"
 import {ElMessage} from "element-plus"
@@ -99,6 +99,10 @@ const saveApiKey = () => {
 
 // 发送消息
 const sendChatMessage = async (content: string = messageContent.value) => {
+  if (content.length <= 0) {
+    ElMessage({message: '请输入内容', type: 'info',})
+    return
+  }
   // 禁止发送
   isTalking.value = true
   // 滚动到底部开关
@@ -213,6 +217,10 @@ const goGitHub = () => {
   window.open("https://github.com/sumingcheng/Vue3-TS-ChatGPT")
 }
 
+const goToTheBottom = () => {
+  scrollToBottom(chatListDom.value)
+}
+
 </script>
 
 <template>
@@ -250,9 +258,13 @@ const goGitHub = () => {
         <!--发送-->
         <el-button @click="sendMessage()" size="large" type="info" class="elBtnStyle text-5xl ml-5">发送
         </el-button>
+        <div class="ml-6 w-10 h-10 cursor-pointer" @click="goToTheBottom">
+          <img src="@/assets/3.svg" alt="返回底部"/>
+        </div>
       </div>
     </div>
   </div>
+
   <!-- 弹框设置 -->
   <el-dialog v-model="centerDialogVisible" title="设置" width="80%" center>
     <div class="bottom-0 w-full p-6 pb-8">
