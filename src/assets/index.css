@@ -128,7 +128,7 @@ body {
     -ms-overflow-style: none;
 }
 
-.triangle {
-
+.el-primary {
+    background-color: #409eff !important;
 }
 

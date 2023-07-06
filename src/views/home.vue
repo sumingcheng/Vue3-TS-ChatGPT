@@ -4,13 +4,14 @@ import Loading from "@/components/Loding.vue"
 import {nextTick, onMounted, onUpdated, ref, watch, watchEffect} from "vue"
 import {chat} from "@/libs/gpt"
 import {initCopy, operationKey, scrollToBottom} from "@/hooks"
-import {ElMessage} from "element-plus"
+import {ElButton, ElDialog, ElInput, ElMessage, ElOption, ElSelect} from "element-plus"
 import {DECODER} from "@/libs/utils"
 import GPT_VERSION from '@/data/data.json'
 // 代码块高亮
 import {markedRender} from "@/libs/highlight"
 // localstorage key
 const {getKey, setKey} = operationKey()
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 // 获取 input
 const myInput = ref<HTMLInputElement | null>(null)
@@ -40,27 +41,6 @@ let isTalking = ref(false)
 let messageContent = ref("")
 let Key = ref("")
 const isScrolling = ref(false);
-
-// const observedDiv = ref(null);
-// let resizeObserver: any = null;
-//
-// onMounted(() => {
-//   resizeObserver = new ResizeObserver(entries => {
-//     for (let entry of entries) {
-//       console.log('Height:', entry.contentRect.height);
-//     }
-//   });
-//
-//   if (observedDiv.value) {
-//     resizeObserver.observe(observedDiv.value);
-//   }
-// });
-//
-// onUnmounted(() => {
-//   if (resizeObserver && observedDiv.value) {
-//     resizeObserver.unobserve(observedDiv.value);
-//   }
-// });
 
 const checkMathJax = () => {
   if (window.MathJax) {
@@ -220,7 +200,6 @@ const goGitHub = () => {
 const goToTheBottom = () => {
   scrollToBottom(chatListDom.value)
 }
-
 </script>
 
 <template>
@@ -228,10 +207,10 @@ const goToTheBottom = () => {
     <!-- 顶部 -->
     <div class="flex flex-nowrap fixed w-full items-baseline top-0 px-6 py-4 bgColor z-50">
       <div class="text-2xl font-bold text-white">神奇海螺</div>
-      <div class="ml-4 text-sm text-white">
+      <div class="ml-4 text-sm text-white" v-if="!isMobile">
         可以呼唤神奇海螺，神奇海螺会帮你解决问题
       </div>
-      <div class="ml-4 my-auto cursor-pointer" @click="goGitHub">
+      <div class="ml-4 my-auto cursor-pointer" @click="goGitHub" v-if="!isMobile">
         <img src="https://img.shields.io/github/stars/sumingcheng/Vue3-TS-ChatGPT?logo=github" alt="GitHub">
       </div>
       <div class="ml-auto text-sm cursor-pointer" @click="clickConfig">
@@ -258,7 +237,7 @@ const goToTheBottom = () => {
         <!--发送-->
         <el-button @click="sendMessage()" size="large" type="info" class="elBtnStyle text-5xl ml-5">发送
         </el-button>
-        <div class="ml-6 w-10 h-10 cursor-pointer" @click="goToTheBottom">
+        <div class="ml-6 w-10 h-10 cursor-pointer" @click="goToTheBottom" v-if="!isMobile">
           <img src="@/assets/3.svg" alt="返回底部"/>
         </div>
       </div>
