@@ -262,7 +262,8 @@ const goToTheBottom = () => {
     <template #footer>
       <span>
         <el-button @click="centerDialogVisible = false">关闭</el-button>
-        <el-button type="primary" @click="saveApiKey">保存</el-button>
+        <el-button type="primary" @click="saveApiKey"
+                   style="background: #409EFF; border: 1px solid #409EFF">保存</el-button>
       </span>
     </template>
   </el-dialog>
