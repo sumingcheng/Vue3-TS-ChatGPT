@@ -128,7 +128,7 @@ body {
     -ms-overflow-style: none;
 }
 
-.el-primary {
+.fix-primary {
     background-color: #409eff !important;
     border: 1px solid #409EFF !important;
 }
