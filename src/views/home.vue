@@ -211,7 +211,7 @@ const goToTheBottom = () => {
         可以呼唤神奇海螺，神奇海螺会帮你解决问题
       </div>
       <div class="ml-4 my-auto cursor-pointer" @click="goGitHub" v-if="!isMobile">
-        <img src="https://img.shields.io/github/stars/sumingcheng/Vue3-TS-ChatGPT?logo=github" alt="GitHub">
+        <img loading="lazy" src="https://img.shields.io/github/stars/sumingcheng/Vue3-TS-ChatGPT?logo=github" alt="GitHub">
       </div>
       <div class="ml-auto text-sm cursor-pointer" @click="clickConfig">
         <el-button size="large" type="info" class="elBtnStyle text-5xl">设置</el-button>
@@ -237,7 +237,7 @@ const goToTheBottom = () => {
         <!--发送-->
         <el-button @click="sendMessage()" size="large" type="info" class="elBtnStyle text-5xl ml-5">发送
         </el-button>
-        <div class="ml-6 w-10 h-10 cursor-pointer" @click="goToTheBottom" v-if="!isMobile">
+        <div class="triangle ml-4 cursor-pointer" @click="goToTheBottom" v-if="!isMobile">
           <img src="@/assets/3.svg" alt="返回底部"/>
         </div>
       </div>

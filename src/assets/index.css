@@ -1,135 +1,139 @@
 * {
-    font-family: "Microsoft YaHei", -apple-system, "Noto Sans";
+  font-family: "Microsoft YaHei", -apple-system, "Noto Sans";
 }
 
 body {
-    position: relative;
-    background-color: #f7f7f7;
+  position: relative;
+  background-color: #f7f7f7;
 }
 
 .bgColor {
-    color: #f7f7f7;
-    background-color: #343541;
+  color: #f7f7f7;
+  background-color: #343541;
 }
 
 .fontColor {
-    color: #f7f7f7;
+  color: #f7f7f7;
 }
 
 .elBtnStyle {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .el-button--info {
-    background-color: #f7f7f7 !important;
+  background-color: #f7f7f7 !important;
 }
 
 .elBtnStyle span {
-    letter-spacing: 3px;
-    font-weight: 700;
-    font-size: 16px;
-    color: #333333;
+  letter-spacing: 3px;
+  font-weight: 700;
+  font-size: 16px;
+  color: #333333;
 }
 
 .el-textarea__inner {
-    color: #000000;
-    font-size: 1.1rem !important;
+  color: #000000;
+  font-size: 1.1rem !important;
 }
 
 /*code*/
 pre {
-    position: relative;
-    width: 100%;
-    background-color: #fafafa;
-    padding: 1.5rem;
-    border: 1px solid rgb(208, 215, 222);
-    border-radius: 6px;
+  position: relative;
+  width: 100%;
+  background-color: #fafafa;
+  padding: 1.5rem;
+  border: 1px solid rgb(208, 215, 222);
+  border-radius: 6px;
 }
 
 code {
-    width: 100%;
-    background-color: #fafafa !important;
+  width: 100%;
+  background-color: #fafafa !important;
 }
 
 .copyNode {
-    cursor: pointer;
-    position: absolute;
-    padding: 0.1rem 0.4rem;
-    top: 1rem;
-    right: 1rem;
-    border: 1px solid rgb(208, 215, 222);
-    border-radius: 6px;
+  cursor: pointer;
+  position: absolute;
+  padding: 0.1rem 0.4rem;
+  top: 1rem;
+  right: 1rem;
+  border: 1px solid rgb(208, 215, 222);
+  border-radius: 6px;
 }
 
 .copyNode:hover {
-    cursor: pointer;
-    background-color: #f2f2f2;
+  cursor: pointer;
+  background-color: #f2f2f2;
 }
 
 .copyNode:active {
-    cursor: pointer;
-    background-color: #e6e6e6;
+  cursor: pointer;
+  background-color: #e6e6e6;
 }
 
 /*code*/
 
 .clearfix::after {
-    content: "";
-    display: table;
-    clear: both;
+  content: "";
+  display: table;
+  clear: both;
 }
 
 textarea::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-    background-color: #f2f2f2;
+  width: 8px;
+  height: 8px;
+  background-color: #f2f2f2;
 }
 
 textarea::-webkit-scrollbar-track {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
 textarea::-webkit-scrollbar-thumb {
-    background-color: #cccccc;
+  background-color: #cccccc;
 }
 
 /*markdown 表格*/
 table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 1rem;
-    border: 1px solid #dee2e6;
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1rem;
+  border: 1px solid #dee2e6;
 }
 
 th,
 td {
-    padding: 0.75rem;
-    vertical-align: top;
-    border: 1px solid #dee2e6;
+  padding: 0.75rem;
+  vertical-align: top;
+  border: 1px solid #dee2e6;
 }
 
 th {
-    text-align: left;
-    background-color: #f2f2f2;
+  text-align: left;
+  background-color: #f2f2f2;
 }
 
 /* 兼容WebKit浏览器 (Chrome, Safari, Opera等) */
 ::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 /* 兼容Firefox */
 html {
-    scrollbar-width: none;
+  scrollbar-width: none;
 }
 
 /* 兼容IE和Edge */
 body {
-    -ms-overflow-style: none;
+  -ms-overflow-style: none;
 }
 
 .fix-primary {
-    background-color: #409eff !important;
-    border: 1px solid #409EFF !important;
+  background-color: #409eff !important;
+  border: 1px solid #409EFF !important;
 }
 
+.triangle {
+  width: 42px;
+  height: 42px;
+}
