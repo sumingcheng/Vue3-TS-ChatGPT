@@ -17,4 +17,6 @@ npm run dev
 npm run build
 ```
 
-![image](https://github.com/sumingcheng/Vue3-TS-ChatGPT/assets/21992204/e12b914f-1c39-4a76-a006-0642917f73f8)
+## The overall page has been optimized
+![image](https://github.com/sumingcheng/Vue3-TS-ChatGPT/assets/21992204/901dfa78-6a5a-4119-ac80-0fab6c3d5317)
+
