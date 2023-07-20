@@ -137,3 +137,7 @@ body {
   width: 42px;
   height: 42px;
 }
+
+.whitespace-pre-wrap p {
+  text-indent: 2em;
+}

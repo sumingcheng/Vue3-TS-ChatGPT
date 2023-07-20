@@ -254,6 +254,18 @@ const goToTheBottom = () => {
       <div class="flex items-center mt-5">
         <span class="w-1/6 font-bold">版本</span>
         <el-select size="large" class="w-full" v-model="GPT_V">
+          console.log("🍉 ~ file: home.vue:283 ~ GPT_V:", GPT_V)
+          console.log("🍉 ~ file: home.vue:281 ~ GPT_V:", GPT_V)
+          console.log("🍉 ~ file: home.vue:279 ~ GPT_V:", GPT_V)
+          console.log("🍉 ~ file: home.vue:277 ~ GPT_V:", GPT_V)
+          console.log("🍉 ~ file: home.vue:275 ~ GPT_V:", GPT_V)
+          console.log("🍉 ~ file: home.vue:273 ~ GPT_V:", GPT_V)
+          console.log("🍉 ~ file: home.vue:271 ~ GPT_V:", GPT_V)
+          console.log("🍉 ~ file: home.vue:269 ~ GPT_V:", GPT_V)
+          console.log("🍉 ~ file: home.vue:267 ~ GPT_V:", GPT_V)
+          console.log("🍉 ~ file: home.vue:265 ~ GPT_V:", GPT_V)
+          console.log("🍉 ~ file: home.vue:263 ~ GPT_V:", GPT_V)
+          console.log("🍉 ~ file: home.vue:261 ~ GPT_V:", GPT_V)
           <el-option v-for="item in GPT_VERSION" :key="item.id" :label="item.id" :value="item.id"/>
         </el-select>
       </div>
