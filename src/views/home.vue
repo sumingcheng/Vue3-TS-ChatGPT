@@ -7,12 +7,12 @@ import {initCopy, operationKey, scrollToBottom} from "@/hooks"
 import {ElButton, ElDialog, ElInput, ElMessage, ElOption, ElSelect} from "element-plus"
 import {DECODER} from "@/libs/utils"
 import GPT_VERSION from '@/data/data.json'
-// 代码块高亮
+// 代码块高亮   
 import {markedRender} from "@/libs/highlight"
 // localstorage key
 const {getKey, setKey} = operationKey()
 const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
+console.log(GPT_VERSION)
 // 获取 input
 const myInput = ref<HTMLInputElement | null>(null)
 // 是否显示loading
@@ -254,18 +254,6 @@ const goToTheBottom = () => {
       <div class="flex items-center mt-5">
         <span class="w-1/6 font-bold">版本</span>
         <el-select size="large" class="w-full" v-model="GPT_V">
-          console.log("🍉 ~ file: home.vue:283 ~ GPT_V:", GPT_V)
-          console.log("🍉 ~ file: home.vue:281 ~ GPT_V:", GPT_V)
-          console.log("🍉 ~ file: home.vue:279 ~ GPT_V:", GPT_V)
-          console.log("🍉 ~ file: home.vue:277 ~ GPT_V:", GPT_V)
-          console.log("🍉 ~ file: home.vue:275 ~ GPT_V:", GPT_V)
-          console.log("🍉 ~ file: home.vue:273 ~ GPT_V:", GPT_V)
-          console.log("🍉 ~ file: home.vue:271 ~ GPT_V:", GPT_V)
-          console.log("🍉 ~ file: home.vue:269 ~ GPT_V:", GPT_V)
-          console.log("🍉 ~ file: home.vue:267 ~ GPT_V:", GPT_V)
-          console.log("🍉 ~ file: home.vue:265 ~ GPT_V:", GPT_V)
-          console.log("🍉 ~ file: home.vue:263 ~ GPT_V:", GPT_V)
-          console.log("🍉 ~ file: home.vue:261 ~ GPT_V:", GPT_V)
           <el-option v-for="item in GPT_VERSION" :key="item.id" :label="item.id" :value="item.id"/>
         </el-select>
       </div>
