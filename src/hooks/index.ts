@@ -1,8 +1,7 @@
-import {Storage} from "@/libs/utils"
-import {ElMessage} from "element-plus";
+import {Storage} from '@/libs/utils'
+import {ElMessage} from 'element-plus'
 
 // localstorage key
-
 export function operationKey() {
   const getKey = (): string => {
     const key: string | null = Storage.get('apiKey')
@@ -15,7 +14,7 @@ export function operationKey() {
 
   return {
     getKey,
-    setKey
+    setKey,
   }
 }
 
@@ -39,12 +38,12 @@ const copy = (copyText: string) => {
 
 // 初始化拷贝
 export const initCopy = () => {
-  const copyText: any = document.getElementsByClassName("copyNode")
+  const copyText: any = document.getElementsByClassName('copyNode')
   let arr = Array.from(copyText)
   arr.forEach((v: any) => {
     // 如果元素已经有一个 copyAction，那么首先移除它
     if (v.copyAction) {
-      v.removeEventListener("click", v.copyAction)
+      v.removeEventListener('click', v.copyAction)
     }
 
     // 创建一个新的 copyAction，并存储在元素的属性中
@@ -53,7 +52,7 @@ export const initCopy = () => {
     }
 
     // 添加新的监听器
-    v.addEventListener("click", v.copyAction)
+    v.addEventListener('click', v.copyAction)
   })
 }
 

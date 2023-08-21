@@ -24,9 +24,9 @@ renderer.paragraph = function (text) {
 }
 
 renderer.code = function (code, language) {
-  const validLang = !!(language && hljs.getLanguage(language));
-  const highlighted = validLang ? hljs.highlight(code, {language}).value : hljs.highlightAuto(code).value;
-  return `<pre class="clearfix"><button class="copyNode">Copy</button><code  class="${language} hljs">${highlighted}</code></pre>\n`;
+  const validLang = !!(language && hljs.getLanguage(language))
+  const highlighted = validLang ? hljs.highlight(code, {language}).value : hljs.highlightAuto(code).value
+  return `<pre class="clearfix"><button class="copyNode">Copy</button><code  class="${language} hljs">${highlighted}</code></pre>\n`
 }
 
 

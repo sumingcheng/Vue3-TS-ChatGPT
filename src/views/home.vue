@@ -1,46 +1,46 @@
 <script setup lang="ts">
-import type {ChatMessage} from "@/types"
-import Loading from "@/components/Loding.vue"
-import {nextTick, onMounted, onUpdated, ref, watch, watchEffect} from "vue"
-import {chat} from "@/libs/gpt"
-import {initCopy, operationKey, scrollToBottom} from "@/hooks"
-import {ElButton, ElDialog, ElInput, ElMessage, ElOption, ElSelect} from "element-plus"
-import {DECODER} from "@/libs/utils"
+import type {ChatMessage} from '@/types'
+import {isMobile} from '@/types'
+import Loading from '@/components/Loding.vue'
+import {nextTick, onMounted, onUpdated, ref, watch, watchEffect} from 'vue'
+import {chat} from '@/libs/gpt'
+import {initCopy, operationKey, scrollToBottom} from '@/hooks'
+import {ElButton, ElDialog, ElInput, ElMessage, ElOption, ElSelect} from 'element-plus'
+import {DECODER} from '@/libs/utils'
 import GPT_VERSION from '@/data/data.json'
-// 代码块高亮   
-import {markedRender} from "@/libs/highlight"
+// 代码块高亮
+import {markedRender} from '@/libs/highlight'
 // localstorage key
 const {getKey, setKey} = operationKey()
-const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-console.log(GPT_VERSION)
+
 // 获取 input
 const myInput = ref<HTMLInputElement | null>(null)
 // 是否显示loading
 const centerDialogVisible = ref(false)
 const chatListDom = ref<HTMLDivElement>()
 // 角色
-const roleAlias = {user: "ME", assistant: "Magic Conch", system: "System"}
+const roleAlias = {user: 'ME', assistant: 'Magic Conch', system: 'System'}
 // 消息列表
 const messageList = ref<ChatMessage[]>([
   {
-    role: "system",
-    content: "You are ChatGPT, Please answer my questions in a simple, easy-to-understand, and detailed manner. Please prioritize Chinese answers and provide straightforward examples when answering questions as much as possible.",
+    role: 'system',
+    content: 'You are ChatGPT, Please answer my questions in a simple, easy-to-understand, and detailed manner. Please prioritize Chinese answers and provide straightforward examples when answering questions as much as possible.',
   },
   {
-    role: "assistant",
+    role: 'assistant',
     content: `
     你好，我是神奇海螺，欢迎提问
     `,
-  }
+  },
 ])
 
-const GPT_V = ref("gpt-3.5-turbo")
+const GPT_V = ref('gpt-3.5-turbo')
 // 是否显示配置
 let isConfig = ref(true)
 let isTalking = ref(false)
-let messageContent = ref("")
-let Key = ref("")
-const isScrolling = ref(false);
+let messageContent = ref('')
+let Key = ref('')
+const isScrolling = ref(false)
 
 const checkMathJax = () => {
   if (window.MathJax) {
@@ -64,7 +64,7 @@ const checkMathJax = () => {
 }
 // 保存 key
 const saveApiKey = () => {
-  if (Key.value.slice(0, 3) !== "sk-" || Key.value.length !== 51) {
+  if (Key.value.slice(0, 3) !== 'sk-' || Key.value.length !== 51) {
     ElMessage({
       message: '请填写 Key', type: 'warning',
     })
@@ -80,7 +80,7 @@ const saveApiKey = () => {
 // 发送消息
 const sendChatMessage = async (content: string = messageContent.value) => {
   if (content.length <= 0) {
-    ElMessage({message: '请输入内容', type: 'info',})
+    ElMessage({message: '请输入内容', type: 'info'})
     return
   }
   // 禁止发送
@@ -90,14 +90,14 @@ const sendChatMessage = async (content: string = messageContent.value) => {
     messageList.value.pop()
   }
 
-  messageList.value.push({role: "user", content})
+  messageList.value.push({role: 'user', content})
   clearMessageContent()
 
-  messageList.value.push({role: "assistant", content: ""})
+  messageList.value.push({role: 'assistant', content: ''})
   // 调用接口 获取数据
   const {status, data, message} = await chat(messageList.value, getKey(), GPT_V.value)
 
-  if (status === "success" && data) {
+  if (status === 'success' && data) {
     const reader = data.getReader()
     await readStream(reader)
   } else {
@@ -130,7 +130,7 @@ const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
     // 移除 "data: "，然后再解析 JSON
     const jsonStr = v.replace('data: ', '')
     const json = JSON.parse(jsonStr)
-    appendLastMessageContent(json.choices[0].delta.content ?? "")
+    appendLastMessageContent(json.choices[0].delta.content ?? '')
   })
   await readStream(reader)
 }
@@ -165,7 +165,7 @@ const clickConfig = () => {
 
 const switchConfigStatus = () => (isConfig.value = !isConfig.value)
 
-const clearMessageContent = () => (messageContent.value = "")
+const clearMessageContent = () => (messageContent.value = '')
 
 // 监听值改变
 watch(messageList.value, () => nextTick(
@@ -173,7 +173,7 @@ watch(messageList.value, () => nextTick(
       if (!isScrolling.value) {
         scrollToBottom(chatListDom.value)
       }
-    }
+    },
 ))
 
 onUpdated(() => {
@@ -194,7 +194,7 @@ onMounted(() => {
 })
 
 const goGitHub = () => {
-  window.open("https://github.com/sumingcheng/Vue3-TS-ChatGPT")
+  window.open('https://github.com/sumingcheng/Vue3-TS-ChatGPT')
 }
 
 const goToTheBottom = () => {
@@ -211,7 +211,8 @@ const goToTheBottom = () => {
         可以呼唤神奇海螺，神奇海螺会帮你解决问题
       </div>
       <div class="ml-4 my-auto cursor-pointer" @click="goGitHub" v-if="!isMobile">
-        <img loading="lazy" src="https://img.shields.io/github/stars/sumingcheng/Vue3-TS-ChatGPT?logo=github" alt="GitHub">
+        <img loading="lazy" src="https://img.shields.io/github/stars/sumingcheng/Vue3-TS-ChatGPT?logo=github"
+             alt="GitHub">
       </div>
       <div class="ml-auto text-sm cursor-pointer" @click="clickConfig">
         <el-button size="large" type="info" class="elBtnStyle text-5xl">设置</el-button>
