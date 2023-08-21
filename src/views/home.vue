@@ -1,14 +1,16 @@
 <script setup lang='ts'>
 import type { ChatMessage } from '@/types'
-import { isMobile, initMsg } from '@/types'
+import { isMobile, initMsg, ChatStorageManager } from '@/types'
 import Loading from '@/components/Loding.vue'
-import { nextTick, onMounted, onUpdated, ref, watch, watchEffect } from 'vue'
+import { nextTick, onMounted, onUpdated, ref, watchEffect, watch } from 'vue'
 import { chat } from '@/libs/gpt'
 import { initCopy, operationKey, scrollToBottom } from '@/hooks'
 import { ElButton, ElInput, ElMessage, ElDialog, ElSelect, ElOption } from 'element-plus'
 import { DECODER } from '@/libs/utils'
 import { markedRender } from '@/libs/highlight'
 import GPT_VERSION from '@/data/data.json'
+
+const chatManager = ChatStorageManager.getInstance()
 
 const { getKey, setKey } = operationKey()
 
@@ -108,6 +110,13 @@ const sendMessageToAssistant = async (content: string = messageContent.value) =>
 
   isTalking.value = false
   getFocus()
+
+  // 保存聊天记录
+  const serializedData = JSON.stringify(messageList.value)
+  const parsedData = JSON.parse(serializedData)
+  chatManager.saveChatRecord(parsedData).then(() => {
+    console.log('Chat records saved successfully!')
+  })
 }
 
 const getFocus = () => {
@@ -132,7 +141,11 @@ const goGitHub = () => {
 }
 
 const goToTheBottom = () => {
-  scrollToBottom(chatListDom.value)
+  nextTick(() => {
+    if (chatListDom.value) {
+      scrollToBottom(chatListDom.value)
+    }
+  })
 }
 
 const toRefresh = () => {
@@ -140,13 +153,24 @@ const toRefresh = () => {
 }
 
 const toDelete = () => {
+  chatManager.deleteChatRecord().then(() => {
+    console.log('Chat records deleted successfully!')
+  })
   messageList.value = initMsg
+}
+
+const initializationRecord = async () => {
+  const res = await chatManager.getChatRecord()
+  if (res) {
+    messageList.value = res
+    goToTheBottom()
+  }
 }
 
 watch(messageList.value, () => {
   nextTick(() => {
     if (!isScrolling.value) {
-      scrollToBottom(chatListDom.value)
+      goToTheBottom()
     }
   })
 })
@@ -162,6 +186,7 @@ onMounted(() => {
     centerDialogVisible.value = true
   }
   getFocus()
+  initializationRecord()
   checkMathJax()
   initCopy()
 })

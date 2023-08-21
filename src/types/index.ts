@@ -7,11 +7,6 @@ declare global {
 // 判断是否为移动端
 export const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 
-export interface ChatMessage {
-  role: 'user' | 'assistant' | 'system'
-  content: string,
-}
-
 export const initMsg: ChatMessage[] = [
   {
     role: 'system',
@@ -23,6 +18,11 @@ export const initMsg: ChatMessage[] = [
   }
 ]
 
+export interface ChatMessage {
+  role: 'user' | 'assistant' | 'system'
+  content: string,
+}
+
 /**
  * 数据库名：ChatAppDB
  * 表名：chatRecords
@@ -30,12 +30,18 @@ export const initMsg: ChatMessage[] = [
  * 类的名称：ChatStorageManager
  */
 
+export interface ChatMessage {
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+}
+
+// 聊天记录存储管理器
 export class ChatStorageManager {
   private static instance: ChatStorageManager
   private dbName: string = 'ChatAppDB'
   private objectStoreName: string = 'chatRecords'
   private chatRecordKey: string = 'chatRecordKey'
-  private isIndexedDBSupported: string = 'indexedDB'
+  private isIndexedDBSupported: boolean = ('indexedDB' in window)
 
   private constructor() {
   }
@@ -67,7 +73,7 @@ export class ChatStorageManager {
   }
 
   // 保存聊天记录
-  public async saveChatRecord(data: any): Promise<void> {
+  public async saveChatRecord(data: ChatMessage[]): Promise<void> {
     if (this.isIndexedDBSupported) {
       const db = await this.initDB()
       const transaction = db.transaction([this.objectStoreName], 'readwrite')
@@ -78,13 +84,8 @@ export class ChatStorageManager {
     }
   }
 
-  // 更新聊天记录
-  public async updateChatRecord(data: any): Promise<void> {
-    return this.saveChatRecord(data)
-  }
-
   // 获取聊天记录
-  public async getChatRecord(): Promise<any | null> {
+  public async getChatRecord(): Promise<ChatMessage[] | null> {
     if (this.isIndexedDBSupported) {
       const db = await this.initDB()
       return new Promise((resolve, reject) => {
@@ -95,12 +96,12 @@ export class ChatStorageManager {
           reject('Failed to fetch record from IndexedDB')
         }
         request.onsuccess = (event) => {
-          resolve(request.result)
+          resolve(request.result as ChatMessage[])
         }
       })
     } else {
       const record = localStorage.getItem(this.chatRecordKey)
-      return record ? JSON.parse(record) : null
+      return record ? JSON.parse(record) as ChatMessage[] : null
     }
   }
 
@@ -117,22 +118,5 @@ export class ChatStorageManager {
   }
 }
 
-export default ChatStorageManager
 
-// import ChatStorageManager from './ChatStorageManager';
-//
-// const chatManager = ChatStorageManager.getInstance();
-//
-// // 保存聊天记录
-// chatManager.saveChatRecord({ message: 'Hello, World!' });
-//
-// // 更新聊天记录
-// chatManager.updateChatRecord({ message: 'Updated Message' });
-//
-// // 获取聊天记录
-// chatManager.getChatRecord().then(data => {
-//   console.log(data);
-// });
-//
-// // 删除聊天记录
-// chatManager.deleteChatRecord();
+
