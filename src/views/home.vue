@@ -166,12 +166,14 @@ const initializationRecord = async () => {
 }
 
 watch(messageList.value, () => {
-  nextTick(() => {
-    if (!isScrolling.value) {
-      goToTheBottom()
-    }
-  })
-})
+    nextTick(() => {
+      if (!isScrolling.value) {
+        goToTheBottom()
+      }
+    })
+  },
+  { deep: true, immediate: true }
+)
 
 onUpdated(() => {
   nextTick(() => {
