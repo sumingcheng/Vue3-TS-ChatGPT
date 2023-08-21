@@ -1,4 +1,4 @@
-import {decryptString, encryptString} from '@/libs/encryp'
+import { decryptString, encryptString } from '@/libs/encryp'
 
 export const DECODER = new TextDecoder('utf-8')
 // 封装 localStorage
@@ -11,6 +11,6 @@ export const Storage = {
   },
   remove(key: string): void {
     window.localStorage.removeItem(key)
-  },
+  }
 }
 

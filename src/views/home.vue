@@ -1,17 +1,17 @@
-<script setup lang="ts">
-import type {ChatMessage} from '@/types'
-import {isMobile} from '@/types'
+<script setup lang='ts'>
+import type { ChatMessage } from '@/types'
+import { isMobile } from '@/types'
 import Loading from '@/components/Loding.vue'
-import {nextTick, onMounted, onUpdated, ref, watch, watchEffect} from 'vue'
-import {chat} from '@/libs/gpt'
-import {initCopy, operationKey, scrollToBottom} from '@/hooks'
-import {ElButton, ElDialog, ElInput, ElMessage, ElOption, ElSelect} from 'element-plus'
-import {DECODER} from '@/libs/utils'
+import { nextTick, onMounted, onUpdated, ref, watch, watchEffect } from 'vue'
+import { chat } from '@/libs/gpt'
+import { initCopy, operationKey, scrollToBottom } from '@/hooks'
+import { ElButton, ElDialog, ElInput, ElMessage, ElOption, ElSelect } from 'element-plus'
+import { DECODER } from '@/libs/utils'
 import GPT_VERSION from '@/data/data.json'
 // 代码块高亮
-import {markedRender} from '@/libs/highlight'
+import { markedRender } from '@/libs/highlight'
 // localstorage key
-const {getKey, setKey} = operationKey()
+const { getKey, setKey } = operationKey()
 
 // 获取 input
 const myInput = ref<HTMLInputElement | null>(null)
@@ -19,19 +19,19 @@ const myInput = ref<HTMLInputElement | null>(null)
 const centerDialogVisible = ref(false)
 const chatListDom = ref<HTMLDivElement>()
 // 角色
-const roleAlias = {user: 'ME', assistant: 'Magic Conch', system: 'System'}
+const roleAlias = { user: 'ME', assistant: 'Magic Conch', system: 'System' }
 // 消息列表
 const messageList = ref<ChatMessage[]>([
   {
     role: 'system',
-    content: 'You are ChatGPT, Please answer my questions in a simple, easy-to-understand, and detailed manner. Please prioritize Chinese answers and provide straightforward examples when answering questions as much as possible.',
+    content: 'You are ChatGPT, Please answer my questions in a simple, easy-to-understand, and detailed manner. Please prioritize Chinese answers and provide straightforward examples when answering questions as much as possible.'
   },
   {
     role: 'assistant',
     content: `
     你好，我是神奇海螺，欢迎提问
-    `,
-  },
+    `
+  }
 ])
 
 const GPT_V = ref('gpt-3.5-turbo')
@@ -66,12 +66,12 @@ const checkMathJax = () => {
 const saveApiKey = () => {
   if (Key.value.slice(0, 3) !== 'sk-' || Key.value.length !== 51) {
     ElMessage({
-      message: '请填写 Key', type: 'warning',
+      message: '请填写 Key', type: 'warning'
     })
   } else {
     setKey(Key.value)
     ElMessage({
-      message: 'Key 设置成功', type: 'success',
+      message: 'Key 设置成功', type: 'success'
     })
     centerDialogVisible.value = false
   }
@@ -80,7 +80,7 @@ const saveApiKey = () => {
 // 发送消息
 const sendChatMessage = async (content: string = messageContent.value) => {
   if (content.length <= 0) {
-    ElMessage({message: '请输入内容', type: 'info'})
+    ElMessage({ message: '请输入内容', type: 'info' })
     return
   }
   // 禁止发送
@@ -90,12 +90,12 @@ const sendChatMessage = async (content: string = messageContent.value) => {
     messageList.value.pop()
   }
 
-  messageList.value.push({role: 'user', content})
+  messageList.value.push({ role: 'user', content })
   clearMessageContent()
 
-  messageList.value.push({role: 'assistant', content: ''})
+  messageList.value.push({ role: 'assistant', content: '' })
   // 调用接口 获取数据
-  const {status, data, message} = await chat(messageList.value, getKey(), GPT_V.value)
+  const { status, data, message } = await chat(messageList.value, getKey(), GPT_V.value)
 
   if (status === 'success' && data) {
     const reader = data.getReader()
@@ -120,7 +120,7 @@ const getFocus = () => {
 
 // 读取Stream
 const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
-  const {done, value} = await reader.read()
+  const { done, value } = await reader.read()
   if (done) {
     reader.closed
     return
@@ -136,7 +136,7 @@ const readStream = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
 }
 
 const appendLastMessageContent = (content: string) =>
-    (messageList.value[messageList.value.length - 1].content += content)
+  (messageList.value[messageList.value.length - 1].content += content)
 
 //  发送消息
 const sendMessage = () => {
@@ -145,7 +145,7 @@ const sendMessage = () => {
     sendChatMessage()
   } else {
     ElMessage({
-      message: '您好像没有填写Key', type: 'warning',
+      message: '您好像没有填写Key', type: 'warning'
     })
   }
 }
@@ -169,11 +169,11 @@ const clearMessageContent = () => (messageContent.value = '')
 
 // 监听值改变
 watch(messageList.value, () => nextTick(
-    () => {
-      if (!isScrolling.value) {
-        scrollToBottom(chatListDom.value)
-      }
-    },
+  () => {
+    if (!isScrolling.value) {
+      scrollToBottom(chatListDom.value)
+    }
+  }
 ))
 
 onUpdated(() => {
@@ -203,67 +203,65 @@ const goToTheBottom = () => {
 </script>
 
 <template>
-  <div class="flex flex-col h-screen">
+  <div class='flex flex-col h-screen'>
     <!-- 顶部 -->
-    <div class="flex flex-nowrap fixed w-full items-baseline top-0 px-6 py-4 bgColor z-50">
-      <div class="text-2xl font-bold text-white">神奇海螺</div>
-      <div class="ml-4 text-sm text-white" v-if="!isMobile">
+    <div class='flex flex-nowrap fixed w-full items-baseline top-0 px-6 py-4 bgColor z-50'>
+      <div class='text-2xl font-bold text-white'>神奇海螺</div>
+      <div class='ml-4 text-sm text-white' v-if='!isMobile'>
         可以呼唤神奇海螺，神奇海螺会帮你解决问题
       </div>
-      <div class="ml-4 my-auto cursor-pointer" @click="goGitHub" v-if="!isMobile">
-        <img loading="lazy" src="https://img.shields.io/github/stars/sumingcheng/Vue3-TS-ChatGPT?logo=github"
-             alt="GitHub">
+      <div class='ml-4 my-auto cursor-pointer' @click='goGitHub' v-if='!isMobile'>
+        <img loading='lazy' src='https://img.shields.io/github/stars/sumingcheng/Vue3-TS-ChatGPT?logo=github' alt='GitHub'>
       </div>
-      <div class="ml-auto text-sm cursor-pointer" @click="clickConfig">
-        <el-button size="large" type="info" class="elBtnStyle text-5xl">设置</el-button>
+      <div class='ml-auto text-sm cursor-pointer' @click='clickConfig'>
+        <el-button size='large' type='info' class='elBtnStyle text-4xl'>设置</el-button>
       </div>
     </div>
     <!-- 内容 -->
-    <div class="flex-1 mt-16 content" ref="observedDiv">
-      <div class="m-6" ref="chatListDom">
+    <div class='flex-1 mt-16 content' ref='observedDiv'>
+      <div class='m-6' ref='chatListDom'>
         <div v-for="item of messageList.filter((v) => v.role !== 'system')">
-          <div class="font-bold mb-3 text-lg">{{ roleAlias[item.role] }}：</div>
-          <div class="text-base text-black whitespace-pre-wrap" v-if="item.content"
-               v-html="markedRender(item.content.replace(/^\n\n/, ''))">
+          <div class='font-bold mb-3 text-lg'>{{ roleAlias[item.role] }}：</div>
+          <div class='text-base text-black whitespace-pre-wrap' v-if='item.content' v-html="markedRender(item.content.replace(/^\n\n/, ''))">
           </div>
-          <Loading v-else/>
+          <Loading v-else />
         </div>
       </div>
     </div>
     <!-- 底部 -->
-    <div class="sticky w-full p-6 bgColor pb-6 bottom-0">
-      <div class="flex items-center">
-        <el-input class="input" :rows="1" type="textarea" ref="myInput" v-model="messageContent" size="large"
-                  @keydown.enter="sendMessage()" :disabled="isTalking"/>
+    <div class='sticky w-full p-6 bgColor pb-6 bottom-0'>
+      <div class='flex items-center'>
+        <el-input class='input' :rows='1' type='textarea' ref='myInput' v-model='messageContent' size='large' @keydown.enter='sendMessage()'
+                  :disabled='isTalking' />
         <!--发送-->
-        <el-button @click="sendMessage()" size="large" type="info" class="elBtnStyle text-5xl ml-5">发送
+        <el-button @click='sendMessage()' size='large' type='info' class='elBtnStyle text-5xl ml-5'>发送
         </el-button>
-        <div class="triangle ml-4 cursor-pointer" @click="goToTheBottom" v-if="!isMobile">
-          <img src="@/assets/3.svg" alt="返回底部"/>
+        <div class='triangle ml-4 cursor-pointer' @click='goToTheBottom' v-if='!isMobile'>
+          <img src='@/assets/3.svg' alt='返回底部' />
         </div>
       </div>
     </div>
   </div>
 
   <!-- 弹框设置 -->
-  <el-dialog v-model="centerDialogVisible" title="设置" width="80%" center>
-    <div class="bottom-0 w-full p-6 pb-8">
-      <div class="flex items-center">
-        <span class="w-1/6 font-bold">API Key</span>
-        <el-input placeholder="sk-xxxxxxxxxx" v-model="Key" size="large" clearable/>
+  <el-dialog v-model='centerDialogVisible' title='设置' width='80%' center>
+    <div class='bottom-0 w-full p-6 pb-8'>
+      <div class='flex items-center'>
+        <span class='w-1/6 font-bold'>API Key</span>
+        <el-input placeholder='sk-xxxxxxxxxx' v-model='Key' size='large' clearable />
       </div>
-      <div class="flex items-center mt-5">
-        <span class="w-1/6 font-bold">版本</span>
-        <el-select size="large" class="w-full" v-model="GPT_V">
-          <el-option v-for="item in GPT_VERSION" :key="item.id" :label="item.id" :value="item.id"/>
+      <div class='flex items-center mt-5'>
+        <span class='w-1/6 font-bold'>版本</span>
+        <el-select size='large' class='w-full' v-model='GPT_V'>
+          <el-option v-for='item in GPT_VERSION' :key='item.id' :label='item.id' :value='item.id' />
         </el-select>
       </div>
     </div>
 
     <template #footer>
       <span>
-        <el-button @click="centerDialogVisible = false">关闭</el-button>
-        <el-button type="primary" @click="saveApiKey" class="fix-primary">保存</el-button>
+        <el-button @click='centerDialogVisible = false'>关闭</el-button>
+        <el-button type='primary' @click='saveApiKey' class='fix-primary'>保存</el-button>
       </span>
     </template>
   </el-dialog>

@@ -1,4 +1,4 @@
-import type {ChatMessage} from '@/types'
+import type { ChatMessage } from '@/types'
 
 export async function chat(messageList: ChatMessage[], apiKey: string, GPT_VERSION: string) {
   try {
@@ -6,23 +6,23 @@ export async function chat(messageList: ChatMessage[], apiKey: string, GPT_VERSI
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`
       },
       body: JSON.stringify({
         model: GPT_VERSION,
         stream: true,
-        messages: messageList,
-      }),
+        messages: messageList
+      })
     })
 
     return {
       status: 'success',
-      data: result.body,
+      data: result.body
     }
   } catch (error: any) {
     return {
       status: 'error',
-      message: error,
+      message: error
     }
   }
 }
