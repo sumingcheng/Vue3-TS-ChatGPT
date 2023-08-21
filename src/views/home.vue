@@ -148,15 +148,13 @@ const goToTheBottom = () => {
   })
 }
 
-const toRefresh = () => {
-  window.location.reload()
-}
-
 const toDelete = () => {
   chatManager.deleteChatRecord().then(() => {
     console.log('Chat records deleted successfully!')
   })
   messageList.value = initMsg
+  // 刷新
+  window.location.reload()
 }
 
 const initializationRecord = async () => {
@@ -225,9 +223,6 @@ onMounted(() => {
         <el-button @click='sendMessageToAssistant()' size='large' type='info' class='elBtnStyle text-5xl ml-5'>发送</el-button>
         <div class='triangle ml-4 cursor-pointer' @click='goToTheBottom' v-if='!isMobile'>
           <img src='@/assets/3.svg' alt='返回底部' />
-        </div>
-        <div class='triangle ml-4 cursor-pointer' @click='toRefresh'>
-          <RefreshRight />
         </div>
         <div class='triangle ml-4 cursor-pointer' @click='toDelete'>
           <DeleteFilled />
