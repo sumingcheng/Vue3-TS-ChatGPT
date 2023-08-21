@@ -1,8 +1,3 @@
-export interface ChatMessage {
-  role: 'user' | 'assistant' | 'system'
-  content: string
-}
-
 declare global {
   interface Window {
     MathJax: any
@@ -12,104 +7,132 @@ declare global {
 // 判断是否为移动端
 export const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 
-// 存储聊天记录
-export class ChatStorage {
-  private static instance: ChatStorage
-  private useIndexedDB: boolean
+export interface ChatMessage {
+  role: 'user' | 'assistant' | 'system'
+  content: string,
+}
 
-  // 私有构造函数，确保外部无法直接实例化
+export const initMsg: ChatMessage[] = [
+  {
+    role: 'system',
+    content: 'You are ChatGPT, Please answer my questions in a simple, easy-to-understand, and detailed manner. Please prioritize Chinese answers and provide straightforward examples when answering questions as much as possible.'
+  },
+  {
+    role: 'assistant',
+    content: '你好，我是神奇海螺，欢迎提问'
+  }
+]
+
+/**
+ * 数据库名：ChatAppDB
+ * 表名：chatRecords
+ * 存储键名：chatRecordKey
+ * 类的名称：ChatStorageManager
+ */
+
+export class ChatStorageManager {
+  private static instance: ChatStorageManager
+  private dbName: string = 'ChatAppDB'
+  private objectStoreName: string = 'chatRecords'
+  private chatRecordKey: string = 'chatRecordKey'
+  private isIndexedDBSupported: string = 'indexedDB'
+
   private constructor() {
-    this.useIndexedDB = !!window.indexedDB
   }
 
-  // 提供一个公共的静态方法来获取类实例
-  public static getInstance(): ChatStorage {
-    if (!ChatStorage.instance) {
-      ChatStorage.instance = new ChatStorage()
+  public static getInstance(): ChatStorageManager {
+    if (!ChatStorageManager.instance) {
+      ChatStorageManager.instance = new ChatStorageManager()
     }
-    return ChatStorage.instance
+    return ChatStorageManager.instance
+  }
+
+  // 初始化 IndexedDB
+  private initDB(): Promise<IDBDatabase> {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open(this.dbName, 1)
+      request.onerror = (event) => {
+        reject('Failed to open IndexedDB')
+      }
+      request.onsuccess = (event) => {
+        resolve((event.target as IDBOpenDBRequest).result)
+      }
+      request.onupgradeneeded = (event) => {
+        const db = (event.target as IDBOpenDBRequest).result
+        if (!db.objectStoreNames.contains(this.objectStoreName)) {
+          db.createObjectStore(this.objectStoreName)
+        }
+      }
+    })
   }
 
   // 保存聊天记录
-  async saveMessage(message: any) {
-    if (this.useIndexedDB) {
-      await this.saveToIndexedDB(message)
+  public async saveChatRecord(data: any): Promise<void> {
+    if (this.isIndexedDBSupported) {
+      const db = await this.initDB()
+      const transaction = db.transaction([this.objectStoreName], 'readwrite')
+      const objectStore = transaction.objectStore(this.objectStoreName)
+      objectStore.put(data, this.chatRecordKey)
     } else {
-      this.saveToLocalStorage(message)
-    }
-  }
-
-  // 加载聊天记录
-  async loadMessages(): Promise<any[]> {
-    if (this.useIndexedDB) {
-      return await this.loadFromIndexedDB()
-    } else {
-      return this.loadFromLocalStorage()
+      localStorage.setItem(this.chatRecordKey, JSON.stringify(data))
     }
   }
 
   // 更新聊天记录
-  async updateMessage(updatedMessage: any) {
-    if (this.useIndexedDB) {
-      await this.updateInIndexedDB(updatedMessage)
+  public async updateChatRecord(data: any): Promise<void> {
+    return this.saveChatRecord(data)
+  }
+
+  // 获取聊天记录
+  public async getChatRecord(): Promise<any | null> {
+    if (this.isIndexedDBSupported) {
+      const db = await this.initDB()
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction([this.objectStoreName])
+        const objectStore = transaction.objectStore(this.objectStoreName)
+        const request = objectStore.get(this.chatRecordKey)
+        request.onerror = (event) => {
+          reject('Failed to fetch record from IndexedDB')
+        }
+        request.onsuccess = (event) => {
+          resolve(request.result)
+        }
+      })
     } else {
-      this.updateInLocalStorage(updatedMessage)
+      const record = localStorage.getItem(this.chatRecordKey)
+      return record ? JSON.parse(record) : null
     }
   }
 
   // 删除聊天记录
-  async deleteMessage(messageId: string) {
-    if (this.useIndexedDB) {
-      await this.deleteFromIndexedDB(messageId)
+  public async deleteChatRecord(): Promise<void> {
+    if (this.isIndexedDBSupported) {
+      const db = await this.initDB()
+      const transaction = db.transaction([this.objectStoreName], 'readwrite')
+      const objectStore = transaction.objectStore(this.objectStoreName)
+      objectStore.delete(this.chatRecordKey)
     } else {
-      this.deleteFromLocalStorage(messageId)
+      localStorage.removeItem(this.chatRecordKey)
     }
-  }
-
-  // IndexedDB 存储方法 (您可能需要实现实际的逻辑)
-  private async saveToIndexedDB(message: any) {
-    // 在这里实现IndexedDB的保存逻辑
-  }
-
-  private async loadFromIndexedDB(): Promise<any[]> {
-    // 在这里实现IndexedDB的加载逻辑
-    return []
-  }
-
-  private async updateInIndexedDB(updatedMessage: any) {
-    // 在这里实现IndexedDB的更新逻辑
-  }
-
-  private async deleteFromIndexedDB(messageId: string) {
-    // 在这里实现IndexedDB的删除逻辑
-  }
-
-  // LocalStorage 存储方法
-  private saveToLocalStorage(message: any) {
-    const messages = JSON.parse(localStorage.getItem('chatMessages') || '[]')
-    messages.push(message)
-    localStorage.setItem('chatMessages', JSON.stringify(messages))
-  }
-
-  private loadFromLocalStorage(): any[] {
-    return JSON.parse(localStorage.getItem('chatMessages') || '[]')
-  }
-
-  private updateInLocalStorage(updatedMessage: any) {
-    const messages = this.loadFromLocalStorage()
-    const index = messages.findIndex((msg: any) => msg.id === updatedMessage.id)
-    if (index !== -1) {
-      messages[index] = updatedMessage
-      localStorage.setItem('chatMessages', JSON.stringify(messages))
-    }
-  }
-
-  private deleteFromLocalStorage(messageId: string) {
-    const messages = this.loadFromLocalStorage()
-    const updatedMessages = messages.filter((msg: any) => msg.id !== messageId)
-    localStorage.setItem('chatMessages', JSON.stringify(updatedMessages))
   }
 }
 
-// 使用方法:
-// const storage = ChatStorage.getInstance();
+export default ChatStorageManager
+
+// import ChatStorageManager from './ChatStorageManager';
+//
+// const chatManager = ChatStorageManager.getInstance();
+//
+// // 保存聊天记录
+// chatManager.saveChatRecord({ message: 'Hello, World!' });
+//
+// // 更新聊天记录
+// chatManager.updateChatRecord({ message: 'Updated Message' });
+//
+// // 获取聊天记录
+// chatManager.getChatRecord().then(data => {
+//   console.log(data);
+// });
+//
+// // 删除聊天记录
+// chatManager.deleteChatRecord();

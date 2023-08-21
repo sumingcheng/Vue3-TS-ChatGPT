@@ -11,7 +11,7 @@ hljs.registerLanguage('javascript', javascript)
 // 以 $ 开始和结束的内联公式，以及以 $$ 开始和结束的块级公式
 renderer.text = function(text) {
   if (text.startsWith('$') && text.endsWith('$')) {
-    return `<span class="math">${text.slice(1, -1)}</span>`
+    return `<span class='math'>${text.slice(1, -1)}</span>`
   }
   return text
 }
@@ -26,7 +26,7 @@ renderer.paragraph = function(text) {
 renderer.code = function(code, language) {
   const validLang = !!(language && hljs.getLanguage(language))
   const highlighted = validLang ? hljs.highlight(code, { language }).value : hljs.highlightAuto(code).value
-  return `<pre class="clearfix"><button class="copyNode">Copy</button><code  class="${language} hljs">${highlighted}</code></pre>\n`
+  return `<pre class='clearfix'><button class='copyNode'>Copy</button><code  class='${language} hljs'>${highlighted}</code></pre>\n`
 }
 
 
@@ -40,7 +40,6 @@ marked.setOptions({
       return hljs.highlightAuto(code).value
     }
   }
-  // 其他配置
 })
 
 // 导出 markedRender
