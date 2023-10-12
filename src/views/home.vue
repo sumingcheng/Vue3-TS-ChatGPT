@@ -191,7 +191,6 @@ onMounted(() => {
   initCopy()
 })
 
-
 </script>
 
 <template>
@@ -223,11 +222,11 @@ onMounted(() => {
         <el-input class='input' :rows='1' type='textarea' ref='myInput' v-model='messageContent' size='large'
                   @keydown.enter='sendMessageToAssistant()' :disabled='isTalking' />
         <el-button @click='sendMessageToAssistant()' size='large' type='info' class='elBtnStyle text-5xl ml-5'>发送</el-button>
-        <div class='triangle ml-4 cursor-pointer' @click='goToTheBottom' v-if='!isMobile'>
-          <img src='@/assets/3.svg' alt='返回底部' />
-        </div>
         <div class='triangle ml-4 cursor-pointer' @click='toDelete'>
           <DeleteFilled />
+        </div>
+        <div class='triangle ml-4 cursor-pointer' @click='goToTheBottom' v-if='!isMobile'>
+          <img src='@/assets/3.svg' alt='返回底部' />
         </div>
       </div>
     </div>

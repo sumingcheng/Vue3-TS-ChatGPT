@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang='zh-CN'>
 
 <head>
-    <meta charset="UTF-8"/>
-    <link rel="icon" href="/Vue3-TS-ChatGPT/favicon.ico"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Vue3-ChatGPT</title>
-    <base href="/">
-  <script type="module" crossorigin src="/Vue3-TS-ChatGPT/assets/index.693e4867.js"></script>
+  <meta charset='UTF-8' />
+  <link rel='icon' href='/Vue3-TS-ChatGPT/favicon.ico' />
+  <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+  <meta charset='UTF-8'>
+  <title>Vue3-ChatGPT</title>
+  <base href='/'>
+  <script type="module" crossorigin src="/Vue3-TS-ChatGPT/assets/index.ed912b8f.js"></script>
   <link rel="modulepreload" crossorigin href="/Vue3-TS-ChatGPT/assets/@vue.14a7b677.js">
   <link rel="modulepreload" crossorigin href="/Vue3-TS-ChatGPT/assets/vue-router.59776677.js">
   <link rel="modulepreload" crossorigin href="/Vue3-TS-ChatGPT/assets/@element-plus.df50e9cf.js">
@@ -21,14 +22,14 @@
 </head>
 
 <body>
-<div id="app"></div>
+<div id='app'></div>
 
-<script id="MathJax-script" defer async src="/Vue3-TS-ChatGPT/cdn.jsdelivr.net_npm_mathjax@3_es5_tex-mml-chtml.js"></script>
+<script id='MathJax-script' defer async src='/Vue3-TS-ChatGPT/cdn.jsdelivr.net_npm_mathjax@3_es5_tex-mml-chtml.js'></script>
 <script>
   MathJax = {
     tex: {
       inlineMath: [['$', '$'], ['\\(', '\\)']],
-      displayMath: [['$$', '$$'], ['\\[', '\\]']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
     },
     svg: {
       fontCache: 'global',
@@ -37,19 +38,19 @@
     },
     options: {
       renderActions: {
-        findScript: [10, function (doc) {
+        findScript: [10, function(doc) {
           for (const node of document.querySelectorAll('span.math, div.math')) {
             const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], false, node)
             const text = document.createTextNode('')
             node.parentNode.replaceChild(text, node)
-            math.start = {node: text, delim: '', n: 0}
-            math.end = {node: text, delim: '', n: 0}
+            math.start = { node: text, delim: '', n: 0 }
+            math.end = { node: text, delim: '', n: 0 }
             doc.math.push(math)
           }
         }, '']
       }
     }
-  };
+  }
 
 </script>
 </body>
