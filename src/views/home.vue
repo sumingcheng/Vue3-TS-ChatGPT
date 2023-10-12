@@ -2,7 +2,6 @@
 import type { ChatMessage } from '@/types'
 import { isMobile, initMsg, ChatStorageManager } from '@/types'
 import Loading from '@/components/Loding.vue'
-import { nextTick, onMounted, onUpdated, ref, watchEffect, watch } from 'vue'
 import { chat } from '@/libs/gpt'
 import { initCopy, operationKey, scrollToBottom } from '@/hooks'
 import { ElButton, ElInput, ElMessage, ElDialog, ElSelect, ElOption } from 'element-plus'
