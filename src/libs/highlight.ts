@@ -6,21 +6,28 @@ import java from 'highlight.js/lib/languages/java'
 import rust from 'highlight.js/lib/languages/rust'
 import shell from 'highlight.js/lib/languages/shell'
 import php from 'highlight.js/lib/languages/php'
-
+import sql from 'highlight.js/lib/languages/sql'
+import less from 'highlight.js/lib/languages/less'
+import css from 'highlight.js/lib/languages/css'
+import xml from 'highlight.js/lib/languages/xml' // HTML 使用 'xml' 模块
+import json from 'highlight.js/lib/languages/json'
+import c from 'highlight.js/lib/languages/c'
+import cpp from 'highlight.js/lib/languages/cpp'
+// 导入样式
 import 'highlight.js/styles/github.css'
 // import '@/assets/dracula.css'
 import { marked, Renderer } from 'marked'
 
 const renderer = new Renderer()
 
-// 注册语言
-hljs.registerLanguage('javascript', javascript)
-hljs.registerLanguage('python', python)
-hljs.registerLanguage('go', go)
-hljs.registerLanguage('java', java)
-hljs.registerLanguage('rust', rust)
-hljs.registerLanguage('shell', shell)
-hljs.registerLanguage('php', php)
+const languages = {
+  javascript, python, go, java, rust, shell, php, sql, less, css, xml, json, c, cpp
+}
+
+// 循环注册所有语言模块
+for (const [name, module] of Object.entries(languages)) {
+  hljs.registerLanguage(name, module)
+}
 
 // 以 $ 开始和结束的内联公式，以及以 $$ 开始和结束的块级公式
 renderer.text = function(text) {
