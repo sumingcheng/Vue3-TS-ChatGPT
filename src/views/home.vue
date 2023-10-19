@@ -64,8 +64,12 @@ const appendLastMessageContent = (content: string) => {
 }
 
 const updateMessageListWithResponse = async (response: any) => {
-  const reader = response.data.getReader()
-  await readStreamAndUpdateMessage(reader)
+  try {
+    const reader = response.data.getReader()
+    await readStreamAndUpdateMessage(reader)
+  } catch (error) {
+    console.error('Error updating message list:', error)
+  }
 }
 
 const readStreamAndUpdateMessage = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
