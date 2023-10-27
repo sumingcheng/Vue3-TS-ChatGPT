@@ -14,3 +14,6 @@ export const Storage = {
   }
 }
 
+export const goGitHub = () => {
+  window.open('https://github.com/sumingcheng/Vue3-TS-ChatGPT')
+}

@@ -1,30 +1,32 @@
 <script setup lang='ts'>
+// Imports
 import type { ChatMessage } from '@/types'
 import { isMobile, initMsg, ChatStorageManager } from '@/types'
 import Loading from '@/components/Loding.vue'
 import { chat } from '@/libs/gpt'
 import { initCopy, operationKey, scrollToBottom } from '@/hooks'
 import { ElButton, ElInput, ElMessage, ElDialog, ElSelect, ElOption } from 'element-plus'
-import { DECODER } from '@/libs/utils'
+import { DECODER, goGitHub } from '@/libs/utils'
 import { markedRender } from '@/libs/highlight'
 import GPT_VERSION from '@/data/data.json'
 
+// Initialization
 const chatManager = ChatStorageManager.getInstance()
-
 const { getKey, setKey } = operationKey()
+const roleAlias = { user: 'ME', assistant: 'Magic Conch', system: 'System' }
+const messageList = ref<ChatMessage[]>(initMsg)
+const GPT_V = ref('gpt-3.5-turbo')
+let isTalking = ref(false)
 
+// References
 const myInput = ref<HTMLInputElement | null>(null)
 const centerDialogVisible = ref(false)
 const chatListDom = ref<HTMLDivElement>()
-const roleAlias = { user: 'ME', assistant: 'Magic Conch', system: 'System' }
-const messageList = ref<ChatMessage[]>(initMsg)
-
-const GPT_V = ref('gpt-3.5-turbo')
-let isTalking = ref(false)
+const isScrolling = ref(false)
 let messageContent = ref('')
 let Key = ref('')
-const isScrolling = ref(false)
 
+// MathJax handling
 const checkMathJax = () => {
   if (window.MathJax) {
     handleMathjaxTypeset()
@@ -45,6 +47,7 @@ const handleMathjaxTypeset = () => {
   })
 }
 
+// Message handling
 const saveApiKey = () => {
   if (!Key.value) {
     ElMessage({ message: '请输入API Key', type: 'warning' })
@@ -114,7 +117,7 @@ const sendMessageToAssistant = async (content: string = messageContent.value) =>
   isTalking.value = false
   getFocus()
 
-  // 保存聊天记录
+  // Save chat records
   const serializedData = JSON.stringify(messageList.value)
   const parsedData = JSON.parse(serializedData)
   chatManager.saveChatRecord(parsedData).then(() => {
@@ -122,6 +125,7 @@ const sendMessageToAssistant = async (content: string = messageContent.value) =>
   })
 }
 
+// UI handling
 const getFocus = () => {
   nextTick(() => {
     if (myInput.value) {
@@ -139,10 +143,6 @@ const handleConfigClick = () => {
   }
 }
 
-const goGitHub = () => {
-  window.open('https://github.com/sumingcheng/Vue3-TS-ChatGPT')
-}
-
 const goToTheBottom = () => {
   nextTick(() => {
     if (chatListDom.value) {
@@ -156,8 +156,6 @@ const toDelete = () => {
     console.log('Chat records deleted successfully!')
   })
   messageList.value = initMsg
-  // 刷新
-  window.location.reload()
 }
 
 const initializationRecord = async () => {
@@ -168,6 +166,7 @@ const initializationRecord = async () => {
   }
 }
 
+// Watchers and lifecycle hooks
 watch(messageList.value, () => {
     nextTick(() => {
       if (!isScrolling.value) {
@@ -195,6 +194,7 @@ onMounted(() => {
 })
 
 </script>
+
 
 <template>
   <div class='flex flex-col h-screen relative'>

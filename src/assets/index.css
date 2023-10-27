@@ -58,17 +58,17 @@ p code {
   background-color: #f0f0f0 !important;
 }
 
-p code:after {
-  display: inline-block;
-  position: absolute;
-  content: "";
-  left: 50%;
-  bottom: 0;
-  width: 95%;
-  transform: translateX(-50%);
-  box-sizing: border-box;
-  border-bottom: 1px solid black;
-}
+/*p code:after {*/
+/*  display: inline-block;*/
+/*  position: absolute;*/
+/*  content: "";*/
+/*  left: 50%;*/
+/*  bottom: 0;*/
+/*  width: 95%;*/
+/*  transform: translateX(-50%);*/
+/*  box-sizing: border-box;*/
+/*  border-bottom: 1px solid black;*/
+/*}*/
 
 ul li code{
   position: relative;
@@ -77,17 +77,17 @@ ul li code{
   background-color: #f0f0f0 !important;
 }
 
-ul li code:after {
-  display: inline-block;
-  position: absolute;
-  content: "";
-  left: 50%;
-  bottom: 0;
-  width: 95%;
-  transform: translateX(-50%);
-  box-sizing: border-box;
-  border-bottom: 1px solid black;
-}
+/*ul li code:after {*/
+/*  display: inline-block;*/
+/*  position: absolute;*/
+/*  content: "";*/
+/*  left: 50%;*/
+/*  bottom: 0;*/
+/*  width: 95%;*/
+/*  transform: translateX(-50%);*/
+/*  box-sizing: border-box;*/
+/*  border-bottom: 1px solid black;*/
+/*}*/
 
 .copyNode {
   cursor: pointer;
