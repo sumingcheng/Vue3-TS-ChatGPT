@@ -211,7 +211,7 @@ onMounted(() => {
       </div>
     </div>
     <div class='flex-1 mt-16 content' ref='observedDiv'>
-      <div class='m-6' ref='chatListDom'>
+      <div class='mx-10 my-6' ref='chatListDom'>
         <div v-for="item of messageList.filter((v) => v.role !== 'system')">
           <div class='font-bold mb-3 text-lg'>{{ roleAlias[item.role] }}：</div>
           <div class='text-base text-black whitespace-pre-wrap' v-if='item.content' v-html="markedRender(item.content.replace(/^\n\n/, ''))">
