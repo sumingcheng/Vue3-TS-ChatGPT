@@ -168,6 +168,7 @@ const initializationRecord = async () => {
 
 // Watchers and lifecycle hooks
 watch(messageList.value, () => {
+    console.log("goToTheBottom()",messageList.value)
     nextTick(() => {
       if (!isScrolling.value) {
         goToTheBottom()
@@ -211,7 +212,7 @@ onMounted(() => {
       </div>
     </div>
     <div class='flex-1 mt-16 content' ref='observedDiv'>
-      <div class='mx-10 my-6' ref='chatListDom'>
+      <div class='mx-10 mt-6 mb-24' ref='chatListDom'>
         <div v-for="item of messageList.filter((v) => v.role !== 'system')">
           <div class='font-bold mb-3 text-lg'>{{ roleAlias[item.role] }}：</div>
           <div class='text-base text-black whitespace-pre-wrap' v-if='item.content' v-html="markedRender(item.content.replace(/^\n\n/, ''))">
@@ -220,8 +221,8 @@ onMounted(() => {
         </div>
       </div>
     </div>
-    <div class='sticky w-full p-6 bgColor bottom-0'>
-      <div class='flex items-center'>
+    <div class='flex flex-nowrap fixed w-full p-6 bgColor bottom-0 z-50'>
+      <div class='flex items-center w-full'>
         <el-input class='input' :rows='1' type='textarea' ref='myInput' v-model='messageContent' size='large'
                   @keydown.enter='sendMessageToAssistant()' :disabled='isTalking' />
         <el-button @click='sendMessageToAssistant()' size='large' type='info' class='elBtnStyle text-5xl ml-5'>发送</el-button>

@@ -70,7 +70,7 @@ p code {
 /*  border-bottom: 1px solid black;*/
 /*}*/
 
-ul li code{
+ul li code {
   position: relative;
   padding: 3px 4px;
   border-radius: 3px;
@@ -176,9 +176,9 @@ body {
   height: 41px;
 }
 
-.whitespace-pre-wrap p {
-  text-indent: 2em;
-}
+/*.whitespace-pre-wrap p {*/
+/*  text-indent: 2em;*/
+/*}*/
 
 /*.whitespace-pre-wrap ul {*/
 /*  text-indent: 2em;*/
