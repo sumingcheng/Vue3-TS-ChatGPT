@@ -6,9 +6,11 @@ import Loading from '@/components/Loding.vue'
 import { chat } from '@/libs/gpt'
 import { initCopy, operationKey, scrollToBottom } from '@/hooks'
 import { ElButton, ElInput, ElMessage, ElDialog, ElSelect, ElOption } from 'element-plus'
-import { DECODER, goGitHub } from '@/libs/utils'
+import { DECODER, goGitHub, sortModelsById } from '@/libs/utils'
 import { markedRender } from '@/libs/highlight'
-import GPT_VERSION from '@/data/data.json'
+import basicModelList from '@/data/data.json'
+
+const GPT_VERSION = sortModelsById(basicModelList)
 
 // Initialization
 const chatManager = ChatStorageManager.getInstance()

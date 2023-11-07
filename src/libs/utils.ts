@@ -17,3 +17,19 @@ export const Storage = {
 export const goGitHub = () => {
   window.open('https://github.com/sumingcheng/Vue3-TS-ChatGPT')
 }
+
+interface Model {
+  id: string;
+  object: string;
+  created: number;
+  owned_by: string;
+}
+
+export function sortModelsById(models: Model[]): Model[] {
+  const collator = new Intl.Collator(undefined, {
+    numeric: true,
+    sensitivity: 'base'
+  })
+
+  return models.sort((a, b) => collator.compare(a.id, b.id))
+}
