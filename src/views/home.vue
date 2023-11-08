@@ -210,7 +210,7 @@ onMounted(() => {
         <img loading='lazy' src='https://img.shields.io/github/stars/sumingcheng/Vue3-TS-ChatGPT?logo=github' alt='GitHub'>
       </div>
       <div class='ml-auto text-sm cursor-pointer' @click='handleConfigClick'>
-        <el-button size='large' type='info' class='elBtnStyle text-4xl'>SetUp</el-button>
+        <el-button size='large' type='info' class='elBtnStyle text-4xl'>Settings</el-button>
       </div>
     </div>
     <div class='flex-1 mt-16 content' ref='observedDiv'>
@@ -238,7 +238,7 @@ onMounted(() => {
     </div>
   </div>
   <!-- 弹框设置 -->
-  <el-dialog v-model='centerDialogVisible' title='SetUp' width='80%' center>
+  <el-dialog v-model='centerDialogVisible' title='Settings' width='80%' center>
     <div class='bottom-0 w-full p-6 pb-8'>
       <div class='flex items-center'>
         <span class='w-1/6 font-bold'>API Key</span>
