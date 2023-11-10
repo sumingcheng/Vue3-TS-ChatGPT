@@ -170,7 +170,7 @@ const initializationRecord = async () => {
 
 // Watchers and lifecycle hooks
 watch(messageList.value, () => {
-    console.log("goToTheBottom()",messageList.value)
+    console.log('goToTheBottom()', messageList.value)
     nextTick(() => {
       if (!isScrolling.value) {
         goToTheBottom()

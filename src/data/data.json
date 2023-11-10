@@ -48,12 +48,6 @@
     "owned_by": "openai"
   },
   {
-    "id": "whisper-1",
-    "object": "model",
-    "created": 1677532384,
-    "owned_by": "openai-internal"
-  },
-  {
     "id": "text-similarity-davinci-001",
     "object": "model",
     "created": 1651172505,
@@ -96,6 +90,18 @@
     "owned_by": "openai"
   },
   {
+    "id": "gpt-3.5-turbo",
+    "object": "model",
+    "created": 1677610602,
+    "owned_by": "openai"
+  },
+  {
+    "id": "gpt-3.5-turbo-1106",
+    "object": "model",
+    "created": 1698959748,
+    "owned_by": "system"
+  },
+  {
     "id": "text-search-ada-doc-001",
     "object": "model",
     "created": 1651172507,
@@ -105,12 +111,6 @@
     "id": "davinci-instruct-beta",
     "object": "model",
     "created": 1649364042,
-    "owned_by": "openai"
-  },
-  {
-    "id": "gpt-4",
-    "object": "model",
-    "created": 1687882411,
     "owned_by": "openai"
   },
   {
@@ -156,6 +156,12 @@
     "owned_by": "openai-dev"
   },
   {
+    "id": "gpt-4",
+    "object": "model",
+    "created": 1687882411,
+    "owned_by": "openai"
+  },
+  {
     "id": "text-davinci-001",
     "object": "model",
     "created": 1649364042,
@@ -192,12 +198,6 @@
     "owned_by": "system"
   },
   {
-    "id": "tts-1",
-    "object": "model",
-    "created": 1681940951,
-    "owned_by": "openai-internal"
-  },
-  {
     "id": "davinci-search-document",
     "object": "model",
     "created": 1651172509,
@@ -214,12 +214,6 @@
     "object": "model",
     "created": 1651172509,
     "owned_by": "openai-dev"
-  },
-  {
-    "id": "gpt-3.5-turbo-1106",
-    "object": "model",
-    "created": 1698959748,
-    "owned_by": "system"
   },
   {
     "id": "text-search-ada-query-001",
@@ -276,12 +270,6 @@
     "owned_by": "openai"
   },
   {
-    "id": "tts-1-1106",
-    "object": "model",
-    "created": 1699053241,
-    "owned_by": "system"
-  },
-  {
     "id": "text-davinci-edit-001",
     "object": "model",
     "created": 1649809179,
@@ -300,12 +288,6 @@
     "owned_by": "system"
   },
   {
-    "id": "gpt-3.5-turbo",
-    "object": "model",
-    "created": 1677610602,
-    "owned_by": "openai"
-  },
-  {
     "id": "gpt-3.5-turbo-instruct-0914",
     "object": "model",
     "created": 1694122472,
@@ -315,6 +297,12 @@
     "id": "ada",
     "object": "model",
     "created": 1649357491,
+    "owned_by": "openai"
+  },
+  {
+    "id": "gpt-3.5-turbo-0613",
+    "object": "model",
+    "created": 1686587434,
     "owned_by": "openai"
   },
   {
@@ -354,6 +342,12 @@
     "owned_by": "system"
   },
   {
+    "id": "gpt-4-0613",
+    "object": "model",
+    "created": 1686588896,
+    "owned_by": "openai"
+  },
+  {
     "id": "text-search-curie-doc-001",
     "object": "model",
     "created": 1651172509,
@@ -366,16 +360,16 @@
     "owned_by": "openai-internal"
   },
   {
-    "id": "gpt-4-0613",
-    "object": "model",
-    "created": 1686588896,
-    "owned_by": "openai"
-  },
-  {
     "id": "text-curie-001",
     "object": "model",
     "created": 1649364043,
     "owned_by": "openai"
+  },
+  {
+    "id": "whisper-1",
+    "object": "model",
+    "created": 1677532384,
+    "owned_by": "openai-internal"
   },
   {
     "id": "curie",
@@ -390,6 +384,18 @@
     "owned_by": "openai"
   },
   {
+    "id": "canary-tts",
+    "object": "model",
+    "created": 1699492935,
+    "owned_by": "system"
+  },
+  {
+    "id": "tts-1",
+    "object": "model",
+    "created": 1681940951,
+    "owned_by": "openai-internal"
+  },
+  {
     "id": "davinci",
     "object": "model",
     "created": 1649359874,
@@ -402,10 +408,10 @@
     "owned_by": "system"
   },
   {
-    "id": "gpt-3.5-turbo-0613",
+    "id": "tts-1-1106",
     "object": "model",
-    "created": 1686587434,
-    "owned_by": "openai"
+    "created": 1699053241,
+    "owned_by": "system"
   },
   {
     "id": "dall-e-3",
