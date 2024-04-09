@@ -80,27 +80,27 @@ const updateMessageListWithResponse = async (response: any) => {
 
 
 const readStreamAndUpdateMessage = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
-  const { done, value } = await reader.read();
+  const { done, value } = await reader.read()
   if (done) {
-    reader.releaseLock();
-    return;
+    reader.releaseLock()
+    return
   }
 
-  const dataList = DECODER.decode(value).match(/data: \s*({.*?}]})/g);
+  const dataList = DECODER.decode(value).match(/data: \s*({.*?}]})/g)
   if (dataList) {
     dataList.forEach((v: any) => {
-      const jsonStr = v.replace('data: ', '');
-      const json = JSON.parse(jsonStr);
-      appendLastMessageContent(json.choices[0].delta.content ?? '');
-    });
+      const jsonStr = v.replace('data: ', '')
+      const json = JSON.parse(jsonStr)
+      appendLastMessageContent(json.choices[0].delta.content ?? '')
+    })
 
-    await nextTick(() => {
-      goToTheBottom();
-    });
+    // await nextTick(() => {
+    //   goToTheBottom();
+    // });
   }
 
-  await readStreamAndUpdateMessage(reader);
-};
+  await readStreamAndUpdateMessage(reader)
+}
 
 const sendMessageToAssistant = async (content: string = messageContent.value) => {
   if (!content) {
@@ -179,9 +179,13 @@ const initializationRecord = async () => {
 }
 
 // Watchers and lifecycle hooks
-watch(messageList.value, () => {
+watch(messageList, () => {
     console.log('goToTheBottom()', messageList.value)
-    goToTheBottom()
+
+    nextTick(() => {
+      goToTheBottom()
+    })
+
     // nextTick(() => {
     //   if (!isScrolling.value) {
     //     goToTheBottom()
