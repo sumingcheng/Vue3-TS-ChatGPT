@@ -10,6 +10,8 @@ import { DECODER, goGitHub, sortModelsById } from '@/libs/utils'
 import { markedRender } from '@/libs/highlight'
 import basicModelList from '@/data/data.json'
 import SmoothScroll from 'smooth-scroll'
+import { debounce } from 'lodash'; // 假设使用lodash的debounce函数
+
 
 const GPT_VERSION = sortModelsById(basicModelList)
 
@@ -174,26 +176,19 @@ const initializationRecord = async () => {
   const res = await chatManager.getChatRecord()
   if (res) {
     messageList.value = res
-    goToTheBottom()
+    // goToTheBottom()
   }
 }
 
+const debouncedGoToTheBottom = debounce(goToTheBottom, 200);
+
 // Watchers and lifecycle hooks
 watch(messageList, () => {
-    console.log('goToTheBottom()', messageList.value)
-
-    nextTick(() => {
-      goToTheBottom()
-    })
-
-    // nextTick(() => {
-    //   if (!isScrolling.value) {
-    //     goToTheBottom()
-    //   }
-    // })
-  },
-  { deep: true, immediate: true }
-)
+  console.log('goToTheBottom()', messageList.value);
+  nextTick(() => {
+    debouncedGoToTheBottom();
+  });
+}, { deep: true, immediate: true });
 
 onUpdated(() => {
   nextTick(() => {
