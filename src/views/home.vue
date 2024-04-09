@@ -4,11 +4,12 @@ import type { ChatMessage } from '@/types'
 import { isMobile, initMsg, ChatStorageManager } from '@/types'
 import Loading from '@/components/Loding.vue'
 import { chat } from '@/libs/gpt'
-import { initCopy, operationKey, scrollToBottom } from '@/hooks'
+import { initCopy, operationKey } from '@/hooks'
 import { ElButton, ElInput, ElMessage, ElDialog, ElSelect, ElOption } from 'element-plus'
 import { DECODER, goGitHub, sortModelsById } from '@/libs/utils'
 import { markedRender } from '@/libs/highlight'
 import basicModelList from '@/data/data.json'
+import SmoothScroll from 'smooth-scroll'
 
 const GPT_VERSION = sortModelsById(basicModelList)
 
@@ -77,20 +78,29 @@ const updateMessageListWithResponse = async (response: any) => {
   }
 }
 
+
 const readStreamAndUpdateMessage = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
-  const { done, value } = await reader.read()
+  const { done, value } = await reader.read();
   if (done) {
-    reader.closed
-    return
+    reader.releaseLock();
+    return;
   }
-  const dataList = DECODER.decode(value).match(/data: \s*({.*?}]})/g)
-  dataList?.forEach((v: any) => {
-    const jsonStr = v.replace('data: ', '')
-    const json = JSON.parse(jsonStr)
-    appendLastMessageContent(json.choices[0].delta.content ?? '')
-  })
-  await readStreamAndUpdateMessage(reader)
-}
+
+  const dataList = DECODER.decode(value).match(/data: \s*({.*?}]})/g);
+  if (dataList) {
+    dataList.forEach((v: any) => {
+      const jsonStr = v.replace('data: ', '');
+      const json = JSON.parse(jsonStr);
+      appendLastMessageContent(json.choices[0].delta.content ?? '');
+    });
+
+    await nextTick(() => {
+      goToTheBottom();
+    });
+  }
+
+  await readStreamAndUpdateMessage(reader);
+};
 
 const sendMessageToAssistant = async (content: string = messageContent.value) => {
   if (!content) {
@@ -146,11 +156,11 @@ const handleConfigClick = () => {
 }
 
 const goToTheBottom = () => {
-  nextTick(() => {
-    if (chatListDom.value) {
-      scrollToBottom(chatListDom.value)
-    }
-  })
+  const scroll = new SmoothScroll()
+  const chatListElement = chatListDom.value
+  if (chatListElement) {
+    scroll.animateScroll(chatListElement.scrollHeight, chatListElement)
+  }
 }
 
 const toDelete = () => {
@@ -171,11 +181,12 @@ const initializationRecord = async () => {
 // Watchers and lifecycle hooks
 watch(messageList.value, () => {
     console.log('goToTheBottom()', messageList.value)
-    nextTick(() => {
-      if (!isScrolling.value) {
-        goToTheBottom()
-      }
-    })
+    goToTheBottom()
+    // nextTick(() => {
+    //   if (!isScrolling.value) {
+    //     goToTheBottom()
+    //   }
+    // })
   },
   { deep: true, immediate: true }
 )
