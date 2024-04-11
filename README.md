@@ -23,7 +23,8 @@ npm run build
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=sumingcheng/Vue3-TS-ChatGPT&type=Date)](https://star-history.com/#sumingcheng/Vue3-TS-ChatGPT&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=sumingcheng/Vue3-TS-ChatGPT&type=Timeline)](https://star-history.com/#sumingcheng/Vue3-TS-ChatGPT&Timeline)
+
 
 ## The overall page has been optimized
 
