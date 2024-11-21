@@ -1,5 +1,4 @@
 <script setup lang='ts'>
-// Imports
 import type { ChatMessage } from '@/types'
 import { isMobile, initMsg, ChatStorageManager } from '@/types'
 import Loading from '@/components/Loding.vue'
@@ -10,8 +9,8 @@ import { DECODER, goGitHub, sortModelsById } from '@/libs/utils'
 import { markedRender } from '@/libs/highlight'
 import basicModelList from '@/data/data.json'
 import SmoothScroll from 'smooth-scroll'
-import { debounce } from 'lodash'; // 假设使用lodash的debounce函数
-
+import { debounce } from 'lodash'
+import { DeleteFilled } from '@element-plus/icons-vue'
 
 const GPT_VERSION = sortModelsById(basicModelList)
 
@@ -27,7 +26,6 @@ let isTalking = ref(false)
 const myInput = ref<HTMLInputElement | null>(null)
 const centerDialogVisible = ref(false)
 const chatListDom = ref<HTMLDivElement>()
-const isScrolling = ref(false)
 let messageContent = ref('')
 let Key = ref('')
 
@@ -180,15 +178,15 @@ const initializationRecord = async () => {
   }
 }
 
-const debouncedGoToTheBottom = debounce(goToTheBottom, 200);
+const debouncedGoToTheBottom = debounce(goToTheBottom, 200)
 
 // Watchers and lifecycle hooks
 watch(messageList, () => {
-  console.log('goToTheBottom()', messageList.value);
+  console.log('goToTheBottom()', messageList.value)
   nextTick(() => {
-    debouncedGoToTheBottom();
-  });
-}, { deep: true, immediate: true });
+    debouncedGoToTheBottom()
+  })
+}, { deep: true, immediate: true })
 
 onUpdated(() => {
   nextTick(() => {
@@ -205,7 +203,6 @@ onMounted(() => {
   checkMathJax()
   initCopy()
 })
-
 </script>
 
 
@@ -217,7 +214,8 @@ onMounted(() => {
         Magic conch based on ChatGPT
       </div>
       <div class='ml-4 my-auto cursor-pointer' @click='goGitHub' v-if='!isMobile'>
-        <img loading='lazy' src='https://img.shields.io/github/stars/sumingcheng/Vue3-TS-ChatGPT?logo=github' alt='GitHub'>
+        <img loading='lazy' src='https://img.shields.io/github/stars/sumingcheng/Vue3-TS-ChatGPT?logo=github'
+          alt='GitHub'>
       </div>
       <div class='ml-auto text-sm cursor-pointer' @click='handleConfigClick'>
         <el-button size='large' type='info' class='elBtnStyle text-4xl'>Settings</el-button>
@@ -227,7 +225,8 @@ onMounted(() => {
       <div class='mx-10 mt-6 mb-24' ref='chatListDom'>
         <div v-for="item of messageList.filter((v) => v.role !== 'system')">
           <div class='font-bold mb-3 text-lg'>{{ roleAlias[item.role] }}：</div>
-          <div class='text-base text-black whitespace-pre-wrap' v-if='item.content' v-html="markedRender(item.content.replace(/^\n\n/, ''))">
+          <div class='text-base text-black whitespace-pre-wrap' v-if='item.content'
+            v-html="markedRender(item.content.replace(/^\n\n/, ''))">
           </div>
           <Loading v-else />
         </div>
@@ -236,8 +235,9 @@ onMounted(() => {
     <div class='flex flex-nowrap fixed w-full p-6 bgColor bottom-0 z-50'>
       <div class='flex items-center w-full'>
         <el-input class='input' :rows='1' type='textarea' ref='myInput' v-model='messageContent' size='large'
-                  @keydown.enter='sendMessageToAssistant()' :disabled='isTalking' />
-        <el-button @click='sendMessageToAssistant()' size='large' type='info' class='elBtnStyle text-5xl ml-5'>Send</el-button>
+          @keydown.enter='sendMessageToAssistant()' :disabled='isTalking' />
+        <el-button @click='sendMessageToAssistant()' size='large' type='info' class='elBtnStyle text-5xl ml-5'>Send
+        </el-button>
         <div class='triangle ml-4 cursor-pointer' @click='toDelete'>
           <DeleteFilled />
         </div>

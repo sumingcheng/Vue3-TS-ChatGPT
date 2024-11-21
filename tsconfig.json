@@ -8,7 +8,8 @@
   ],
   "compilerOptions": {
     "types": [
-      "node"
+      "node",
+      "element-plus/global"
     ],
     "baseUrl": ".",
     "allowJs": true,
@@ -17,7 +18,15 @@
         "./src/*"
       ]
     },
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "verbatimModuleSyntax": true,
+    "outDir": "./dist",
+    "ignoreDeprecations": "5.0"
   },
   "references": [
     {
