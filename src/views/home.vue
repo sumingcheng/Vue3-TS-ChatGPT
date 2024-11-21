@@ -235,7 +235,7 @@ onMounted(() => {
     <div class='flex flex-nowrap fixed w-full p-6 bgColor bottom-0 z-50'>
       <div class='flex items-center w-full'>
         <el-input class='input' :rows='1' type='textarea' ref='myInput' v-model='messageContent' size='large'
-          @keydown.enter='sendMessageToAssistant()' :disabled='isTalking' />
+          @keydown.enter='sendMessageToAssistant()' :disabled='isTalking' style="--el-input-text-color: #000000" />
         <el-button @click='sendMessageToAssistant()' size='large' type='info' class='elBtnStyle text-5xl ml-5'>Send
         </el-button>
         <div class='triangle ml-4 cursor-pointer' @click='toDelete'>
