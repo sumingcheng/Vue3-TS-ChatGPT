@@ -38,7 +38,7 @@ const checkMathJax = () => {
   }
 }
 
-const handleMathjaxTypeset = () => {
+const handleMathjaxTypeset = debounce(() => {
   watchEffect(() => {
     messageList.value.forEach((message) => {
       if (message.content && message.content.includes('$')) {
@@ -48,7 +48,7 @@ const handleMathjaxTypeset = () => {
       }
     })
   })
-}
+}, 200)
 
 // Message handling
 const saveApiKey = () => {
@@ -178,7 +178,7 @@ const initializationRecord = async () => {
   }
 }
 
-const debouncedGoToTheBottom = debounce(goToTheBottom, 200)
+const debouncedGoToTheBottom = debounce(goToTheBottom, 100)
 
 // Watchers and lifecycle hooks
 watch(messageList, () => {
