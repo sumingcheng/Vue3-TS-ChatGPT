@@ -19,7 +19,12 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            return id.split('node_modules/')[1].split('/')[0].toString()
+            const match = id.match(/node_modules[/\\]\.pnpm[/\\](.+?)[@/\\]/)
+            if (match) {
+              const pkg = match[1].replace(/@.+/, '')
+              return `vendor/${pkg}`
+            }
+            return 'vendor/' + id.split('node_modules/')[1].split('/')[0].toString()
           }
         }
       }
