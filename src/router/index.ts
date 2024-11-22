@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHashHistory('/Vue3-TS-ChatGPT/'),
   routes: [
     {
       path: '/',
