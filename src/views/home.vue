@@ -223,12 +223,12 @@ onMounted(() => {
     </div>
     <div class='flex-1 mt-16 content' ref='observedDiv'>
       <div class='mx-10 mt-6 mb-24' ref='chatListDom'>
-        <div v-for="item of messageList.filter((v) => v.role !== 'system')">
+        <div v-for="item of messageList.filter((v) => v.role !== 'system')" :key="item.content">
           <div class='font-bold mb-3 text-lg'>{{ roleAlias[item.role] }}：</div>
-          <div class='text-base text-black whitespace-pre-wrap' v-if='item.content'
+          <div class='text-base text-black whitespace-pre-wrap' v-show='item.content'
             v-html="markedRender(item.content.replace(/^\n\n/, ''))">
           </div>
-          <Loading v-else />
+          <Loading v-show='!item.content' />
         </div>
       </div>
     </div>
