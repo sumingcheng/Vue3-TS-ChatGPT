@@ -4,13 +4,14 @@ import { isMobile, initMsg, ChatStorageManager } from '@/types'
 import Loading from '@/components/Loding.vue'
 import { chat } from '@/libs/gpt'
 import { initCopy, operationKey } from '@/hooks'
-import { ElButton, ElInput, ElMessage, ElDialog, ElSelect, ElOption } from 'element-plus'
+import { ElButton, ElInput, ElMessage } from 'element-plus'
 import { DECODER, goGitHub, sortModelsById } from '@/libs/utils'
 import { markedRender } from '@/libs/highlight'
 import basicModelList from '@/data/data.json'
 import SmoothScroll from 'smooth-scroll'
 import { debounce } from 'lodash'
 import { DeleteFilled } from '@element-plus/icons-vue'
+import SettingsDialog from '@/components/SettingsDialog.vue'
 
 const GPT_VERSION = sortModelsById(basicModelList)
 
@@ -27,7 +28,6 @@ const myInput = ref<HTMLInputElement | null>(null)
 const centerDialogVisible = ref(false)
 const chatListDom = ref<HTMLDivElement>()
 let messageContent = ref('')
-let Key = ref('')
 
 // MathJax handling
 const checkMathJax = () => {
@@ -52,11 +52,11 @@ const handleMathjaxTypeset = debounce(() => {
 
 // Message handling
 const saveApiKey = () => {
-  if (!Key.value) {
+  if (!getKey()) {
     ElMessage({ message: '请输入API Key', type: 'warning' })
     return
   }
-  setKey(Key.value)
+  setKey(getKey())
   ElMessage({ message: '保存成功', type: 'success' })
   centerDialogVisible.value = false
 }
@@ -148,11 +148,6 @@ const getFocus = () => {
 
 const handleConfigClick = () => {
   centerDialogVisible.value = true
-
-  let apiKey = getKey()
-  if (apiKey) {
-    Key.value = apiKey
-  }
 }
 
 const goToTheBottom = () => {
@@ -203,6 +198,17 @@ onMounted(() => {
   checkMathJax()
   initCopy()
 })
+
+const handleSaveSettings = (key: string, version: string) => {
+  if (!key) {
+    ElMessage({ message: '请输入API Key', type: 'warning' })
+    return
+  }
+  setKey(key)
+  GPT_V.value = version
+  ElMessage({ message: '保存成功', type: 'success' })
+  centerDialogVisible.value = false
+}
 </script>
 
 
@@ -248,25 +254,6 @@ onMounted(() => {
     </div>
   </div>
   <!-- 弹框设置 -->
-  <el-dialog v-model='centerDialogVisible' title='Settings' width='80%' center>
-    <div class='bottom-0 w-full p-6 pb-8'>
-      <div class='flex items-center'>
-        <span class='w-1/6 font-bold'>API Key</span>
-        <el-input placeholder='sk-xxxxxxxxxx' v-model='Key' size='large' clearable />
-      </div>
-      <div class='flex items-center mt-5'>
-        <span class='w-1/6 font-bold'>Version</span>
-        <el-select size='large' class='w-full' v-model='GPT_V'>
-          <el-option v-for='item in GPT_VERSION' :key='item.id' :label='item.id' :value='item.id' />
-        </el-select>
-      </div>
-    </div>
-
-    <template #footer>
-      <span>
-        <el-button @click='centerDialogVisible = false'>Close</el-button>
-        <el-button type='primary' @click='saveApiKey' class='fix-primary'>Preserve</el-button>
-      </span>
-    </template>
-  </el-dialog>
+  <SettingsDialog v-model:visible="centerDialogVisible" :api-key="getKey()" :gpt-version="GPT_V"
+    :gpt-version-list="GPT_VERSION" @save="handleSaveSettings" />
 </template>
