@@ -58,11 +58,11 @@ export class ChatStorageManager {
   private initDB(): Promise<IDBDatabase> {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open(this.dbName, 1)
-      request.onerror = (event) => {
+      request.onerror = (_event) => {
         reject('Failed to open IndexedDB')
       }
-      request.onsuccess = (event) => {
-        resolve((event.target as IDBOpenDBRequest).result)
+      request.onsuccess = (_event) => {
+        resolve((_event.target as IDBOpenDBRequest).result)
       }
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result
@@ -93,10 +93,10 @@ export class ChatStorageManager {
         const transaction = db.transaction([this.objectStoreName])
         const objectStore = transaction.objectStore(this.objectStoreName)
         const request = objectStore.get(this.chatRecordKey)
-        request.onerror = (event) => {
+        request.onerror = () => {
           reject('Failed to fetch record from IndexedDB')
         }
-        request.onsuccess = (event) => {
+        request.onsuccess = () => {
           resolve(request.result as ChatMessage[])
         }
       })

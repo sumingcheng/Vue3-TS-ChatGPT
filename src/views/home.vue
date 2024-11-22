@@ -50,17 +50,6 @@ const handleMathjaxTypeset = debounce(() => {
   })
 }, 200)
 
-// Message handling
-const saveApiKey = () => {
-  if (!getKey()) {
-    ElMessage({ message: '请输入API Key', type: 'warning' })
-    return
-  }
-  setKey(getKey())
-  ElMessage({ message: '保存成功', type: 'success' })
-  centerDialogVisible.value = false
-}
-
 const clearMessageContent = () => {
   messageContent.value = ''
 }
