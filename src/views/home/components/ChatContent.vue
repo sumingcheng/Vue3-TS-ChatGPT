@@ -4,7 +4,7 @@ import { markedRender } from '@/libs/highlight'
 import type { ChatMessage } from '@/types'
 import { Service, UserFilled } from '@element-plus/icons-vue'
 import { ElIcon } from 'element-plus'
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted, watch, nextTick } from 'vue'
 
 interface Props {
   messages: ChatMessage[]
@@ -45,6 +45,13 @@ onUnmounted(() => {
 const getRenderedContent = computed(() => (content: string) => {
   return markedRender(content)
 })
+
+// 监听消息变化，自动滚动到底部
+watch(() => props.messages, () => {
+  nextTick(() => {
+    scrollToBottom()
+  })
+}, { deep: true })
 
 defineExpose({
   chatListDom,
