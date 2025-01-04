@@ -43,7 +43,7 @@ pre {
   position: relative;
   width: 100%;
   background-color: #fafafa;
-  padding: 1.5rem;
+  /* padding: 1.5rem; */
   border: 1px solid #2c2c2c;
   border-radius: 6px;
 }
@@ -55,7 +55,7 @@ code {
 
 p code {
   position: relative;
-  padding: 3px 4px;
+  /* padding: 3px 4px; */
   border-radius: 3px;
   background-color: #f0f0f0 !important;
 }

@@ -43,7 +43,7 @@ onUnmounted(() => {
 
 // 缓存 markedRender 结果
 const getRenderedContent = computed(() => (content: string) => {
-  return markedRender(content.replace(/^\n\n/, ''))
+  return markedRender(content)
 })
 
 defineExpose({
@@ -64,9 +64,8 @@ defineExpose({
               <Service v-else />
             </ElIcon>
           </div>
-          <div class="message-content" :class="[item.role, { 'mobile-message': isMobile }]">
-            <div class="text-base whitespace-pre-wrap break-words" v-show="item.content"
-              v-html="getRenderedContent(item.content)">
+          <div class="message-content px-6 py-4" :class="[item.role, { 'mobile-message': isMobile }]">
+            <div class="text-base break-words" v-show="item.content" v-html="getRenderedContent(item.content)">
             </div>
             <Loading v-show="!item.content" />
           </div>
@@ -134,7 +133,6 @@ defineExpose({
 }
 
 .message-content {
-  padding: 12px 14px;
   border-radius: 1.5rem;
   font-size: 14px;
   line-height: 1.4;
@@ -158,7 +156,7 @@ defineExpose({
 
 :deep(pre) {
   margin: 8px 0;
-  padding: 12px;
+  /* padding: 12px; */
   border-radius: 6px;
   overflow-x: auto;
 }
