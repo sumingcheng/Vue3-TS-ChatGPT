@@ -14,22 +14,35 @@ import ChatInput from './components/ChatInput.vue'
 import Header from './components/Header.vue'
 import SettingsDialog from './components/SettingsDialog.vue'
 
+// Constants
 const GPT_VERSION = sortModelsById(basicModelList)
+const roleAlias = { user: 'ME', assistant: 'Magic Conch', system: 'System' }
 
-// Initialization
+// State Management
 const chatManager = ChatStorageManager.getInstance()
 const { getKey, setKey } = operationKey()
-const roleAlias = { user: 'ME', assistant: 'Magic Conch', system: 'System' }
 const messageList = ref<ChatMessage[]>(initMsg)
 const GPT_V = ref('gpt-3.5-turbo')
-let isTalking = ref(false)
-
-// References
-const chatContentRef = ref()
-const chatInputRef = ref()
+const isTalking = ref(false)
 const centerDialogVisible = ref(false)
 
-// MathJax handling
+// Component References
+const chatContentRef = ref()
+const chatInputRef = ref()
+
+// MathJax Handling
+const handleMathjaxTypeset = debounce(() => {
+  watchEffect(() => {
+    messageList.value.forEach((message) => {
+      if (message.content && message.content.includes('$')) {
+        nextTick(() => {
+          window.MathJax.typesetPromise()
+        })
+      }
+    })
+  })
+}, 200)
+
 const checkMathJax = () => {
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
@@ -45,31 +58,10 @@ const checkMathJax = () => {
   })
 }
 
-const handleMathjaxTypeset = debounce(() => {
-  watchEffect(() => {
-    messageList.value.forEach((message) => {
-      if (message.content && message.content.includes('$')) {
-        nextTick(() => {
-          window.MathJax.typesetPromise()
-        })
-      }
-    })
-  })
-}, 200)
-
+// Message Handling Functions
 const appendLastMessageContent = (content: string) => {
   messageList.value[messageList.value.length - 1].content += content
 }
-
-const updateMessageListWithResponse = async (response: any) => {
-  try {
-    const reader = response.data.getReader()
-    await readStreamAndUpdateMessage(reader)
-  } catch (error) {
-    console.error('Error updating message list:', error)
-  }
-}
-
 
 const readStreamAndUpdateMessage = async (reader: ReadableStreamDefaultReader<Uint8Array>) => {
   const { done, value } = await reader.read()
@@ -90,6 +82,16 @@ const readStreamAndUpdateMessage = async (reader: ReadableStreamDefaultReader<Ui
   await readStreamAndUpdateMessage(reader)
 }
 
+const updateMessageListWithResponse = async (response: any) => {
+  try {
+    const reader = response.data.getReader()
+    await readStreamAndUpdateMessage(reader)
+  } catch (error) {
+    console.error('Error updating message list:', error)
+  }
+}
+
+// Chat Operations
 const sendMessageToAssistant = async (content: string) => {
   try {
     if (!content) {
@@ -104,7 +106,6 @@ const sendMessageToAssistant = async (content: string) => {
     }
 
     messageList.value.push({ role: 'user', content })
-
     messageList.value.push({ role: 'assistant', content: '' })
 
     const response = await chat(messageList.value, getKey(), GPT_V.value)
@@ -129,7 +130,7 @@ const sendMessageToAssistant = async (content: string) => {
   }
 }
 
-// UI handling
+// UI Event Handlers
 const handleConfigClick = () => {
   centerDialogVisible.value = true
 }
@@ -149,37 +150,6 @@ const toDelete = () => {
   messageList.value = initMsg
 }
 
-const initializationRecord = async () => {
-  const res = await chatManager.getChatRecord()
-  if (res) {
-    messageList.value = res
-    // goToTheBottom()
-  }
-}
-
-// Watchers and lifecycle hooks
-watch(messageList, () => {
-  nextTick(() => {
-    goToTheBottom()
-  })
-}, { deep: true })
-
-onUpdated(() => {
-  nextTick(() => {
-    initCopy()
-  })
-})
-
-onMounted(() => {
-  if (getKey() === '') {
-    centerDialogVisible.value = true
-  }
-  chatInputRef.value?.getFocus()
-  initializationRecord()
-  checkMathJax()
-  initCopy()
-})
-
 const handleSaveSettings = (key: string, version: string) => {
   if (!key) {
     ElMessage({ message: '请输入API Key', type: 'warning' })
@@ -190,6 +160,37 @@ const handleSaveSettings = (key: string, version: string) => {
   ElMessage({ message: '保存成功', type: 'success' })
   centerDialogVisible.value = false
 }
+
+// Initialization
+const initializationRecord = async () => {
+  const res = await chatManager.getChatRecord()
+  if (res) {
+    messageList.value = res
+  }
+}
+
+// Lifecycle Hooks and Watchers
+onMounted(() => {
+  if (getKey() === '') {
+    centerDialogVisible.value = true
+  }
+  chatInputRef.value?.getFocus()
+  initializationRecord()
+  checkMathJax()
+  initCopy()
+})
+
+onUpdated(() => {
+  nextTick(() => {
+    initCopy()
+  })
+})
+
+watch(messageList, () => {
+  nextTick(() => {
+    goToTheBottom()
+  })
+}, { deep: true })
 </script>
 
 
