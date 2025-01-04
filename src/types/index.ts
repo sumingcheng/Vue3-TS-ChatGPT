@@ -1,13 +1,5 @@
-declare global {
-  interface Window {
-    MathJax: any
-  }
-}
-
-// 判断是否为移动端
 export const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 
-// 初始角色
 export const initMsg: ChatMessage[] = [
   {
     role: 'system',
@@ -19,27 +11,31 @@ export const initMsg: ChatMessage[] = [
   }
 ]
 
+export type Role = 'user' | 'assistant' | 'system'
+
 export interface ChatMessage {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
+  role: Role
+  content: string
 }
 
-/**
- * 数据库名：ChatAppDB
- * 表名：chatRecords
- * 存储键名：chatRecordKey
- * 类的名称：ChatStorageManager
- */
+class DatabaseError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'DatabaseError'
+  }
+}
 
-// 聊天记录存储管理器
 export class ChatStorageManager {
-  private static instance: ChatStorageManager
-  private dbName: string = 'ChatAppDB'
-  private objectStoreName: string = 'chatRecords'
-  private chatRecordKey: string = 'chatRecordKey'
-  private isIndexedDBSupported: boolean = ('indexedDB' in window)
+  private static instance: ChatStorageManager | null = null
+  private readonly dbName = 'ChatAppDB'
+  private readonly objectStoreName = 'chatRecords'
+  private readonly chatRecordKey = 'chatRecordKey'
+  private readonly isIndexedDBSupported = 'indexedDB' in window
 
   private constructor() {
+    if (ChatStorageManager.instance) {
+      throw new Error('Use ChatStorageManager.getInstance() instead of new.')
+    }
   }
 
   public static getInstance(): ChatStorageManager {
@@ -49,67 +45,78 @@ export class ChatStorageManager {
     return ChatStorageManager.instance
   }
 
-  // 初始化 IndexedDB
-  private initDB(): Promise<IDBDatabase> {
-    return new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.dbName, 1)
-      request.onerror = (_event) => {
-        reject('Failed to open IndexedDB')
-      }
-      request.onsuccess = (_event) => {
-        resolve((_event.target as IDBOpenDBRequest).result)
-      }
-      request.onupgradeneeded = (event) => {
-        const db = (event.target as IDBOpenDBRequest).result
-        if (!db.objectStoreNames.contains(this.objectStoreName)) {
-          db.createObjectStore(this.objectStoreName)
-        }
-      }
-    })
-  }
-
-  // 保存聊天记录
-  public async saveChatRecord(data: ChatMessage[]): Promise<void> {
-    if (this.isIndexedDBSupported) {
-      const db = await this.initDB()
-      const transaction = db.transaction([this.objectStoreName], 'readwrite')
-      const objectStore = transaction.objectStore(this.objectStoreName)
-      objectStore.put(data, this.chatRecordKey)
-    } else {
-      localStorage.setItem(this.chatRecordKey, JSON.stringify(data))
-    }
-  }
-
-  // 获取聊天记录
-  public async getChatRecord(): Promise<ChatMessage[] | null> {
-    if (this.isIndexedDBSupported) {
-      const db = await this.initDB()
-      return new Promise((resolve, reject) => {
-        const transaction = db.transaction([this.objectStoreName])
-        const objectStore = transaction.objectStore(this.objectStoreName)
-        const request = objectStore.get(this.chatRecordKey)
-        request.onerror = () => {
-          reject('Failed to fetch record from IndexedDB')
-        }
-        request.onsuccess = () => {
-          resolve(request.result as ChatMessage[])
+  private async initDB(): Promise<IDBDatabase> {
+    try {
+      return await new Promise((resolve, reject) => {
+        const request = indexedDB.open(this.dbName, 1)
+        request.onerror = () => reject(new DatabaseError('Failed to open IndexedDB'))
+        request.onsuccess = (event) => resolve((event.target as IDBOpenDBRequest).result)
+        request.onupgradeneeded = (event) => {
+          const db = (event.target as IDBOpenDBRequest).result
+          if (!db.objectStoreNames.contains(this.objectStoreName)) {
+            db.createObjectStore(this.objectStoreName)
+          }
         }
       })
-    } else {
-      const record = localStorage.getItem(this.chatRecordKey)
-      return record ? JSON.parse(record) as ChatMessage[] : null
+    } catch (error: any) {
+      throw new DatabaseError(`IndexedDB initialization failed: ${error.message}`)
     }
   }
 
-  // 删除聊天记录
+  public async saveChatRecord(data: ChatMessage[]): Promise<void> {
+    try {
+      if (this.isIndexedDBSupported) {
+        const db = await this.initDB()
+        const transaction = db.transaction([this.objectStoreName], 'readwrite')
+        const objectStore = transaction.objectStore(this.objectStoreName)
+        await new Promise<void>((resolve, reject) => {
+          const request = objectStore.put(data, this.chatRecordKey)
+          request.onsuccess = () => resolve()
+          request.onerror = () => reject(new DatabaseError('Failed to save record'))
+        })
+      } else {
+        localStorage.setItem(this.chatRecordKey, JSON.stringify(data))
+      }
+    } catch (error: any) {
+      throw new DatabaseError(`Failed to save chat record: ${error.message}`)
+    }
+  }
+
+  public async getChatRecord(): Promise<ChatMessage[] | null> {
+    try {
+      if (this.isIndexedDBSupported) {
+        const db = await this.initDB()
+        return await new Promise((resolve, reject) => {
+          const transaction = db.transaction([this.objectStoreName])
+          const objectStore = transaction.objectStore(this.objectStoreName)
+          const request = objectStore.get(this.chatRecordKey)
+          request.onerror = () => reject(new DatabaseError('Failed to fetch record'))
+          request.onsuccess = () => resolve(request.result)
+        })
+      }
+      const record = localStorage.getItem(this.chatRecordKey)
+      return record ? JSON.parse(record) : null
+    } catch (error: any) {
+      throw new DatabaseError(`Failed to get chat record: ${error.message}`)
+    }
+  }
+
   public async deleteChatRecord(): Promise<void> {
-    if (this.isIndexedDBSupported) {
-      const db = await this.initDB()
-      const transaction = db.transaction([this.objectStoreName], 'readwrite')
-      const objectStore = transaction.objectStore(this.objectStoreName)
-      objectStore.delete(this.chatRecordKey)
-    } else {
-      localStorage.removeItem(this.chatRecordKey)
+    try {
+      if (this.isIndexedDBSupported) {
+        const db = await this.initDB()
+        const transaction = db.transaction([this.objectStoreName], 'readwrite')
+        const objectStore = transaction.objectStore(this.objectStoreName)
+        await new Promise<void>((resolve, reject) => {
+          const request = objectStore.delete(this.chatRecordKey)
+          request.onsuccess = () => resolve()
+          request.onerror = () => reject(new DatabaseError('Failed to delete record'))
+        })
+      } else {
+        localStorage.removeItem(this.chatRecordKey)
+      }
+    } catch (error: any) {
+      throw new DatabaseError(`Failed to delete chat record: ${error.message}`)
     }
   }
 }

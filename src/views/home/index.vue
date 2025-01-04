@@ -1,17 +1,17 @@
 <script setup lang='ts'>
-import type { ChatMessage } from '@/types'
-import { isMobile, initMsg, ChatStorageManager } from '@/types'
 import Loading from '@/components/Loding.vue'
-import { chat } from '@/libs/gpt'
-import { initCopy, operationKey } from '@/hooks'
-import { ElButton, ElInput, ElMessage } from 'element-plus'
-import { DECODER, goGitHub, sortModelsById } from '@/libs/utils'
-import { markedRender } from '@/libs/highlight'
 import basicModelList from '@/data/data.json'
-import SmoothScroll from 'smooth-scroll'
-import { debounce } from 'lodash'
+import { initCopy, operationKey } from '@/hooks'
+import { chat } from '@/libs/gpt'
+import { markedRender } from '@/libs/highlight'
+import { DECODER, goGitHub, sortModelsById } from '@/libs/utils'
+import type { ChatMessage } from '@/types'
+import { ChatStorageManager, initMsg, isMobile } from '@/types'
 import { DeleteFilled } from '@element-plus/icons-vue'
-import SettingsDialog from '@/components/SettingsDialog.vue'
+import { ElButton, ElInput, ElMessage } from 'element-plus'
+import { debounce } from 'lodash'
+import SmoothScroll from 'smooth-scroll'
+import SettingsDialog from './SettingsDialog.vue'
 
 const GPT_VERSION = sortModelsById(basicModelList)
 
@@ -19,7 +19,7 @@ const GPT_VERSION = sortModelsById(basicModelList)
 const chatManager = ChatStorageManager.getInstance()
 const { getKey, setKey } = operationKey()
 const roleAlias = { user: 'ME', assistant: 'Magic Conch', system: 'System' }
-const messageList = ref<ChatMessage[]>(initMsg)
+const messageList = ref<ChatMessage[]>(initMsg as ChatMessage[])
 const GPT_V = ref('gpt-3.5-turbo')
 let isTalking = ref(false)
 
@@ -244,12 +244,12 @@ const handleSaveSettings = (key: string, version: string) => {
           <DeleteFilled />
         </div>
         <div class='triangle ml-4 cursor-pointer' @click='goToTheBottom' v-if='!isMobile'>
-          <img src='@/assets/3.svg' alt='ReturnToBottom' />
+          <img src='../../assets/3.svg' alt='ReturnToBottom' />
         </div>
       </div>
     </div>
   </div>
   <!-- 弹框设置 -->
-  <SettingsDialog v-model:visible="centerDialogVisible" :api-key="getKey()" :gpt-version="GPT_V"
-    :gpt-version-list="GPT_VERSION" @save="handleSaveSettings" />
+  <SettingsDialog v-model="centerDialogVisible" :api-key="getKey()" :gpt-version="GPT_V" :gpt-version-list="GPT_VERSION"
+    @save="handleSaveSettings" />
 </template>
