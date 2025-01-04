@@ -28,15 +28,16 @@ watch(() => props.modelValue, (val) => {
 </script>
 
 <template>
-  <el-dialog v-model="modelValue" title="Settings" :width="width" center>
+  <el-dialog :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" title="Settings"
+    :width="width" center>
     <div class="p-6">
       <div class="flex items-center">
         <span class="w-24 font-bold">API Key</span>
-        <el-input placeholder="sk-xxxxxxxxxx" v-model="localKey" size="large" clearable />
+        <el-input v-model="localKey" placeholder="sk-xxxxxxxxxx" size="large" clearable />
       </div>
       <div class="flex items-center mt-5">
         <span class="w-24 font-bold">Version</span>
-        <el-select size="large" class="w-full" v-model="localVersion">
+        <el-select v-model="localVersion" size="large" class="w-full">
           <el-option v-for="item in gptVersionList" :key="item.id" :label="item.id" :value="item.id" />
         </el-select>
       </div>
@@ -44,7 +45,7 @@ watch(() => props.modelValue, (val) => {
 
     <template #footer>
       <span>
-        <el-button @click="emit('update:modelValue', false)">取消</el-button>
+        <el-button @click="$emit('update:modelValue', false)">取消</el-button>
         <el-button type="primary" @click="emit('save', localKey, localVersion)">保存</el-button>
       </span>
     </template>

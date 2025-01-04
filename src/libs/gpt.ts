@@ -14,8 +14,14 @@ export async function chat(messageList: ChatMessage[], apiKey: string, GPT_VERSI
         messages: messageList
       })
     })
+
+    if (!result.ok) {
+      const errorData = await result.json()
+      return { status: 'error', error: errorData.error }
+    }
+
     return { status: 'success', data: result.body }
   } catch (error) {
-    return { status: 'error', message: error instanceof Error ? error.message : '未知错误' }
+    return { status: 'error', error: { message: error instanceof Error ? error.message : '未知错误' } }
   }
 }

@@ -11,8 +11,8 @@ import { ElButton } from 'element-plus'
       Magic conch based on ChatGPT
     </div>
     <div class='ml-4 my-auto cursor-pointer' @click='goGitHub' v-if='!isMobile'>
-      <img loading='lazy' src='https://img.shields.io/github/stars/sumingcheng/Vue3-TS-ChatGPT?logo=github'
-        alt='GitHub'>
+      <img loading="lazy" decoding="async"
+        src='https://img.shields.io/github/stars/sumingcheng/Vue3-TS-ChatGPT?logo=github' alt='GitHub'>
     </div>
     <div class='ml-auto text-sm cursor-pointer' @click="$emit('config')">
       <el-button size='large' type='info' class='elBtnStyle text-4xl'>Settings</el-button>

@@ -155,10 +155,12 @@ body {
   height: 41px;
 }
 
-/*.whitespace-pre-wrap p {*/
-/*  text-indent: 2em;*/
-/*}*/
+a {
+  text-decoration: underline;
+  color: #333333;
+  font-weight: bold;
+}
 
-/*.whitespace-pre-wrap ul {*/
-/*  text-indent: 2em;*/
-/*}*/
+a:hover {
+  text-decoration: underline;
+}

@@ -5,6 +5,7 @@ import { chat } from '@/libs/gpt'
 import { DECODER, sortModelsById } from '@/libs/utils'
 import type { ChatMessage } from '@/types'
 import { ChatStorageManager, initMsg, isMobile } from '@/types'
+import { useDebounceFn } from '@vueuse/core'
 import { ElMessage } from 'element-plus'
 import { debounce } from 'lodash'
 import SmoothScroll from 'smooth-scroll'
@@ -30,11 +31,18 @@ const centerDialogVisible = ref(false)
 
 // MathJax handling
 const checkMathJax = () => {
-  if (window.MathJax) {
-    handleMathjaxTypeset()
-  } else {
-    setTimeout(checkMathJax, 100)
-  }
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'childList' && window.MathJax) {
+        handleMathjaxTypeset()
+      }
+    })
+  })
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  })
 }
 
 const handleMathjaxTypeset = debounce(() => {
@@ -77,10 +85,6 @@ const readStreamAndUpdateMessage = async (reader: ReadableStreamDefaultReader<Ui
       const json = JSON.parse(jsonStr)
       appendLastMessageContent(json.choices[0].delta.content ?? '')
     })
-
-    // await nextTick(() => {
-    //   goToTheBottom();
-    // });
   }
 
   await readStreamAndUpdateMessage(reader)
@@ -107,17 +111,16 @@ const sendMessageToAssistant = async (content: string) => {
     if (response.status === 'success' && response.data) {
       await updateMessageListWithResponse(response)
     } else {
-      const errorMessage = typeof response.message === 'string'
-        ? response.message
-        : '发生未知错误'
+      const errorMessage = response.error?.message || '发生未知错误'
       appendLastMessageContent(errorMessage)
+      ElMessage({ message: errorMessage, type: 'error' })
     }
 
     const serializedData = JSON.stringify(messageList.value)
     const parsedData = JSON.parse(serializedData)
     await chatManager.saveChatRecord(parsedData)
-  } catch (error) {
-    const errorMessage = error instanceof Error ? error.message : '请求失败，请重试'
+  } catch (error: any) {
+    const errorMessage = error.error?.message || error.message || '请求失败，请重试'
     appendLastMessageContent(errorMessage)
     ElMessage({ message: errorMessage, type: 'error' })
   } finally {
@@ -131,13 +134,13 @@ const handleConfigClick = () => {
   centerDialogVisible.value = true
 }
 
-const goToTheBottom = () => {
+const goToTheBottom = useDebounceFn(() => {
   const scroll = new SmoothScroll()
   const chatListElement = chatContentRef.value?.chatListDom
   if (chatListElement) {
     scroll.animateScroll(chatListElement.scrollHeight, chatListElement)
   }
-}
+}, 100)
 
 const toDelete = () => {
   chatManager.deleteChatRecord().then(() => {
@@ -154,15 +157,12 @@ const initializationRecord = async () => {
   }
 }
 
-const debouncedGoToTheBottom = debounce(goToTheBottom, 100)
-
 // Watchers and lifecycle hooks
 watch(messageList, () => {
-  console.log('goToTheBottom()', messageList.value)
   nextTick(() => {
-    debouncedGoToTheBottom()
+    goToTheBottom()
   })
-}, { deep: true, immediate: true })
+}, { deep: true })
 
 onUpdated(() => {
   nextTick(() => {
