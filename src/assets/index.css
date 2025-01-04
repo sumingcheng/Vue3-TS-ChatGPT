@@ -129,21 +129,6 @@ th {
   background-color: #f2f2f2;
 }
 
-/* 兼容WebKit浏览器 (Chrome, Safari, Opera等) */
-::-webkit-scrollbar {
-  display: none;
-}
-
-/* 兼容Firefox */
-html {
-  scrollbar-width: none;
-}
-
-/* 兼容IE和Edge */
-body {
-  -ms-overflow-style: none;
-}
-
 .fix-primary {
   background-color: #409eff !important;
   border: 1px solid #409eff !important;
@@ -162,4 +147,35 @@ a {
 
 a:hover {
   text-decoration: underline;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(144, 147, 153, 0.3);
+  border-radius: 2px;
+  transition: all 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(144, 147, 153, 0.5);
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(144, 147, 153, 0.3) transparent;
 }

@@ -53,40 +53,51 @@ defineExpose({
 </script>
 
 <template>
-  <div class="chat-container h-full overflow-y-auto" :class="{ 'mx-2 my-2': isMobile, 'mx-4 my-2': !isMobile }"
-    ref="chatListDom">
-    <div v-for="item of messages.filter((v) => v.role !== 'system')" :key="item.content"
-      v-memo="[item.content, item.role]">
-      <div class="message-wrapper" :class="{ 'flex-row-reverse': item.role === 'user' }">
-        <div class="avatar-wrapper" :class="{ 'mobile-avatar': isMobile }">
-          <ElIcon :size="isMobile ? 16 : 20" color="#000000">
-            <UserFilled v-if="item.role === 'user'" />
-            <Service v-else />
-          </ElIcon>
-        </div>
-        <div class="message-content" :class="[item.role, { 'mobile-message': isMobile }]">
-          <div class="text-base whitespace-pre-wrap break-words" v-show="item.content"
-            v-html="getRenderedContent(item.content)">
+  <div class="outer-container h-full">
+    <div class="chat-container h-full overflow-y-auto" ref="chatListDom">
+      <div v-for="item of messages.filter((v) => v.role !== 'system')" :key="item.content"
+        v-memo="[item.content, item.role]">
+        <div class="message-wrapper" :class="{ 'flex-row-reverse': item.role === 'user' }">
+          <div class="avatar-wrapper" :class="{ 'mobile-avatar': isMobile }">
+            <ElIcon :size="isMobile ? 16 : 20" color="#000000">
+              <UserFilled v-if="item.role === 'user'" />
+              <Service v-else />
+            </ElIcon>
           </div>
-          <Loading v-show="!item.content" />
+          <div class="message-content" :class="[item.role, { 'mobile-message': isMobile }]">
+            <div class="text-base whitespace-pre-wrap break-words" v-show="item.content"
+              v-html="getRenderedContent(item.content)">
+            </div>
+            <Loading v-show="!item.content" />
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- 向下滚动按钮 -->
-    <Transition name="fade">
-      <div v-if="showScrollButton"
-        class="fixed right-6 bottom-32 cursor-pointer bg-black rounded-full shadow-lg hover:bg-opacity-80 transition-all"
-        :class="{ 'right-3 bottom-24': isMobile }" @click="scrollToBottom">
-        <div class="bg-black rounded-full p-2">
-          <img src='../../../assets/3.svg' alt='ReturnToBottom' class="w-5 h-5" />
+      <!-- 向下滚动按钮 -->
+      <Transition name="fade">
+        <div v-if="showScrollButton"
+          class="fixed right-6 bottom-32 cursor-pointer bg-black rounded-full shadow-lg hover:bg-opacity-80 transition-all"
+          :class="{ 'right-3 bottom-24': isMobile }" @click="scrollToBottom">
+          <div class="bg-black rounded-full p-2">
+            <img src='../../../assets/3.svg' alt='ReturnToBottom' class="w-5 h-5" />
+          </div>
         </div>
-      </div>
-    </Transition>
+      </Transition>
+    </div>
   </div>
 </template>
 
 <style scoped>
+.outer-container {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+.chat-container {
+  padding: 10px 16px;
+}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.3s ease;
@@ -95,24 +106,6 @@ defineExpose({
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
-}
-
-.chat-container {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
-}
-
-.chat-container::-webkit-scrollbar {
-  width: 6px;
-}
-
-.chat-container::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.chat-container::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
 }
 
 .message-wrapper {
