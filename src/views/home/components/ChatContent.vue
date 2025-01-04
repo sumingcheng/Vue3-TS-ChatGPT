@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import Loading from '@/components/Loding.vue'
-import { UserFilled, Service } from '@element-plus/icons-vue'
-import { ElIcon } from 'element-plus'
 import { markedRender } from '@/libs/highlight'
 import type { ChatMessage } from '@/types'
+import { Service, UserFilled } from '@element-plus/icons-vue'
+import { ElIcon } from 'element-plus'
 import { computed, ref } from 'vue'
 
 interface Props {
@@ -26,7 +26,7 @@ defineExpose({
 </script>
 
 <template>
-  <div class="chat-container mx-6 mt-6 mb-24" ref="chatListDom">
+  <div class="chat-container mx-6 mt-8 mb-24" ref="chatListDom">
     <div v-for="item of messages.filter((v) => v.role !== 'system')" :key="item.content"
       v-memo="[item.content, item.role]">
       <div class="message-wrapper" :class="{ 'flex-row-reverse': item.role === 'user' }">
@@ -71,8 +71,8 @@ defineExpose({
 }
 
 .message-content {
-  padding: 8px 12px;
-  border-radius: 6px;
+  padding: 12px 14px;
+  border-radius: 1.5rem;
   font-size: 14px;
   line-height: 1.4;
   word-break: break-word;
@@ -91,7 +91,6 @@ defineExpose({
   margin: 8px 0;
   padding: 12px;
   border-radius: 6px;
-  background-color: #282a36 !important;
 }
 
 :deep(code) {

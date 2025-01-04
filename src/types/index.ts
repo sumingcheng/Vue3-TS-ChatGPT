@@ -7,7 +7,7 @@ export const initMsg: ChatMessage[] = [
   },
   {
     role: 'assistant',
-    content: '你好，我是神奇海螺，欢迎提问'
+    content: 'Hello, I am the Magic Conch Shell. Feel free to ask me any questions.'
   }
 ]
 
