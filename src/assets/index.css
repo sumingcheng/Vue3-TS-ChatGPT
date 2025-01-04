@@ -28,7 +28,6 @@ body {
 }
 
 .elBtnStyle span {
-  letter-spacing: 1px;
   font-weight: 700;
   font-size: 16px;
   color: #333333;
@@ -72,8 +71,8 @@ ul li code {
   cursor: pointer;
   position: absolute;
   padding: 0.1rem 0.4rem;
-  top: 1rem;
-  right: 1rem;
+  top: 0.8rem;
+  right: 0.8rem;
   border: 1px solid rgb(208, 215, 222);
   border-radius: 6px;
 }

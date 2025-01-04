@@ -1,4 +1,13 @@
-export const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+import { computed, ref } from 'vue'
+
+const windowWidth = ref(window.innerWidth)
+
+// 监听窗口大小变化
+window.addEventListener('resize', () => {
+  windowWidth.value = window.innerWidth
+})
+
+export const isMobile = computed(() => windowWidth.value <= 768)
 
 export const initMsg: ChatMessage[] = [
   {

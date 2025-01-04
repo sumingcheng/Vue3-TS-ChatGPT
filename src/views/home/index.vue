@@ -195,13 +195,14 @@ watch(messageList, () => {
 
 
 <template>
-  <div class='flex flex-col h-screen relative'>
+  <div class='flex flex-col h-screen'>
     <Header @config="handleConfigClick" />
-    <div class='flex-1 mt-16 content' ref='observedDiv'>
-      <ChatContent ref="chatContentRef" :messages="messageList" :role-alias="roleAlias" />
+    <div class='flex-1 overflow-hidden mt-16 mb-24'>
+      <ChatContent ref="chatContentRef" :messages="messageList" :role-alias="roleAlias" :is-mobile="isMobile"
+        @scroll-bottom="goToTheBottom" />
     </div>
     <ChatInput ref="chatInputRef" :is-talking="isTalking" :is-mobile="isMobile" @send="sendMessageToAssistant"
-      @delete="toDelete" @scroll-bottom="goToTheBottom" />
+      @delete="toDelete" />
   </div>
   <SettingsDialog v-model="centerDialogVisible" :api-key="getKey()" :gpt-version="GPT_V" :gpt-version-list="GPT_VERSION"
     @save="handleSaveSettings" />

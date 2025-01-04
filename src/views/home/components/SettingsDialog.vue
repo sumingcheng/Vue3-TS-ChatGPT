@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ElButton, ElDialog, ElInput, ElOption, ElSelect } from 'element-plus'
 import { ref, watch } from 'vue'
+import { isMobile } from '@/types'
 
 interface Props {
   modelValue: boolean
@@ -11,7 +12,7 @@ interface Props {
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  width: '80%'
+  width: isMobile ? '90%' : '80%'
 })
 
 const emit = defineEmits(['update:modelValue', 'save'])
@@ -28,26 +29,33 @@ watch(() => props.modelValue, (val) => {
 </script>
 
 <template>
-  <el-dialog :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" title="Settings"
-    :width="width" center>
-    <div class="p-6">
-      <div class="flex items-center">
-        <span class="w-24 font-bold">API Key</span>
-        <el-input v-model="localKey" placeholder="sk-xxxxxxxxxx" size="large" clearable />
+  <el-dialog :model-value="modelValue" @update:model-value="$emit('update:modelValue', $event)" :width="width" center>
+    <div :class="{ 'p-6': !isMobile, 'p-3': isMobile }">
+      <div :class="['flex items-center gap-4', { 'flex-col items-start': isMobile }]">
+        <span class="font-bold whitespace-nowrap">API Key</span>
+        <el-input v-model="localKey" placeholder="sk-xxxxxxxxxx" :size="isMobile ? 'default' : 'large'" clearable
+          class="flex-1" :class="{ 'w-full': isMobile }" />
       </div>
-      <div class="flex items-center mt-5">
-        <span class="w-24 font-bold">Version</span>
-        <el-select v-model="localVersion" size="large" class="w-full">
+      <div :class="['flex items-center gap-4 mt-5', { 'flex-col items-start': isMobile }]">
+        <span class="font-bold whitespace-nowrap">Version</span>
+        <el-select v-model="localVersion" :size="isMobile ? 'default' : 'large'" class="flex-1"
+          :class="{ 'w-full': isMobile }">
           <el-option v-for="item in gptVersionList" :key="item.id" :label="item.id" :value="item.id" />
         </el-select>
       </div>
     </div>
 
     <template #footer>
-      <span>
-        <el-button @click="$emit('update:modelValue', false)">取消</el-button>
-        <el-button type="primary" @click="emit('save', localKey, localVersion)">保存</el-button>
-      </span>
+      <div :class="[{ 'flex gap-2': !isMobile, 'space-y-2': isMobile }]">
+        <el-button @click="$emit('update:modelValue', false)" :size="isMobile ? 'default' : 'large'"
+          :class="{ 'w-full': isMobile }">
+          取消
+        </el-button>
+        <el-button type="primary" @click="emit('save', localKey, localVersion)" :size="isMobile ? 'default' : 'large'"
+          :class="{ 'w-full': isMobile }">
+          保存
+        </el-button>
+      </div>
     </template>
   </el-dialog>
 </template>
