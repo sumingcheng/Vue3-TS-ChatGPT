@@ -14,10 +14,7 @@ const props = withDefaults(defineProps<Props>(), {
   width: '80%'
 })
 
-const emit = defineEmits<{
-  (e: 'update:modelValue', value: boolean): void
-  (e: 'save', key: string, version: string): void
-}>()
+const emit = defineEmits(['update:modelValue', 'save'])
 
 const localKey = ref(props.apiKey)
 const localVersion = ref(props.gptVersion)

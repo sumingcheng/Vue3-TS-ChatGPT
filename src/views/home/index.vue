@@ -1,9 +1,7 @@
 <script setup lang='ts'>
-import Loading from '@/components/Loding.vue'
 import basicModelList from '@/data/data.json'
 import { initCopy, operationKey } from '@/hooks'
 import { chat } from '@/libs/gpt'
-import { markedRender } from '@/libs/highlight'
 import { DECODER, sortModelsById } from '@/libs/utils'
 import type { ChatMessage } from '@/types'
 import { ChatStorageManager, initMsg, isMobile } from '@/types'
@@ -11,6 +9,7 @@ import { DeleteFilled } from '@element-plus/icons-vue'
 import { ElButton, ElInput, ElMessage } from 'element-plus'
 import { debounce } from 'lodash'
 import SmoothScroll from 'smooth-scroll'
+import ChatContent from './components/ChatContent.vue'
 import Header from './components/Header.vue'
 import SettingsDialog from './components/SettingsDialog.vue'
 
@@ -20,14 +19,14 @@ const GPT_VERSION = sortModelsById(basicModelList)
 const chatManager = ChatStorageManager.getInstance()
 const { getKey, setKey } = operationKey()
 const roleAlias = { user: 'ME', assistant: 'Magic Conch', system: 'System' }
-const messageList = ref<ChatMessage[]>(initMsg as ChatMessage[])
+const messageList = ref<ChatMessage[]>(initMsg)
 const GPT_V = ref('gpt-3.5-turbo')
 let isTalking = ref(false)
 
 // References
 const myInput = ref<HTMLInputElement | null>(null)
 const centerDialogVisible = ref(false)
-const chatListDom = ref<HTMLDivElement>()
+const chatContentRef = ref()
 let messageContent = ref('')
 
 // MathJax handling
@@ -149,7 +148,7 @@ const handleConfigClick = () => {
 
 const goToTheBottom = () => {
   const scroll = new SmoothScroll()
-  const chatListElement = chatListDom.value
+  const chatListElement = chatContentRef.value?.chatListDom
   if (chatListElement) {
     scroll.animateScroll(chatListElement.scrollHeight, chatListElement)
   }
@@ -213,15 +212,7 @@ const handleSaveSettings = (key: string, version: string) => {
   <div class='flex flex-col h-screen relative'>
     <Header @config="handleConfigClick" />
     <div class='flex-1 mt-16 content' ref='observedDiv'>
-      <div class='mx-10 mt-6 mb-24' ref='chatListDom'>
-        <div v-for="item of messageList.filter((v) => v.role !== 'system')" :key="item.content">
-          <div class='font-bold mb-3 text-lg'>{{ roleAlias[item.role] }}：</div>
-          <div class='text-base text-black whitespace-pre-wrap' v-show='item.content'
-            v-html="markedRender(item.content.replace(/^\n\n/, ''))">
-          </div>
-          <Loading v-show='!item.content' />
-        </div>
-      </div>
+      <ChatContent ref="chatContentRef" :messages="messageList" :role-alias="roleAlias" />
     </div>
     <div class='flex flex-nowrap fixed w-full p-6 bgColor bottom-0 z-50'>
       <div class='flex items-center w-full'>
@@ -238,7 +229,6 @@ const handleSaveSettings = (key: string, version: string) => {
       </div>
     </div>
   </div>
-  <!-- 弹框设置 -->
   <SettingsDialog v-model="centerDialogVisible" :api-key="getKey()" :gpt-version="GPT_V" :gpt-version-list="GPT_VERSION"
     @save="handleSaveSettings" />
 </template>
