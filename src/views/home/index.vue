@@ -4,15 +4,15 @@ import basicModelList from '@/data/data.json'
 import { initCopy, operationKey } from '@/hooks'
 import { chat } from '@/libs/gpt'
 import { markedRender } from '@/libs/highlight'
-import { DECODER, goGitHub, sortModelsById } from '@/libs/utils'
+import { DECODER, sortModelsById } from '@/libs/utils'
 import type { ChatMessage } from '@/types'
 import { ChatStorageManager, initMsg, isMobile } from '@/types'
 import { DeleteFilled } from '@element-plus/icons-vue'
 import { ElButton, ElInput, ElMessage } from 'element-plus'
 import { debounce } from 'lodash'
 import SmoothScroll from 'smooth-scroll'
-import SettingsDialog from './SettingsDialog.vue'
-import Header from './Header.vue'
+import Header from './components/Header.vue'
+import SettingsDialog from './components/SettingsDialog.vue'
 
 const GPT_VERSION = sortModelsById(basicModelList)
 
