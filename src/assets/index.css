@@ -1,5 +1,8 @@
 * {
-  font-family: "Microsoft YaHei", -apple-system, "Noto Sans";
+  font-family:
+    'Microsoft YaHei',
+    -apple-system,
+    'Noto Sans';
 }
 
 body {
@@ -58,36 +61,12 @@ p code {
   background-color: #f0f0f0 !important;
 }
 
-/*p code:after {*/
-/*  display: inline-block;*/
-/*  position: absolute;*/
-/*  content: "";*/
-/*  left: 50%;*/
-/*  bottom: 0;*/
-/*  width: 95%;*/
-/*  transform: translateX(-50%);*/
-/*  box-sizing: border-box;*/
-/*  border-bottom: 1px solid black;*/
-/*}*/
-
 ul li code {
   position: relative;
   padding: 3px 4px;
   border-radius: 3px;
   background-color: #f0f0f0 !important;
 }
-
-/*ul li code:after {*/
-/*  display: inline-block;*/
-/*  position: absolute;*/
-/*  content: "";*/
-/*  left: 50%;*/
-/*  bottom: 0;*/
-/*  width: 95%;*/
-/*  transform: translateX(-50%);*/
-/*  box-sizing: border-box;*/
-/*  border-bottom: 1px solid black;*/
-/*}*/
 
 .copyNode {
   cursor: pointer;
@@ -112,7 +91,7 @@ ul li code {
 /*code*/
 
 .clearfix::after {
-  content: "";
+  content: '';
   display: table;
   clear: both;
 }
@@ -168,7 +147,7 @@ body {
 
 .fix-primary {
   background-color: #409eff !important;
-  border: 1px solid #409EFF !important;
+  border: 1px solid #409eff !important;
 }
 
 .triangle {
@@ -183,4 +162,3 @@ body {
 /*.whitespace-pre-wrap ul {*/
 /*  text-indent: 2em;*/
 /*}*/
-

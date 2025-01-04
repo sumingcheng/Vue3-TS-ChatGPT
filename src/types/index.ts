@@ -20,8 +20,8 @@ export const initMsg: ChatMessage[] = [
 ]
 
 export interface ChatMessage {
-  role: 'user' | 'assistant' | 'system'
-  content: string,
+  role: 'user' | 'assistant' | 'system';
+  content: string;
 }
 
 /**
@@ -30,11 +30,6 @@ export interface ChatMessage {
  * 存储键名：chatRecordKey
  * 类的名称：ChatStorageManager
  */
-
-export interface ChatMessage {
-  role: 'user' | 'assistant' | 'system';
-  content: string;
-}
 
 // 聊天记录存储管理器
 export class ChatStorageManager {

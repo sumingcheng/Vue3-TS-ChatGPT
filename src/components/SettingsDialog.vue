@@ -30,7 +30,8 @@ const handleSave = () => {
 </script>
 
 <template>
-  <el-dialog v-model="visible" title="Settings" width="80%" center @update:visible="handleClose">
+  <el-dialog :modelValue="visible" @update:modelValue="$emit('update:visible', $event)" title="Settings" width="80%"
+    center @close="handleClose">
     <div class="bottom-0 w-full p-6 pb-8">
       <div class="flex items-center">
         <span class="w-1/6 font-bold">API Key</span>
@@ -51,4 +52,4 @@ const handleSave = () => {
       </span>
     </template>
   </el-dialog>
-</template> 
+</template>

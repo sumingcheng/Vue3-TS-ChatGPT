@@ -92,38 +92,45 @@ const readStreamAndUpdateMessage = async (reader: ReadableStreamDefaultReader<Ui
 }
 
 const sendMessageToAssistant = async (content: string = messageContent.value) => {
-  if (!content) {
-    ElMessage({ message: '请输入内容', type: 'info' })
-    return
+  try {
+    if (!content) {
+      ElMessage({ message: '请输入内容', type: 'info' })
+      return
+    }
+
+    isTalking.value = true
+
+    if (messageList.value.length === 2) {
+      messageList.value.pop()
+    }
+
+    messageList.value.push({ role: 'user', content })
+    clearMessageContent()
+
+    messageList.value.push({ role: 'assistant', content: '' })
+
+    const response = await chat(messageList.value, getKey(), GPT_V.value)
+    if (response.status === 'success' && response.data) {
+      await updateMessageListWithResponse(response)
+    } else {
+      const errorMessage = typeof response.message === 'string'
+        ? response.message
+        : '发生未知错误'
+      appendLastMessageContent(errorMessage)
+    }
+
+    // Save chat records
+    const serializedData = JSON.stringify(messageList.value)
+    const parsedData = JSON.parse(serializedData)
+    await chatManager.saveChatRecord(parsedData)
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : '请求失败，请重试'
+    appendLastMessageContent(errorMessage)
+    ElMessage({ message: errorMessage, type: 'error' })
+  } finally {
+    isTalking.value = false
+    getFocus()
   }
-
-  isTalking.value = true
-
-  if (messageList.value.length === 2) {
-    messageList.value.pop()
-  }
-
-  messageList.value.push({ role: 'user', content })
-  clearMessageContent()
-
-  messageList.value.push({ role: 'assistant', content: '' })
-
-  const response = await chat(messageList.value, getKey(), GPT_V.value)
-  if (response.status === 'success' && response.data) {
-    await updateMessageListWithResponse(response)
-  } else {
-    appendLastMessageContent(response.message)
-  }
-
-  isTalking.value = false
-  getFocus()
-
-  // Save chat records
-  const serializedData = JSON.stringify(messageList.value)
-  const parsedData = JSON.parse(serializedData)
-  chatManager.saveChatRecord(parsedData).then(() => {
-    console.log('Chat records saved successfully!')
-  })
 }
 
 // UI handling

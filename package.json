@@ -3,9 +3,9 @@
   "version": "3.0.0",
   "main": "index.html",
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite --host --port 8888",
     "build": "run-p type-check build-only",
-    "preview": "vite preview --port 3456",
+    "preview": "vite preview --port 8888",
     "build-only": "vite build",
     "type-check": "vue-tsc --noEmit",
     "deploy": "npm run build && gh-pages -d docs"

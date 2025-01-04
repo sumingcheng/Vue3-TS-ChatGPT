@@ -2,12 +2,7 @@ import type { ChatMessage } from '@/types'
 
 export async function chat(messageList: ChatMessage[], apiKey: string, GPT_VERSION: string) {
   try {
-    const baseURL = import.meta.env.DEV
-      ? '/api/v1/chat/completions' // 开发环境使用代理
-      : 'https://api.openai.com/v1/chat/completions' // 生产环境直接请求
-    console.log('baseURL', baseURL)
-
-    const result = await fetch(baseURL, {
+    const result = await fetch("https://api.openai.com/v1/chat/completions", {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -19,15 +14,8 @@ export async function chat(messageList: ChatMessage[], apiKey: string, GPT_VERSI
         messages: messageList
       })
     })
-
-    return {
-      status: 'success',
-      data: result.body
-    }
-  } catch (error: any) {
-    return {
-      status: 'error',
-      message: error
-    }
+    return { status: 'success', data: result.body }
+  } catch (error) {
+    return { status: 'error', message: error instanceof Error ? error.message : '未知错误' }
   }
 }

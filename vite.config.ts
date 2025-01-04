@@ -31,14 +31,14 @@ export default defineConfig({
     }
   },
   server: {
-    port: 3456,
-    proxy: {
-      '/api': {
-        target: 'https://api.openai.com',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '')
-      }
-    }
+    port: 8888,
+    // proxy: {
+    //   '/api': {
+    //     target: 'https://api.openai.com',
+    //     changeOrigin: true,
+    //     rewrite: (path) => path.replace(/^\/api/, '')
+    //   }
+    // }
   },
   resolve: {
     alias: {
