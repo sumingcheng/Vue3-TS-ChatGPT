@@ -12,6 +12,7 @@ import { ElButton, ElInput, ElMessage } from 'element-plus'
 import { debounce } from 'lodash'
 import SmoothScroll from 'smooth-scroll'
 import SettingsDialog from './SettingsDialog.vue'
+import Header from './Header.vue'
 
 const GPT_VERSION = sortModelsById(basicModelList)
 
@@ -210,19 +211,7 @@ const handleSaveSettings = (key: string, version: string) => {
 
 <template>
   <div class='flex flex-col h-screen relative'>
-    <div class='flex flex-nowrap fixed w-full items-baseline top-0 px-6 py-4 bgColor z-50'>
-      <div class='text-2xl font-bold text-white'>MagicConch</div>
-      <div class='ml-4 text-sm text-white' v-if='!isMobile'>
-        Magic conch based on ChatGPT
-      </div>
-      <div class='ml-4 my-auto cursor-pointer' @click='goGitHub' v-if='!isMobile'>
-        <img loading='lazy' src='https://img.shields.io/github/stars/sumingcheng/Vue3-TS-ChatGPT?logo=github'
-          alt='GitHub'>
-      </div>
-      <div class='ml-auto text-sm cursor-pointer' @click='handleConfigClick'>
-        <el-button size='large' type='info' class='elBtnStyle text-4xl'>Settings</el-button>
-      </div>
-    </div>
+    <Header @config="handleConfigClick" />
     <div class='flex-1 mt-16 content' ref='observedDiv'>
       <div class='mx-10 mt-6 mb-24' ref='chatListDom'>
         <div v-for="item of messageList.filter((v) => v.role !== 'system')" :key="item.content">
