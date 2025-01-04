@@ -5,11 +5,11 @@ import { chat } from '@/libs/gpt'
 import { DECODER, sortModelsById } from '@/libs/utils'
 import type { ChatMessage } from '@/types'
 import { ChatStorageManager, initMsg, isMobile } from '@/types'
-import { DeleteFilled } from '@element-plus/icons-vue'
-import { ElButton, ElInput, ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { debounce } from 'lodash'
 import SmoothScroll from 'smooth-scroll'
 import ChatContent from './components/ChatContent.vue'
+import ChatInput from './components/ChatInput.vue'
 import Header from './components/Header.vue'
 import SettingsDialog from './components/SettingsDialog.vue'
 
@@ -24,10 +24,9 @@ const GPT_V = ref('gpt-3.5-turbo')
 let isTalking = ref(false)
 
 // References
-const myInput = ref<HTMLInputElement | null>(null)
-const centerDialogVisible = ref(false)
 const chatContentRef = ref()
-let messageContent = ref('')
+const chatInputRef = ref()
+const centerDialogVisible = ref(false)
 
 // MathJax handling
 const checkMathJax = () => {
@@ -49,10 +48,6 @@ const handleMathjaxTypeset = debounce(() => {
     })
   })
 }, 200)
-
-const clearMessageContent = () => {
-  messageContent.value = ''
-}
 
 const appendLastMessageContent = (content: string) => {
   messageList.value[messageList.value.length - 1].content += content
@@ -91,7 +86,7 @@ const readStreamAndUpdateMessage = async (reader: ReadableStreamDefaultReader<Ui
   await readStreamAndUpdateMessage(reader)
 }
 
-const sendMessageToAssistant = async (content: string = messageContent.value) => {
+const sendMessageToAssistant = async (content: string) => {
   try {
     if (!content) {
       ElMessage({ message: '请输入内容', type: 'info' })
@@ -105,7 +100,6 @@ const sendMessageToAssistant = async (content: string = messageContent.value) =>
     }
 
     messageList.value.push({ role: 'user', content })
-    clearMessageContent()
 
     messageList.value.push({ role: 'assistant', content: '' })
 
@@ -119,7 +113,6 @@ const sendMessageToAssistant = async (content: string = messageContent.value) =>
       appendLastMessageContent(errorMessage)
     }
 
-    // Save chat records
     const serializedData = JSON.stringify(messageList.value)
     const parsedData = JSON.parse(serializedData)
     await chatManager.saveChatRecord(parsedData)
@@ -129,19 +122,11 @@ const sendMessageToAssistant = async (content: string = messageContent.value) =>
     ElMessage({ message: errorMessage, type: 'error' })
   } finally {
     isTalking.value = false
-    getFocus()
+    chatInputRef.value?.getFocus()
   }
 }
 
 // UI handling
-const getFocus = () => {
-  nextTick(() => {
-    if (myInput.value) {
-      myInput.value.focus()
-    }
-  })
-}
-
 const handleConfigClick = () => {
   centerDialogVisible.value = true
 }
@@ -189,7 +174,7 @@ onMounted(() => {
   if (getKey() === '') {
     centerDialogVisible.value = true
   }
-  getFocus()
+  chatInputRef.value?.getFocus()
   initializationRecord()
   checkMathJax()
   initCopy()
@@ -214,20 +199,8 @@ const handleSaveSettings = (key: string, version: string) => {
     <div class='flex-1 mt-16 content' ref='observedDiv'>
       <ChatContent ref="chatContentRef" :messages="messageList" :role-alias="roleAlias" />
     </div>
-    <div class='flex flex-nowrap fixed w-full p-6 bgColor bottom-0 z-50'>
-      <div class='flex items-center w-full'>
-        <el-input class='input' :rows='1' type='textarea' ref='myInput' v-model='messageContent' size='large'
-          @keydown.enter='sendMessageToAssistant()' :disabled='isTalking' style="--el-input-text-color: #000000" />
-        <el-button @click='sendMessageToAssistant()' size='large' type='info' class='elBtnStyle text-5xl ml-5'>Send
-        </el-button>
-        <div class='triangle ml-4 cursor-pointer' @click='toDelete'>
-          <DeleteFilled />
-        </div>
-        <div class='triangle ml-4 cursor-pointer' @click='goToTheBottom' v-if='!isMobile'>
-          <img src='../../assets/3.svg' alt='ReturnToBottom' />
-        </div>
-      </div>
-    </div>
+    <ChatInput ref="chatInputRef" :is-talking="isTalking" :is-mobile="isMobile" @send="sendMessageToAssistant"
+      @delete="toDelete" @scroll-bottom="goToTheBottom" />
   </div>
   <SettingsDialog v-model="centerDialogVisible" :api-key="getKey()" :gpt-version="GPT_V" :gpt-version-list="GPT_VERSION"
     @save="handleSaveSettings" />
