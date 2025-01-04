@@ -40,7 +40,8 @@ defineExpose({
 </script>
 
 <template>
-  <div class='flex flex-nowrap fixed w-full bottom-0 z-50 bgColor h-24' :class="{ 'px-6': !isMobile, 'px-3': isMobile }">
+  <div class='flex flex-nowrap fixed w-full bottom-0 z-50 bgColor h-24'
+    :class="{ 'px-6': !isMobile, 'px-3': isMobile }">
     <div class='flex items-center w-full h-full' :class="{ 'max-w-3xl mx-auto': isMobile }">
       <el-input class='input flex-1' :rows='1' type='textarea' ref='myInput' v-model='messageContent'
         :size="isMobile ? 'default' : 'large'" :disabled='isTalking' @keydown.enter='handleSend'
@@ -57,14 +58,6 @@ defineExpose({
 </template>
 
 <style scoped>
-.input {
-  min-height: 44px;
-}
-
-.input :deep(.el-textarea__inner) {
-  min-height: 44px;
-}
-
 .triangle {
   display: flex;
   align-items: center;
