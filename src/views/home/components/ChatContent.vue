@@ -18,15 +18,15 @@ const emit = defineEmits(['scroll-bottom'])
 const chatListDom = ref<HTMLDivElement>()
 const showScrollButton = ref(false)
 
-// 监听滚动
+// Listen for scroll events
 const handleScroll = () => {
   if (!chatListDom.value) return
   const { scrollTop, scrollHeight, clientHeight } = chatListDom.value
-  // 当距离底部超过200px时显示按钮
+  // Show button when distance to bottom exceeds 200px
   showScrollButton.value = scrollHeight - (scrollTop + clientHeight) > 200
 }
 
-// 滚动到底部
+// Scroll to bottom
 const scrollToBottom = () => {
   if (!chatListDom.value) return
   chatListDom.value.scrollTop = chatListDom.value.scrollHeight
@@ -41,12 +41,12 @@ onUnmounted(() => {
   chatListDom.value?.removeEventListener('scroll', handleScroll)
 })
 
-// 缓存 markedRender 结果
+// Cache markedRender results
 const getRenderedContent = computed(() => (content: string) => {
   return markedRender(content)
 })
 
-// 监听消息变化，自动滚动到底部
+// Auto scroll to bottom when messages change
 watch(() => props.messages, () => {
   nextTick(() => {
     scrollToBottom()
@@ -80,7 +80,7 @@ defineExpose({
         </div>
       </div>
 
-      <!-- 向下滚动按钮 -->
+      <!-- Scroll to bottom button -->
       <Transition name="fade">
         <div v-if="showScrollButton"
           class="fixed right-6 bottom-32 cursor-pointer bg-black rounded-full shadow-lg hover:bg-opacity-80 transition-all"

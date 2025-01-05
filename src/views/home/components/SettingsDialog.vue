@@ -49,11 +49,11 @@ watch(() => props.modelValue, (val) => {
       <div :class="[{ 'flex justify-center items-center gap-2': !isMobile, 'space-y-2': isMobile }]">
         <el-button @click="$emit('update:modelValue', false)" :size="isMobile ? 'default' : 'large'"
           :class="{ 'w-full mb-2': isMobile }">
-          取消
+          Cancel
         </el-button>
         <el-button type="primary" @click="emit('save', localKey, localVersion)" :size="isMobile ? 'default' : 'large'"
           class="!m-0" :class="{ 'w-full': isMobile }">
-          保存
+          Save
         </el-button>
       </div>
     </template>

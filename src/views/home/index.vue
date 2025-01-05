@@ -95,7 +95,7 @@ const updateMessageListWithResponse = async (response: any) => {
 const sendMessageToAssistant = async (content: string) => {
   try {
     if (!content) {
-      ElMessage({ message: '请输入内容', type: 'info' })
+      ElMessage({ message: 'Please enter content', type: 'info' })
       return
     }
 
@@ -112,7 +112,7 @@ const sendMessageToAssistant = async (content: string) => {
     if (response.status === 'success' && response.data) {
       await updateMessageListWithResponse(response)
     } else {
-      const errorMessage = response.error?.message || '发生未知错误'
+      const errorMessage = response.error?.message || 'Unknown error occurred'
       appendLastMessageContent(errorMessage)
       ElMessage({ message: errorMessage, type: 'error' })
     }
@@ -121,7 +121,7 @@ const sendMessageToAssistant = async (content: string) => {
     const parsedData = JSON.parse(serializedData)
     await chatManager.saveChatRecord(parsedData)
   } catch (error: any) {
-    const errorMessage = error.error?.message || error.message || '请求失败，请重试'
+    const errorMessage = error.error?.message || error.message || 'Request failed, please try again'
     appendLastMessageContent(errorMessage)
     ElMessage({ message: errorMessage, type: 'error' })
   } finally {
@@ -152,12 +152,12 @@ const toDelete = () => {
 
 const handleSaveSettings = (key: string, version: string) => {
   if (!key) {
-    ElMessage({ message: '请输入API Key', type: 'warning' })
+    ElMessage({ message: 'Please enter API Key', type: 'warning' })
     return
   }
   setKey(key)
   GPT_V.value = version
-  ElMessage({ message: '保存成功', type: 'success' })
+  ElMessage({ message: 'Saved successfully', type: 'success' })
   centerDialogVisible.value = false
 }
 
