@@ -197,7 +197,7 @@ watch(messageList, () => {
 <template>
   <div class='flex flex-col h-screen'>
     <Header @config="handleConfigClick" />
-    <div class='flex-1 overflow-hidden mt-16 mb-24'>
+    <div class='flex-1 overflow-hidden mt-16' :class="{ 'mb-24': !isMobile, 'mb-10': isMobile }">
       <ChatContent ref="chatContentRef" :messages="messageList" :role-alias="roleAlias" :is-mobile="isMobile"
         @scroll-bottom="goToTheBottom" />
     </div>

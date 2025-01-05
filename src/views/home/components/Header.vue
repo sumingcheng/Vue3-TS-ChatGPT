@@ -11,7 +11,7 @@ import { ElButton } from 'element-plus'
     <div class='ml-4 text-sm text-white' v-if='!isMobile'>
       Magic conch based on ChatGPT
     </div>
-    <div class='ml-4 my-auto cursor-pointer' @click='goGitHub' v-if='!isMobile'>
+    <div class='ml-4 my-auto cursor-pointer' @click='goGitHub' :class="{ 'scale-90': isMobile }">
       <img loading="lazy" decoding="async"
         src='https://img.shields.io/github/stars/sumingcheng/Vue3-TS-ChatGPT?logo=github' alt='GitHub'>
     </div>

@@ -61,7 +61,8 @@ defineExpose({
 
 <template>
   <div class="outer-container h-full">
-    <div class="chat-container h-full overflow-y-auto" ref="chatListDom">
+    <div class="chat-container h-full overflow-y-auto" :class="{ mobile: isMobile, desktop: !isMobile }"
+      ref="chatListDom">
       <div v-for="item of messages.filter((v) => v.role !== 'system')" :key="item.content"
         v-memo="[item.content, item.role]">
         <div class="message-wrapper" :class="{ 'flex-row-reverse': item.role === 'user' }">
@@ -71,8 +72,8 @@ defineExpose({
               <Service v-else />
             </ElIcon>
           </div>
-          <div class="message-content px-6 py-4" :class="[item.role, { 'mobile-message': isMobile }]">
-            <div class="text-base break-words" v-show="item.content" v-html="getRenderedContent(item.content)">
+          <div class="message-content px-6 py-4" :class="[item.role, { 'mobile-message px-2': isMobile }]">
+            <div class="break-words text-base" v-show="item.content" v-html="getRenderedContent(item.content)">
             </div>
             <Loading v-show="!item.content" />
           </div>
@@ -83,7 +84,7 @@ defineExpose({
       <Transition name="fade">
         <div v-if="showScrollButton"
           class="fixed right-6 bottom-32 cursor-pointer bg-black rounded-full shadow-lg hover:bg-opacity-80 transition-all"
-          :class="{ 'right-3 bottom-24': isMobile }" @click="scrollToBottom">
+          :class="{ 'right-3 bottom-24 opacity-50': isMobile }" @click="scrollToBottom">
           <div class="bg-black rounded-full p-2">
             <img src='../../../assets/3.svg' alt='ReturnToBottom' class="w-5 h-5" />
           </div>
@@ -102,6 +103,14 @@ defineExpose({
 
 .chat-container {
   padding: 10px 16px;
+}
+
+.chat-container.mobile {
+  padding-bottom: 20px;
+}
+
+.chat-container.desktop {
+  padding-bottom: 20ox;
 }
 
 .fade-enter-active,

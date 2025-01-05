@@ -60,6 +60,10 @@ p code {
   background-color: #f0f0f0 !important;
 }
 
+p {
+  line-height: 2;
+}
+
 ul li code {
   position: relative;
   padding: 3px 4px;
