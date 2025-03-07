@@ -1,88 +1,185 @@
 * {
-    font-family: "Microsoft YaHei", -apple-system, "Noto Sans";
+  font-family:
+    'Microsoft YaHei',
+    -apple-system,
+    'Noto Sans';
 }
 
 body {
-    background-color: #f7f7f7;
-}
-
-.jb:before {
-    /*图标*/
-    display: inline-block;
-    content: " ";
-    margin-right: 10px;
-    width: 20px;
-    height: 22px;
+  position: relative;
+  background-color: #ffffff;
 }
 
 .bgColor {
-    color: #f7f7f7;
-    background-color: #343541;
+  color: #f7f7f7;
+  background-color: #343541;
 }
 
 .fontColor {
-    color: #f7f7f7;
+  color: #f7f7f7;
 }
 
 .elBtnStyle {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 .el-button--info {
-    background-color: #f7f7f7 !important;
+  background-color: #f7f7f7 !important;
 }
 
 .elBtnStyle span {
-    letter-spacing: 3px;
-    font-weight: 700;
-    font-size: 16px;
-    color: #333333;
+  font-weight: 700;
+  font-size: 16px;
+  color: #333333;
 }
 
 .el-textarea__inner {
-    color: #000000;
-    font-size: 1.1rem !important;
+  color: #000000;
+  font-size: 1.1rem !important;
 }
 
 /*code*/
 pre {
-    width: auto;
-    background-color: #fafafa;
-    padding: 1.5rem;
-    border: 1px solid rgb(208, 215, 222);
-    border-radius: 6px;
+  position: relative;
+  width: 100%;
+  background-color: #fafafa;
+  /* padding: 1.5rem; */
+  border: 1px solid #2c2c2c;
+  border-radius: 6px;
+}
+
+code {
+  width: 100%;
+  background-color: #fafafa !important;
+}
+
+p code {
+  position: relative;
+  /* padding: 3px 4px; */
+  border-radius: 3px;
+  background-color: #f0f0f0 !important;
+}
+
+p {
+  line-height: 2;
+}
+
+ul li code {
+  position: relative;
+  padding: 3px 4px;
+  border-radius: 3px;
+  background-color: #f0f0f0 !important;
+}
+
+.copyNode {
+  cursor: pointer;
+  position: absolute;
+  padding: 0.1rem 0.4rem;
+  top: 0.8rem;
+  right: 0.8rem;
+  border: 1px solid rgb(208, 215, 222);
+  border-radius: 6px;
+}
+
+.copyNode:hover {
+  cursor: pointer;
+  background-color: #f2f2f2;
+}
+
+.copyNode:active {
+  cursor: pointer;
+  background-color: #e6e6e6;
+}
+
+/*code*/
+
+.clearfix::after {
+  content: '';
+  display: table;
+  clear: both;
 }
 
 textarea::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-    background-color: #f2f2f2;
+  width: 8px;
+  height: 8px;
+  background-color: #f2f2f2;
 }
 
 textarea::-webkit-scrollbar-track {
-    background-color: #f2f2f2;
+  background-color: #f2f2f2;
 }
 
 textarea::-webkit-scrollbar-thumb {
-    background-color: #cccccc;
+  background-color: #cccccc;
 }
 
 /*markdown 表格*/
 table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-bottom: 1rem;
-    background-color: transparent;
-    border: 1px solid #dee2e6;
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1rem;
+  border: 1px solid #dee2e6;
 }
 
-th, td {
-    padding: 0.75rem;
-    vertical-align: top;
-    border: 1px solid #dee2e6;
+th,
+td {
+  padding: 0.75rem;
+  vertical-align: top;
+  border: 1px solid #dee2e6;
 }
 
 th {
-    text-align: left;
-    background-color: #f2f2f2;
+  text-align: left;
+  background-color: #f2f2f2;
+}
+
+.fix-primary {
+  background-color: #409eff !important;
+  border: 1px solid #409eff !important;
+}
+
+.triangle {
+  width: 41px;
+  height: 41px;
+}
+
+a {
+  text-decoration: underline;
+  color: #333333;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(144, 147, 153, 0.3);
+  border-radius: 2px;
+  transition: all 0.2s ease-in-out;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(144, 147, 153, 0.5);
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(144, 147, 153, 0.3) transparent;
 }

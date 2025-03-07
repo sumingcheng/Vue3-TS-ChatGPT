@@ -1,0 +1,23 @@
+{
+  "printWidth": 250,
+  "semi": false,
+  "singleQuote": true,
+  "bracketSpacing": true,
+  "tabWidth": 2,
+  "jsxBracketSameLine": false,
+  "arrowParens": "always",
+  "trailingComma": "none",
+  "useTabs": false,
+  "spaceBetweenParens": true,
+  "spaceBeforeFunctionParen": true,
+  "chain-operators": "multiline",
+  "rules": {
+    "blankLines": [
+      {
+        "blankLines": "always",
+        "prev": "function",
+        "next": "function"
+      }
+    ]
+  }
+}

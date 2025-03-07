@@ -1,5 +1,5 @@
 <template>
-  <div class="com__box">
+  <div class="box">
     <div class="loading">
       <div></div>
       <div></div>
@@ -33,6 +33,7 @@
 
 .loading > div {
   display: inline-block;
+  will-change: opacity;
   float: none;
   background-color: currentColor;
   border: 0 solid currentColor;
